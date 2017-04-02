@@ -1,29 +1,12 @@
-use alienfile;
+use Alien::Build;
 
-plugin 'PkgConfig' => 'gdal';
-
-plugin 'Probe::CommandLine' => (
-  command   => 'gdal-config',
-  secondary => 1,
-);
-
-share {
-
-  plugin Download => (
-    url     => 'http://download.osgeo.org/gdal/CURRENT',
-    version => qr/^gdal-([0-9\.]+)\.tar\.gz$/,
-  );
-
-  plugin Extract => 'tar.gz';
-
-  plugin 'Build::Autoconf' => ();
-
-  # the build step is only necessary if you need to customize the
-  # options passed to ./configure.  The default set by the
-  # Build::Autoconf plugin is frequently sufficient.
-  build [
-    '%{configure} --disable-shared',
-    '%{make}',
-    '%{make} install',
-  ];
-};
+my $build = Alien::Build->load('./alienfile');
+$build->load_requires('configure');
+$build->set_prefix('/usr/local');
+$build->set_stage('/Users/admin/stage');  # needs to be absolute
+$build->load_requires($build->install_type);
+$build->download;
+$build->build;
+# files are now in /Users/admin/stage, it is your job (or
+# ExtUtils::MakeMaker, Module::Build, etc) to copy
+# those files into /usr/local
