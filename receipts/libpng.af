@@ -7,7 +7,7 @@ probe [ 'pkg-config --exists libpng16' ];
 share {
 
   plugin Download => (
-    url     => 'https://sourceforge.net/projects/libpng/files/',
+    url     => 'https://sourceforge.net/projects/libpng/files/latest/',
     version => qr/^libpng16-([0-9\.]+)\.tar\.gz$/,
   );
 
