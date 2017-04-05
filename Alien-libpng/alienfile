@@ -7,7 +7,7 @@ probe [ 'pkg-config --exists libpng16' ];
 share {
 
   plugin Download => (
-    url     => 'ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng16/',
+    url     => 'http://prdownloads.sourceforge.net/libpng/libpng-1.6.28.tar.gz?download',
     version => qr/^libpng16-([0-9\.]+)\.tar\.gz$/,
   );
 
