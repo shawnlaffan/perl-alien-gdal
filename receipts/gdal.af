@@ -2,11 +2,10 @@ use alienfile;
 
 plugin 'PkgConfig' => 'gdal';
 
-#plugin 'Probe::CommandLine' => (
-#  command   => 'gdal-config',
-#  secondary => 1,
-#);
-probe [ 'pkg-config --exists gdal' ];
+plugin 'Probe::CommandLine' => (
+  command   => 'gdal-config',
+  secondary => 1,
+);
 
 share {
 
