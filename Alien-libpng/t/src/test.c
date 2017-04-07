@@ -137,7 +137,7 @@ void write_png_file(char* file_name)
         fclose(fp);
 }
 
-int main(void)    
+int main(int argc, char **argv)    
 {
     if (argc != 3)
         abort_("Usage: program_name <file_in> <file_out>");
