@@ -20,7 +20,7 @@ share {
   # Build::Autoconf plugin is frequently sufficient.
   build [
     '%{configure} --disable-shared',
-    '%{make}',
+    '%{make} LIBS=-lz',
     '%{make} install',
   ];
 };

@@ -1,4 +1,4 @@
-package Alien::libpng;
+package Alien::gdal;
 
 use strict;
 use warnings;
