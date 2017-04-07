@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <png.h>
 
 int main(void)    
 {
