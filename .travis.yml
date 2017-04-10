@@ -4,4 +4,4 @@ perl:
   - "5.22"
 
 install:
-  - cpanm --quiet Alien::Build alienfile
+  - cpanm --quiet Alien::Build
