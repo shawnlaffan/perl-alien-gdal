@@ -12,14 +12,17 @@ sudo: false
 cache:
   directories:
     - perl_modules
-
+    - /usr/local
 before_install:
+  - /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  - brew install perl
+  - brew install cpanminus  
+  #  make sure we get the brewed perl and cpanm etc
+  - export PATH=/usr/local/bin:${PATH}
 
   #  local::lib target is cached
-#  - cpanm --notest local::lib
-#  - eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
-  - brew update
-  - brew install perl
+  - cpanm --notest local::lib
+  - eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
 
 install:
 #  - cpanm --quiet Alien::Build
