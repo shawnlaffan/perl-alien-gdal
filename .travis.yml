@@ -23,9 +23,9 @@ before_install:
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then export PATH=/usr/local/bin:${PATH}; fi;
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then /usr/local/bin/cpanm --version; fi;
 
-#  local::lib target is cached;
-  cpanm --notest local::lib
-  eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
+#  local::lib target is cached
+  - cpanm --notest local::lib
+  - eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
 
 install:
   - cpanm --quiet Alien::Build
