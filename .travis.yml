@@ -22,7 +22,7 @@ before_install:
   #  local::lib target is cached
   - /usr/local/bin/cpanm --notest local::lib
   - eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
-  - cpanm --version
+  - /usr/local/bin/cpanm --version
 install:
-#  - cpanm --quiet Alien::Build
-#  - cpanm --quiet HTML::LinkExtor
+  - /usr/local/bin/cpanm --quiet Alien::Build
+  - /usr/local/bin/cpanm --quiet HTML::LinkExtor
