@@ -26,6 +26,9 @@ before_install:
   - cpanm --notest local::lib
   - eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
 
+# Add to PATH to find gdal-config
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then export PATH=${PWD}/blib/lib/auto/share/dist/Alien-gdal/bin:${PATH}; fi;
+
 install:
   - cpanm --quiet Alien::Build
   - cpanm --quiet HTML::LinkExtor
