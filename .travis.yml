@@ -14,20 +14,18 @@ cache:
     - perl_modules
     - /usr/local
 before_install:
-    - if [ "$TRAVIS_OS_NAME" == "osx" ]; then rvm use ruby-2.0.0-p648; fi;
-#    - if [ "$TRAVIS_OS_NAME" == "osx" ]; then /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"; fi;
-      - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install perl; fi;
-      - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install cpanminus; fi;
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then rvm use ruby-2.0.0-p648; fi;
+# - if [ "$TRAVIS_OS_NAME" == "osx" ]; then /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"; fi;
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install perl; fi;
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install cpanminus; fi;
 
-      #  make sure we get the brewed perl and cpanm etc
-      - if [ "$TRAVIS_OS_NAME" == "osx" ]; then export PATH=/usr/local/bin:${PATH}; fi;
+#  make sure we get the brewed perl and cpanm etc
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then export PATH=/usr/local/bin:${PATH}; fi;
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then /usr/local/bin/cpanm --version; fi;
 
-      - if [ "$TRAVIS_OS_NAME" == "osx" ]; then /usr/local/bin/cpanm --version; fi;
-
-    #  local::lib target is cached;
-      cpanm --notest local::lib;
-      eval "$(perl -Mlocal::lib=${PWD}/perl_modules)";
-    fi
+#  local::lib target is cached;
+  cpanm --notest local::lib
+  eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
 
 install:
   - cpanm --quiet Alien::Build
