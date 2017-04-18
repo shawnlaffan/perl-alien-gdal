@@ -14,22 +14,22 @@ cache:
     - perl_modules
     - /usr/local
 before_install:
-    if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-      rvm use ruby-2.0.0-p648
-      /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-      brew install perl
-      brew install cpanminus  
+    - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+      rvm use ruby-2.0.0-p648;
+      /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)";
+      brew install perl;
+      brew install cpanminus;  
       #  make sure we get the brewed perl and cpanm etc
-      export PATH=/usr/local/bin:${PATH}
+      export PATH=/usr/local/bin:${PATH};
 
       /usr/local/bin/cpanm --version
-    #  local::lib target is cached
-      /usr/local/cpanm --notest local::lib
-      eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
+    #  local::lib target is cached;
+      /usr/local/cpanm --notest local::lib;
+      eval "$(perl -Mlocal::lib=${PWD}/perl_modules)";
     else
     #  local::lib target is cached
-      cpanm --notest local::lib
-      eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
+      cpanm --notest local::lib;
+      eval "$(perl -Mlocal::lib=${PWD}/perl_modules)";
     fi
 
 install:
