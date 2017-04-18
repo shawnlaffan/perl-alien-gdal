@@ -8,9 +8,6 @@ diag( 'VERSION=' . Alien::gdal->config('version') );
 
 my $alien = Alien::gdal->new;
 
-diag( 'CFLAGS=' . $alien->cflags );
-diag( 'LIBS=' . $alien->libs );
-
 SKIP: {
     skip "system libs may not need -I or -L", 2
         if $alien->install_type('system');
