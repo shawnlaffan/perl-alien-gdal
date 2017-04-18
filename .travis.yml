@@ -25,7 +25,7 @@ before_install:
 #  local::lib target is cached
   - cpanm --notest local::lib
   - eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
-  - find ${PERLBREW_ROOT} -nane gdal-config
+  - find ${PERLBREW_ROOT} -name gdal-config
 
 install:
   - cpanm --quiet Alien::Build
