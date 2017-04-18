@@ -5,13 +5,16 @@ perl:
 
 os:
   - linux
-#  - osx
+  - osx
+
+sudo: false
 
 cache:
   directories:
     - perl_modules
 
 before_install:
+  - eval $(curl https://travis-perl.github.io/init) --auto
   #  local::lib target is cached
   - cpanm --notest local::lib
   - eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
