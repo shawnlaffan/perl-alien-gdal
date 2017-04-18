@@ -21,7 +21,7 @@ before_install:
   - export PATH=/usr/local/bin:${PATH}
 
   #  local::lib target is cached
-  - cpanm --notest local::lib
+  - /usr/local/bin/cpanm --notest local::lib
   - eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
 
 install:
