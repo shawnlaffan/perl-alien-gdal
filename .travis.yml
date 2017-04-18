@@ -29,3 +29,4 @@ before_install:
 install:
   - cpanm --quiet Alien::Build
   - cpanm --quiet HTML::LinkExtor
+  - cpanm --quiet Test::CChecker
