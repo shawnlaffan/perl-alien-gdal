@@ -1,4 +1,7 @@
 language: perl
+os:
+ - osx 
+
 perl:
   - "5.24"
 matrix:
