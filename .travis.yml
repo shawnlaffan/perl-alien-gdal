@@ -4,7 +4,7 @@ perl:
 #  - "5.22"
 
 os:
-  - linux
+  #- linux
   - osx
 
 sudo: false
@@ -14,11 +14,25 @@ cache:
     - perl_modules
 
 before_install:
-  - eval $(curl https://travis-perl.github.io/init) --auto
+  - git clone git://github.com/travis-perl/helpers ~/travis-perl-helpers
+  - source ~/travis-perl-helpers/init
+  - build-perl
+  - perl -V
+  - build-dist
+  - cd $BUILD_DIR             # $BUILD_DIR is set by the build-dist command
+
   #  local::lib target is cached
   - cpanm --notest local::lib
   - eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
 
 install:
+  - cpan-install --deps       # installs prereqs, including recommends
+  - cpan-install --coverage   # installs converage prereqs, if enabled
   - cpanm --quiet Alien::Build
   - cpanm --quiet HTML::LinkExtor
+before_script:
+  - coverage-setup
+script:
+  - prove -l -j$(test-jobs) $(test-files)   # parallel testing
+after_success:
+  - coverage-report
