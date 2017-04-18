@@ -16,11 +16,11 @@ cache:
 before_install:
 
   #  local::lib target is cached
-  - cpanm --notest local::lib
-  - eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
+#  - cpanm --notest local::lib
+#  - eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
   - brew update
   - brew install perl
 
 install:
-  - cpanm --quiet Alien::Build
-  - cpanm --quiet HTML::LinkExtor
+#  - cpanm --quiet Alien::Build
+#  - cpanm --quiet HTML::LinkExtor
