@@ -12,7 +12,7 @@ my %WriteMakefileArgs = (
     "ExtUtils::MakeMaker" => "6.52",
     "Alien::Build::MM" => 0,
     "PkgConfig" => 0,
-    ($^O =~ /mswin/i) ? "Alien::MSYS" => 0 : (),
+    ($^O =~ /mswin/i) ? ("Alien::MSYS" => 0) : (),
     "HTTP::Tiny" => 0.044,  #  something, somewhere needs this version, need to track it down
   },
   "PREREQ_PM" => {
