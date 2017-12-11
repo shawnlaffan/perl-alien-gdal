@@ -16,6 +16,7 @@ install:
   - cpanm --quiet HTML::LinkExtor
   - cpanm --quiet Test::CChecker
   - cpanm --quiet Alien::MSYS
+  - gcc -v
 
 build_script:
   - perl Makefile.PL
