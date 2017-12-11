@@ -24,7 +24,7 @@ share {
   # options passed to ./configure.  The default set by the
   # Build::Autoconf plugin is frequently sufficient.
   build [
-    '%{configure} --with-perl ' . ' ' . $build_static,
+    '%{configure} ' . $build_static,
     '%{make}',
     '%{make} install',
   ];
