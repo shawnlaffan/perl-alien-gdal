@@ -11,9 +11,11 @@ install:
   - set ST=C:\strawberry
   - set PATH=%ST%\perl\bin;%ST%\perl\site\bin;%ST%\c\bin;%PATH%
   - cd C:\projects\%APPVEYOR_PROJECT_NAME%
+  #  ensure we have some packages that aren't picked up by the install system
   - cpanm --quiet Alien::Build
   - cpanm --quiet HTML::LinkExtor
   - cpanm --quiet Test::CChecker
+  - cpanm --guiet Alien::MSYS
 
 build_script:
   - perl Makefile.PL
