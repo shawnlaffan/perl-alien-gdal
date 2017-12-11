@@ -1,26 +1,27 @@
 use strict;
 use warnings;
 use ExtUtils::MakeMaker;
-use Alien::Build::MM;
 
 my %WriteMakefileArgs = (
   "ABSTRACT" => "Find or build gdal",
   "AUTHOR" => "Jason Mumbulla <jasonmumbulla\@gmail.com>",
+  "NAME" => "Alien::gdal",
   "VERSION_FROM" => "lib/Alien/gdal.pm",
   "CONFIGURE_REQUIRES" => {
+    "Alien::Build" => 0,
     "ExtUtils::MakeMaker" => "6.52",
+    "Alien::Build::MM" => 0,
+    "PkgConfig" => 0,
+    "Alien::MSYS" => 0,
   },
   "PREREQ_PM" => {
     "Alien::Base" => "0.038",
   },
   "DISTNAME" => "Alien-gdal",
   "LICENSE" => "perl",
-  "NAME" => "Alien::gdal",
-  "PREREQ_PM" => {
-    "Alien::Base" => "0.038"
-  },
 );
 
+use Alien::Build::MM;
 my $abmm = Alien::Build::MM->new;
 %WriteMakefileArgs = $abmm->mm_args(%WriteMakefileArgs);
 
