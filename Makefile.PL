@@ -13,6 +13,7 @@ my %WriteMakefileArgs = (
     "Alien::Build::MM" => 0,
     "PkgConfig" => 0,
     "Alien::MSYS" => 0,
+    "HTTP::Tiny" => 0.044,  #  something, somewhere needs this version, need to track it down
   },
   "PREREQ_PM" => {
     "Alien::Base" => "0.038",
