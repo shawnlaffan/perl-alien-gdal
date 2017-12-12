@@ -38,7 +38,7 @@ before_install:
   - eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
 
   # install a small package to avoid cpanm fails in the next phase
-  - cpanm Readonly  
+  - cpanm File::BOM
 
 script:
   - echo "Running script"
