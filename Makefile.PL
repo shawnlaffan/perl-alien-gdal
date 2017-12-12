@@ -18,7 +18,7 @@ my %WriteMakefileArgs = (
   "BUILD_REQUIRES" => {
     "Alien::Build" => "0.32",
     "Alien::Build::MM" => "0.32",
-    "ExtUtils::MakeMaker" => "6.52"
+    "ExtUtils::MakeMaker" => "6.52",
     ($^O =~ /mswin/i) ? ("Alien::MSYS" => 0) : (),
   },
   "TEST_REQUIRES" => {
