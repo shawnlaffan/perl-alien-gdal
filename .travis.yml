@@ -1,4 +1,4 @@
-#language: perl
+language: perl
 perl:
   - "5.26"
 #  - "5.22"
@@ -39,8 +39,8 @@ before_install:
 
   # need to work out how make A::B::MM a dependency as macos fails if it is not installed
   #  - maybe need it in inc/
-  #- cpanm --quiet --notest Alien::Build::MM
-  #- cpanm --verbose --installdeps .
+  - cpanm --quiet --notest Alien::Build::MM
+  - cpanm --verbose --notest --installdeps .
   
 
 script:
