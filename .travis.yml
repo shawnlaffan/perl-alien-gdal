@@ -43,6 +43,8 @@ before_install:
   #- cpanm --quiet Alien::Build
   #- cpanm --quiet HTML::LinkExtor
   #- cpanm --quiet Test::CChecker
+  # just a small one to see if any cpanm call will help
+  - cpanm File::BOM  
 
 script:
   - echo "Running script"
