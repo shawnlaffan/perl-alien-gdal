@@ -37,13 +37,17 @@ before_install:
   - cpanm --notest local::lib
   - eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
 
-  # need to work out how make this a dependency - maybe need it in inc
+  # need to work out how make A::B::MM a dependency as macos fails if it is not installed
+  #  - maybe need it in inc/
   #- cpanm Alien::Build::MM
-  - cpanm --verbose --installdeps .
+  #- cpanm ExtUtils::MakeMaker
+  
+  #- cpanm --verbose --installdeps .
+  - perl Makefile.PL
 
 script:
-  - echo "Running script"
-  - perl Makefile.PL
+  #- echo "Running script"
+  #- perl Makefile.PL
   - make
   - make test
   #  minor debug
