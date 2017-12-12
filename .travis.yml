@@ -38,7 +38,7 @@ before_install:
   - eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
 
   # need to work out how make this a dependency - maybe need it in inc
-  - cpanm Alien::Build::MM
+  #- cpanm Alien::Build::MM
   - cpanm --verbose --installdeps .
 
 script:
