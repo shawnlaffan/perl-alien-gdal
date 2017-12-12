@@ -38,7 +38,7 @@ before_install:
   - eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
 
 # Add to PATH to find gdal-config
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then export PATH=${PWD}/blib/lib/auto/share/dist/Alien-gdal/bin:${PATH}; fi;
+  #- if [ "$TRAVIS_OS_NAME" == "linux" ]; then export PATH=${PWD}/blib/lib/auto/share/dist/Alien-gdal/bin:${PATH}; fi;
 
   - cpanm --quiet Alien::Build
   - cpanm --quiet HTML::LinkExtor
@@ -48,4 +48,5 @@ script:
   - perl Makefile.PL
   - make
   - make test
-  
+  #  minor debug
+  - perl -Iblib/lib -Iblib/arch -MAlien::gdal -E 'say $ENV{PATH}'
