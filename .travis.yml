@@ -39,10 +39,7 @@ before_install:
 
   # need to work out how make A::B::MM a dependency as macos fails if it is not installed
   #  - maybe need it in inc/
-  #- cpanm Alien::Build::MM
-  #- cpanm ExtUtils::MakeMaker
-  - perl -MExtUtils::MakeMaker -E 'say $ExtUtils::MakeMaker::VERSION';
-  - cpanm ExtUtils::MakeMaker
+  - cpanm Alien::Build::MM
   - cpanm --verbose --installdeps .
   
 
