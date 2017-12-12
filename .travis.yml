@@ -9,6 +9,10 @@ os:
 
 sudo: required 
 
+branches:
+  except:
+  - /appveyor/
+
 cache:
   directories:
     - perl_modules
