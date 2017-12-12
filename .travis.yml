@@ -42,4 +42,8 @@ before_install:
   - cpanm --quiet HTML::LinkExtor
   - cpanm --quiet Test::CChecker
 
-script: prove -l -j4
+script:
+  - perl Makefile.PL
+  - make
+  - make test
+  
