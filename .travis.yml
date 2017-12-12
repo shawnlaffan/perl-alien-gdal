@@ -40,11 +40,12 @@ before_install:
 # Add to PATH to find gdal-config
   #- if [ "$TRAVIS_OS_NAME" == "linux" ]; then export PATH=${PWD}/blib/lib/auto/share/dist/Alien-gdal/bin:${PATH}; fi;
 
-  - cpanm --quiet Alien::Build
+  #- cpanm --quiet Alien::Build
   #- cpanm --quiet HTML::LinkExtor
   #- cpanm --quiet Test::CChecker
 
 script:
+  - echo "Running script"
   - perl Makefile.PL
   - make
   - make test
