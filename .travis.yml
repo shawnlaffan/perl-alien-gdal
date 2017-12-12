@@ -14,8 +14,8 @@ cache:
     - perl_modules
     - /usr/local
 
-env:
-  MAKEFLAGS='-j$(nproc)'
+#env:
+#  MAKEFLAGS='-j$(nproc)' - nope - exhausts memory
 
 before_install:
     # Skip build if the commit message contains [skip travis] or [travis skip]
