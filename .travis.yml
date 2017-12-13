@@ -52,7 +52,7 @@ script:
   #- echo "Running script"
   #- perl Makefile.PL
   - perl Makefile.PL
-  - make | perl -ne 'BEGIN {$|=1; open our $log, ">", "build.log"}; print "."; print {$log} $_;' || cat build.log
+  - make | perl -ne 'BEGIN {$|=1; open our $log, ">", "build.log"}; print "\n" if 90 == ($. % 10); print "."; print {$log} $_;' || cat build.log
   #- make
   - make test
   #  minor debug
