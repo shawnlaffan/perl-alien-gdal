@@ -12,10 +12,11 @@ install:
   - set PATH=%ST%\perl\bin;%ST%\perl\site\bin;%ST%\c\bin;%PATH%
   - cd C:\projects\%APPVEYOR_PROJECT_NAME%
   #  ensure we have some packages that aren't picked up by the install system
-  - cpanm --quiet Alien::Build
-  - cpanm --quiet HTML::LinkExtor
-  - cpanm --quiet Test::CChecker
-  - cpanm --quiet Alien::MSYS
+  - cpanm --quiet --notest Alien::Build
+  - cpanm --quiet --notest Alien::patch
+  - cpanm --quiet --notest HTML::LinkExtor
+  - cpanm --quiet --notest Test::CChecker
+  - cpanm --quiet --notest Alien::MSYS
   - gcc -v
 
 build_script:

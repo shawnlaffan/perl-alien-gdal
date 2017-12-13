@@ -44,6 +44,7 @@ before_install:
   # need to work out how make A::B::MM a dependency as macos fails if it is not installed
   #  - maybe need it in inc/
   - cpanm --quiet --notest Alien::Build::MM
+  - cpanm --quiet --notest Alien::patch
   - cpanm --verbose --notest --installdeps .
   
 
