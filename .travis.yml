@@ -45,14 +45,15 @@ before_install:
   #  - maybe need it in inc/
   - cpanm --quiet --notest Alien::Build::MM
   - cpanm --quiet --notest Alien::patch
-  - cpanm --verbose --notest --installdeps .
+  - cpanm --quiet --notest --installdeps .
   
 
 script:
   #- echo "Running script"
   #- perl Makefile.PL
   - perl Makefile.PL
-  - make
+  - make | perl -ne 'BEGIN {$|=1; open our $log, ">", "build.log"}; print "."; print {$log} $_;' || cat build.log
+  #- make
   - make test
   #  minor debug
   - perl -Iblib/lib -Iblib/arch -MAlien::gdal -E 'say $ENV{PATH}'
