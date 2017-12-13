@@ -4,6 +4,8 @@
 
 t/.*\.html
 
+t-disabled
+
 Makefile.old
 MANIFEST.bak
 Makefile$
