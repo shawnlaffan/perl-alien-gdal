@@ -21,5 +21,6 @@ install:
 build_script:
   - perl Makefile.PL
   - gmake
-  #- prove -l
+  - gmake test
+
 
