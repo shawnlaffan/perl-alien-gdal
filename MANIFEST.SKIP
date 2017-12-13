@@ -4,6 +4,9 @@
 
 t/.*\.html
 
+t/src/test.exe
+t/src/test.o
+
 t-disabled
 
 Makefile.old
