@@ -23,7 +23,9 @@ share {
   #  but travis CI has a 4MB log limit which we otherwise hit
   $build_static = ($ENV{CONTINUOUS_INTEGRATION} && $ENV{TRAVIS})
         ? '--disable-shared'
-        : ''; 
+        : '';
+
+  $build_static = '' if $ENV{FORCE_DYNAMIC};
   
   # the build step is only necessary if you need to customize the
   # options passed to ./configure.  The default set by the
