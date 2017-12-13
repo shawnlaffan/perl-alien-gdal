@@ -11,6 +11,7 @@ my %WriteMakefileArgs = (
     "Alien::Build" => "0.32",
     "ExtUtils::MakeMaker" => "6.52",
     "Alien::Build::MM" => "0.32",
+    "Alien::patch" => 0,
     "PkgConfig" => 0,
     ($^O =~ /mswin/i) ? ("Alien::MSYS" => 0) : (),
     "HTTP::Tiny" => 0.044,  #  something, somewhere needs this version, need to track it down
@@ -19,6 +20,7 @@ my %WriteMakefileArgs = (
     "Alien::Build" => "0.32",
     "Alien::Build::MM" => "0.32",
     "ExtUtils::MakeMaker" => "6.52",
+    "Alien::patch" => 0,
     ($^O =~ /mswin/i) ? ("Alien::MSYS" => 0) : (),
   },
   "TEST_REQUIRES" => {
