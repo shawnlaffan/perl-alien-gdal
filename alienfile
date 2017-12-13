@@ -25,8 +25,7 @@ share {
   plugin Extract => 'tar.gz';
   
   if ($^O =~ /mswin/i) {
-      #patch ['dir port'];
-      #say (-e 'port/cpl_port.h') ? 'target exists' : 'target does not exist';
+    #  need additional conditions for version le 2.2.3
       patch [
         '%{patch} --verbose --backup port/cpl_port.h < ' . $patch_file,
       ];
