@@ -81,6 +81,8 @@ sub patch_pkgconfig {
     say 'gdal-configs: ' . join ' ', @gdal_configs;
     say 'pkg-configs:  ' . join ' ', @pkg_configs;
     
+    return if !@gdal_configs || !@pkg_configs;
+    
     open my $gc_fh, '<', $gdal_configs[0] or die $!;
     my $dep_libs = '';
     while (defined (my $line = <$gc_fh>)) {
