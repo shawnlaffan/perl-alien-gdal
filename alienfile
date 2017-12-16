@@ -61,4 +61,59 @@ share {
     $make_cmd,
     '%{make} install',
   ];
+  
+  gather [&patch_pkgconfig()];
 };
+
+
+sub patch_pkgconfig {
+    #my $gdal_config_file = 'bin/gdal-config';
+    #my $pkg_config_file  = 'lib/pkgconfig/gdal.pc';
+    use File::Find::Rule;
+    my @gdal_configs
+      = File::Find::Rule->file()
+                        ->name( 'gdal-config' )
+                        ->in( '.' );
+    my @pkg_configs
+      = File::Find::Rule->file()
+                        ->name( 'gdal.pc' )
+                        ->in( '.' );
+    say 'gdal-configs: ' . join ' ', @gdal_configs;
+    say 'pkg-configs:  ' . join ' ', @pkg_configs;
+    
+    open my $gc_fh, '<', $gdal_configs[0] or die $!;
+    my $dep_libs = '';
+    while (defined (my $line = <$gc_fh>)) {
+        if ($line =~ /CONFIG_DEP_LIBS=(.+)$/) {
+            $dep_libs = $1;
+            last;
+        }
+    }
+    close $gc_fh;
+
+    #  trim quotes (could do in prev check, but...)
+    $dep_libs =~ s/^\"//;
+    $dep_libs =~ s/\"$//;
+    
+    open my $pk_fh, '<', $pkg_configs[0] or die $!;
+    my @pkg_conf;
+    while (defined (my $line = <$pk_fh>)) {
+        push @pkg_conf, $line;
+    }
+    close $pk_fh;
+
+    #  change all (we should be more nuanced and do only the one that matters)
+    foreach my $pkg_config_file (@pkg_configs) {
+        say "Adding gdal dep_libs to $pkg_config_file";
+        #  now add the dep libs to the pkg_conf file
+        open $pk_fh, '>', $pkg_config_file or die $!;
+        foreach my $line (@pkg_conf) {
+            if ($line =~ /^CONFIG_INST_LIBS/) {
+                chomp $line;
+                $line .= ' ' . $dep_libs . "\n";
+            }
+            print {$pk_fh} $line;
+        }
+        close $pk_fh;
+    }
+}
