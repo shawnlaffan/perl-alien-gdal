@@ -9,6 +9,7 @@ build_requires:
   Alien::patch: '0.09'
   Archive::Tar: '0'
   ExtUtils::MakeMaker: '6.52'
+  File::Find::Rule: 0
   HTML::LinkExtor: '0'
   HTTP::Tiny: '0.044'
   IO::Zlib: '0'
@@ -22,6 +23,7 @@ configure_requires:
   Alien::MSYS: '0'
   Alien::patch: '0'
   ExtUtils::MakeMaker: '6.52'
+  File::Find::Rule: 0
   HTTP::Tiny: '0.044'
   PkgConfig: '0'
 dynamic_config: 1
