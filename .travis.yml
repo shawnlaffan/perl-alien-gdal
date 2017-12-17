@@ -58,4 +58,4 @@ script:
   #  minor debug
   - perl -Iblib/lib -Iblib/arch -MAlien::gdal -E 'say $ENV{PATH}'
   #  disable for now - osx builds hit issues
-  - [ "$TRAVIS_OS_NAME" != "osx" ] && cat blib/lib/auto/share/dist/Alien-gdal/lib/pkgconfig/gdal.pc
+  #- [ "$TRAVIS_OS_NAME" != "osx" ] && cat blib/lib/auto/share/dist/Alien-gdal/lib/pkgconfig/gdal.pc
