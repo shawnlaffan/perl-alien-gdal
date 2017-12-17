@@ -8,12 +8,21 @@ my $patch_file = "$base_dir/patch_isnan_gcc.patch";
 say "Patch file is $patch_file";
 #say -r $patch_file or die $!;
 
-plugin 'PkgConfig' => 'gdal';
+plugin 'PkgConfig' => (
+    pkg_name => 'gdal',
+    minimum_version => '2.2.3',
+);
 
+#  we need to probe for gdal v2
 plugin 'Probe::CommandLine' => (
-  command   => 'gdal-config',
+  command   => 'gdalwarp',
+  args      => [ '--version' ],
+  match     => qr/GDAL/,
+  version   => qr/GDAL ([0-9\.]+)/,
   secondary => 1,
 );
+
+print 'gdalwarp version is ' . $1 ."\n";
 
 share {
 
