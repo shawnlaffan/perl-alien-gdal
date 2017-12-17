@@ -20,10 +20,10 @@ plugin 'PkgConfig' => (
 plugin 'Probe::CommandLine' => (
   command   => 'gdalwarp',
   args      => [ '--version' ],
-  match     => qr/GDAL/,
+  match     => qr/GDAL 2\.[0-9\.]+/,
   version   => qr/GDAL ([0-9\.]+)/,
   secondary => 1,
-  minimum_version => $min_target_version,
+  #minimum_version => $min_target_version,
 );
 
 #print 'gdalwarp version is ' . ($1 //'') ."\n";
