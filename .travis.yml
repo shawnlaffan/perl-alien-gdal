@@ -57,4 +57,4 @@ script:
   - make test
   #  minor debug
   - perl -Iblib/lib -Iblib/arch -MAlien::gdal -E 'say $ENV{PATH}'
-  - cat `find . -name gdal.pc -print`
+  - cat blib/lib/auto/share/dist/Alien-gdal/lib/pkgconfig/gdal.pc
