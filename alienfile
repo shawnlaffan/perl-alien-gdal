@@ -59,10 +59,10 @@ share {
   build [
     '%{configure} ' . $build_static,
     $make_cmd,
+    \&patch_pkgconfig,
     '%{make} install',
   ];
-  
-  gather [&patch_pkgconfig()];
+
 };
 
 
@@ -119,3 +119,4 @@ sub patch_pkgconfig {
         close $pk_fh;
     }
 }
+
