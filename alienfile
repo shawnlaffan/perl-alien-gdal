@@ -8,21 +8,25 @@ my $patch_file = "$base_dir/patch_isnan_gcc.patch";
 say "Patch file is $patch_file";
 #say -r $patch_file or die $!;
 
+my $min_target_version = '2.2.0';
+
 plugin 'PkgConfig' => (
     pkg_name => 'gdal',
-    minimum_version => '2.2.3',
+    minimum_version => $min_target_version,
 );
 
 #  we need to probe for gdal v2
+#  Do we need this probe?  PkgConfig seems to handle things?
 plugin 'Probe::CommandLine' => (
   command   => 'gdalwarp',
   args      => [ '--version' ],
   match     => qr/GDAL/,
   version   => qr/GDAL ([0-9\.]+)/,
   secondary => 1,
+  minimum_version => $min_target_version,
 );
 
-print 'gdalwarp version is ' . $1 ."\n";
+#print 'gdalwarp version is ' . ($1 //'') ."\n";
 
 share {
 
@@ -34,7 +38,7 @@ share {
   plugin Extract => 'tar.gz';
   
   if ($^O =~ /mswin/i) {
-    #  need additional conditions for version le 2.2.3
+    #  need additional conditions for versions le 2.2.3
       patch [
         '%{patch} --verbose --backup port/cpl_port.h < ' . $patch_file,
       ];
