@@ -1,6 +1,22 @@
 use 5.010;
 use alienfile;
 
+#  add existing alien files to path etc
+#  not very elegant...
+my $have_alien_gdal = eval 'require Alien::gdal';
+if ($have_alien_gdal) {
+    my $ag_version = Alien::gdal->version;
+    say "Found existing gdal via alien ($ag_version) in " .  Alien::gdal->dist_dir;
+    #say -e Alien::gdal->dist_dir . '/lib/pkgconfig/' . 'gdal.pc';
+    #  append the relevant path
+    my $sep = ($^O =~ /mswin/i) ? ';' : ':';
+    $ENV{PKG_CONFIG_PATH}
+      = Alien::gdal->dist_dir . '/lib/pkgconfig/'
+      . $sep
+      . ($ENV{PKG_CONFIG_PATH} // '');
+    $ENV{PATH} = Alien::gdal->dist_dir . '/bin' . $sep . $ENV{PATH};
+}
+
 use Cwd;
 my $base_dir = getcwd();
 my $patch_file = "$base_dir/patch_isnan_gcc.patch";
