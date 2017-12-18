@@ -38,10 +38,11 @@ share {
   plugin Extract => 'tar.gz';
   
   if ($^O =~ /mswin/i) {
-    #  need additional conditions for versions le 2.2.3
-      patch [
-        '%{patch} --verbose --backup port/cpl_port.h < ' . $patch_file,
-      ];
+    #  fix known issue in 2.2.3, but need to make this more conditional
+    #  as it should be fixed in 2.2.4
+    patch [
+      '%{patch} --verbose --backup port/cpl_port.h < ' . $patch_file,
+    ];
   }
 
   plugin 'Build::Autoconf' => ();
