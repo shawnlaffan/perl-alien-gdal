@@ -46,7 +46,7 @@ plugin 'PkgConfig' => (
 #);
 
 #  some feedback
-say $ENV{PATH};
+say '$ENV{PATH} is ' . $ENV{PATH};
 
 #print 'gdalwarp version is ' . ($1 //'') ."\n";
 
