@@ -3,8 +3,11 @@ use alienfile;
 
 #  add existing alien files to path etc
 #  not very elegant...
+#  disable for now - config tests fail
+#  it looks to be already noted in https://github.com/Perl5-Alien/Alien-Build/issues/12
+#  might also be able to access via old hash via https://metacpan.org/pod/Alien::Build#install_prop
 my $have_alien_gdal = eval 'require Alien::gdal';
-if ($have_alien_gdal) {
+if (0 && $have_alien_gdal) {
     my $ag_version = Alien::gdal->version;
     say "Found existing gdal via alien ($ag_version) in " .  Alien::gdal->dist_dir;
     #say -e Alien::gdal->dist_dir . '/lib/pkgconfig/' . 'gdal.pc';
