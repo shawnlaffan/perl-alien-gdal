@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use base qw( Alien::Base );
 
-our $VERSION = '1.02';
+our $VERSION = '1.02_001';
 
 1;
 
@@ -12,7 +12,7 @@ __END__
 
 =head1 NAME
 
-Alien::gdal - Compile gdal
+Alien::gdal - Compile gdal, the Geographic Data Abstraction Library
 
 =head1 SYNOPSIS
 
@@ -48,7 +48,9 @@ L<Geo::GDAL>
 =head1 AUTHORS
 
 Shawn Laffan, E<lt>shawnlaffan@gmail.comE<gt>
-Jason Mumbulla (did all the initial work - see github log for details)
+
+Jason Mumbulla (did all the initial work - see git log for details)
+
 Ari Jolma
 
 =head1 COPYRIGHT AND LICENSE

@@ -1,5 +1,8 @@
 Revision history for Alien::gdal
 
+1.02_001 2018-03-29
+    - See if we can truncate the build log for cpan testers, but display it if we get a failure
+
 1.02 2018-03-28
     - update changes file for 1.01 changes
     
