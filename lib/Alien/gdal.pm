@@ -16,25 +16,20 @@ Alien::gdal - Compile gdal, the Geographic Data Abstraction Library
 
 =head1 SYNOPSIS
 
-  use Alien::gdal;
+    use Alien::gdal;
 
+    use Env qw(@PATH);
+    unshift @PATH, Alien::gdal->bin_dir;
 
-=head1 ABSTRACT
+    print Alien::gdal->dist_dir;
 
-use Env qw(@PATH);
-unshift @PATH, Alien::gdal->bin_dir;
- 
-print Alien::gdal->dist_dir;
-
-#  example assumes @args exists already
-system (Alien::gdal->bin_dir, 'gdalwarp', @args);
-
+    #  example assumes @args exists already
+    system (Alien::gdal->bin_dir, 'gdalwarp', @args);
+    
 =head1 DESCRIPTION
 
 GDAL is the Geographic Data Abstraction Library.  See L<http://www.gdal.org>.
 
-
-=back
 
 =head1 REPORTING BUGS
 

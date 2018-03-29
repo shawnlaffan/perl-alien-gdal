@@ -38,7 +38,6 @@ my %WriteMakefileArgs = (
             repository => {
                 type => 'git',
                 url  => 'https://github.com/shawnlaffan/perl-alien-gdal',
-                #web  => 'http://purl.org/biodiverse',
             },
             bugtracker => {
                 web => 'https://github.com/shawnlaffan/perl-alien-gdal/issues/',
