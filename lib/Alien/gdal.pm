@@ -33,8 +33,8 @@ GDAL is the Geographic Data Abstraction Library.  See L<http://www.gdal.org>.
 
 =head1 REPORTING BUGS
 
-Please send any bugs, suggestions, or feature requests to
-  L<https://github.com/shawnlaffan/perl-alien-gdal/issues>.
+Please send any bugs, suggestions, or feature requests to 
+L<https://github.com/shawnlaffan/perl-alien-gdal/issues>.
 
 =head1 SEE ALSO
 
