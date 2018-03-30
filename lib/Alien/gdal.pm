@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use base qw( Alien::Base );
 
-our $VERSION = '1.02_001';
+our $VERSION = '1.02_002';
 
 1;
 
