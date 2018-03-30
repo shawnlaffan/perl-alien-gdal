@@ -1,5 +1,8 @@
 Revision history for Alien::gdal
 
+1.02_003 2018-03-31
+    - More cpantesters feedback
+
 1.02_002 2018-03-31
     - More feedback that might help diagnose cpantesters results
 
