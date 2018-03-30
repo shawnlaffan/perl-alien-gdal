@@ -1,5 +1,8 @@
 Revision history for Alien::gdal
 
+1.02_002 2018-03-31
+    - More feedback that might help diagnose cpantesters results
+
 1.02_001 2018-03-29
     - See if we can truncate the build log for cpan testers, but display it if we get a failure
     - Reformat the POD a little
