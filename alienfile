@@ -94,6 +94,7 @@ share {
     if (not $^O =~ /mswin/) {
         $make_cmd =~ s/%%/%/;
         $make_cmd =~ s/type/cat/;
+        $make_cmd =~ s/"/'/g;
     }
   }
   
