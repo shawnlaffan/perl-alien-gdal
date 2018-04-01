@@ -1,5 +1,8 @@
 Revision history for Alien::gdal
 
+1.02_005 2018-04-02
+    - insensitise OS regexp
+
 1.02_004 2018-04-01
     - Use correct quotes 
 

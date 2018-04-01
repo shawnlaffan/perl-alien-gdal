@@ -91,7 +91,7 @@ share {
   if ($ENV{PERL_CPAN_REPORTER_DIR} || $ENV{AUTOMATED_TESTING}) {
     print "Running under automated testing\n";
     $make_cmd .= q/ | perl -ne "BEGIN {$|=1; open our $log, q|>|, q|build.log|}; print qq|\n| if 0 == ($. %% 100); print q|.|; print {$log} $_;" || type build.log/;
-    if (not $^O =~ /mswin/) {
+    if (not $^O =~ /mswin/i) {
         $make_cmd =~ s/%%/%/;
         $make_cmd =~ s/type/cat/;
         $make_cmd =~ s/"/'/g;
