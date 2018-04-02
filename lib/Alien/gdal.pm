@@ -14,6 +14,18 @@ __END__
 
 Alien::gdal - Compile gdal, the Geographic Data Abstraction Library
 
+=head1 BUILD STATUS
+ 
+=begin HTML
+ 
+<p>
+    <img src="https://img.shields.io/badge/perl-5.10+-blue.svg" alt="Requires Perl 5.10+" />
+    <a href="https://travis-ci.org/shawnlaffan/perl-alien-gdal"><img src="https://travis-ci.org/shawnlaffan/perl-alien-gdal.svg?branch=master" /></a>
+    <a href="https://ci.appveyor.com/project/shawnlaffan/perl-alien-gdal"><img src="https://ci.appveyor.com/api/projects/status/1tqk5rd40cv2ve8q?svg=true" /></a>
+</p>
+
+=end HTML
+
 =head1 SYNOPSIS
 
     use Alien::gdal;
