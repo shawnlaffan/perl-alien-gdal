@@ -46,7 +46,7 @@ plugin 'PkgConfig' => (
 #);
 
 #  some feedback
-say '$ENV{PATH} is ' . $ENV{PATH};
+#say '$ENV{PATH} is ' . $ENV{PATH};
 
 #print 'gdalwarp version is ' . ($1 //'') ."\n";
 
@@ -62,6 +62,7 @@ share {
   if ($^O =~ /mswin/i) {
     #  fix known issue in 2.2.3, but need to make this more conditional
     #  as it should be fixed in 2.2.4
+    #  Update 2018-04-07: It is not fixed in 2.2.4.
     patch [
       '%{patch} --verbose --backup port/cpl_port.h < ' . $patch_file,
     ];
@@ -79,15 +80,7 @@ share {
   $build_static = '' if $ENV{FORCE_DYNAMIC};
   
   my $make_cmd = '%{make}';
-  #  try not to fill up the cpan-testers disk space,
-  #  but need to think more on the approach - the || will likely trap any fails,
-  #  thus installation will proceed regardless
-  #if ($^O =~ /mswin/i) {
-  #  $make_cmd .= q/ | perl -ne "BEGIN {$|=1; open our $log, q|>|, q|build.log|}; print qq|\n| if 0 == ($. %% 100); print q|.|; print {$log} $_;" || type build.log/;
-  #}
-  #else {
-  #  $make_cmd .= q/ | perl -ne 'BEGIN {$|=1; open our $log, ">", "build.log"}; print "\n" if 0 == ($. % 90); print "."; print {$log} $_;' || cat build.log/;
-  #}
+  #  try not to fill up the cpan-testers disk space
   if ($ENV{PERL_CPAN_REPORTER_DIR} || $ENV{AUTOMATED_TESTING}) {
     print "Running under automated testing\n";
     $make_cmd .= q/ | perl -ne "BEGIN {$|=1; open our $log, q|>|, q|build.log|}; print qq|\n| if 0 == ($. %% 100); print q|.|; print {$log} $_;" || type build.log/;
