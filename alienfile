@@ -71,12 +71,7 @@ share {
   plugin 'Build::Autoconf' => ();
 
   my $build_static = ($^O =~ /mswin/i) ? '' : '--disable-shared';
-  #  disable by default - we don't want huge binaries and likely don't need a static build
-  #  but travis CI has a 4MB log limit which we otherwise hit
-  #$build_static = ($ENV{CONTINUOUS_INTEGRATION} && $ENV{TRAVIS})
-  #      ? '--disable-shared'
-  #      : '';
-
+  $build_static = '';  #  override
   $build_static = '' if $ENV{FORCE_DYNAMIC};
   
   my $make_cmd = '%{make}';
