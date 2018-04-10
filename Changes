@@ -1,5 +1,8 @@
 Revision history for Alien::gdal
 
+1.03_001 2018-04-10
+    - Use a dynamic build on all platforms by default
+
 1.03 2018-04-04
     - Add CI badges
 
