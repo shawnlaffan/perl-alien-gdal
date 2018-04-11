@@ -1,5 +1,8 @@
 Revision history for Alien::gdal
 
+1.03_002 2018-04-11
+    - Force use of gmake on freebsd
+
 1.03_001 2018-04-10
     - Use a dynamic build on all platforms by default
 

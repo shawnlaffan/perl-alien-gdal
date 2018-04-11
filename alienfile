@@ -75,6 +75,10 @@ share {
   $build_static = '' if $ENV{FORCE_DYNAMIC};
   
   my $make_cmd = '%{make}';
+  if ($^O eq 'freebsd') {
+    print "freebsd OS detected, using gmake for make phase\n";
+    $make_cmd = 'gmake';
+  }
   #  try not to fill up the cpan-testers disk space
   if ($ENV{PERL_CPAN_REPORTER_DIR} || $ENV{AUTOMATED_TESTING}) {
     print "Running under automated testing\n";
