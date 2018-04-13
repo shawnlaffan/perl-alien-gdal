@@ -1,6 +1,9 @@
 Revision history for Alien::gdal
 
-1.03_003 2018-04-11
+1.03_005 2018-04-14
+    - try to add /usr/local/include to include path on bsd variants
+
+1.03_004 2018-04-13
     - use internal tiff library to avoid cpan testers fails
 
 1.03_003 2018-04-11

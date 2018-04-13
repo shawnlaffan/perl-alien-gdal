@@ -48,7 +48,11 @@ my %WriteMakefileArgs = (
 );
 
 use Alien::Build::MM;
-my $abmm = Alien::Build::MM->new;
+my %extra_includes = ();
+if ($^O =~ /bsd/i && -e '/usr/local/include') {
+    %extra_includes{alien_provides_cflags} = '-I/usr/local/include';
+}
+my $abmm = Alien::Build::MM->new (%extra_includes);
 %WriteMakefileArgs = $abmm->mm_args(%WriteMakefileArgs);
 
 WriteMakefile(%WriteMakefileArgs);
