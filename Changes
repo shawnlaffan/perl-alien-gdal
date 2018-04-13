@@ -1,6 +1,9 @@
 Revision history for Alien::gdal
 
 1.03_003 2018-04-11
+    - use internal tiff library to avoid cpan testers fails
+
+1.03_003 2018-04-11
     - Use plugin for GNU make on bsd variants
 
 1.03_002 2018-04-11
