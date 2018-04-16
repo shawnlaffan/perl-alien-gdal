@@ -1,17 +1,17 @@
-From d92f136c606a63f144059a80a1ce0df1c1b06829 Mon Sep 17 00:00:00 2001
+From 3e475ff3b57a25c9aa62992c426a012db64dbec6 Mon Sep 17 00:00:00 2001
 From: Shawn Laffan <shawnlaffan@gmail.com>
-Date: Mon, 16 Apr 2018 16:02:24 +1000
-Subject: [PATCH] Enable shared build on freebsd 10+
+Date: Tue, 17 Apr 2018 07:06:48 +1000
+Subject: [PATCH] don't conflate freebsd1 with freebsd10 and 11
 
 ---
- gdal/configure | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ configure | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/gdal/configure b/gdal/configure
-index caf4d21753..76bd3b99b2 100755
---- a/gdal/configure
-+++ b/gdal/configure
-@@ -13500,7 +13500,7 @@ fi
+diff --git a/configure b/configure
+index 049fa5f8e6..6068b1aa8a 100755
+--- a/configure
++++ b/configure
+@@ -13623,7 +13623,7 @@ fi
        hardcode_shlibpath_var=no
        ;;
  
@@ -20,7 +20,7 @@ index caf4d21753..76bd3b99b2 100755
        ld_shlibs=no
        ;;
  
-@@ -14494,7 +14494,7 @@ dgux*)
+@@ -14617,7 +14617,7 @@ dgux*)
    shlibpath_var=LD_LIBRARY_PATH
    ;;
  
@@ -29,15 +29,42 @@ index caf4d21753..76bd3b99b2 100755
    dynamic_linker=no
    ;;
  
-@@ -18327,7 +18327,7 @@ dgux*)
+@@ -14628,7 +14628,7 @@ freebsd* | dragonfly*)
+     objformat=`/usr/bin/objformat`
+   else
+     case $host_os in
+-    freebsd[123]*) objformat=aout ;;
++    freebsd[123].*) objformat=aout ;;
+     *) objformat=elf ;;
+     esac
+   fi
+@@ -16586,7 +16586,7 @@ fi
+         esac
+         ;;
+ 
+-      freebsd[12]*)
++      freebsd[12].*)
+         # C++ shared libraries reported to be fairly broken before
+ 	# switch to ELF
+         ld_shlibs_CXX=no
+@@ -18450,7 +18450,7 @@ dgux*)
    shlibpath_var=LD_LIBRARY_PATH
    ;;
  
 -freebsd1*)
-+freebsd1.*)
++freebsd.*)
    dynamic_linker=no
    ;;
  
+@@ -18461,7 +18461,7 @@ freebsd* | dragonfly*)
+     objformat=`/usr/bin/objformat`
+   else
+     case $host_os in
+-    freebsd[123]*) objformat=aout ;;
++    freebsd[123].*) objformat=aout ;;
+     *) objformat=elf ;;
+     esac
+   fi
 -- 
 2.16.2.windows.1
 
