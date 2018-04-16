@@ -75,6 +75,11 @@ share {
         $with_local = '--with-local=/usr/local';
     }
   }
+  elsif ($^O =~ /dragonfly/) {
+    #  might need to be combined with bsd check above
+    #  but not sure if /usr/local is needed yet
+    plugin 'Build::Make' => 'gmake';
+  }
 
   my $make_cmd = '%{make}';
 
