@@ -34,21 +34,6 @@ plugin 'PkgConfig' => (
     minimum_version => $min_target_version,
 );
 
-#  we need to probe for gdal v2
-#  Do we need this probe?  PkgConfig seems to handle things?
-#plugin 'Probe::CommandLine' => (
-#  command   => 'gdalwarp',
-#  args      => [ '--version' ],
-#  match     => qr/GDAL 2\.[0-9\.]+/,
-#  version   => qr/GDAL ([0-9\.]+)/,
-#  secondary => 1,
-#  #minimum_version => $min_target_version,
-#);
-
-#  some feedback
-#say '$ENV{PATH} is ' . $ENV{PATH};
-
-#print 'gdalwarp version is ' . ($1 //'') ."\n";
 
 share {
 
@@ -115,13 +100,6 @@ share {
   ];
 
 };
-
-sub patch_configure {
-    return if not $^O =~ /freebsd/;
-    #  we need to edit the configure file under freebsd
-    #  lines like freebsd1* match freebsd1 and freebsd10
-    system 'perl '
-}
 
 
 sub patch_pkgconfig {
