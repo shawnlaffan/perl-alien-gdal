@@ -1,0 +1,43 @@
+From d92f136c606a63f144059a80a1ce0df1c1b06829 Mon Sep 17 00:00:00 2001
+From: Shawn Laffan <shawnlaffan@gmail.com>
+Date: Mon, 16 Apr 2018 16:02:24 +1000
+Subject: [PATCH] Enable shared build on freebsd 10+
+
+---
+ gdal/configure | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/gdal/configure b/gdal/configure
+index caf4d21753..76bd3b99b2 100755
+--- a/gdal/configure
++++ b/gdal/configure
+@@ -13500,7 +13500,7 @@ fi
+       hardcode_shlibpath_var=no
+       ;;
+ 
+-    freebsd1*)
++    freebsd1.*)
+       ld_shlibs=no
+       ;;
+ 
+@@ -14494,7 +14494,7 @@ dgux*)
+   shlibpath_var=LD_LIBRARY_PATH
+   ;;
+ 
+-freebsd1*)
++freebsd1.*)
+   dynamic_linker=no
+   ;;
+ 
+@@ -18327,7 +18327,7 @@ dgux*)
+   shlibpath_var=LD_LIBRARY_PATH
+   ;;
+ 
+-freebsd1*)
++freebsd1.*)
+   dynamic_linker=no
+   ;;
+ 
+-- 
+2.16.2.windows.1
+

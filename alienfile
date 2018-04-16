@@ -22,10 +22,10 @@ if (0 && $have_alien_gdal) {
 
 use Cwd;
 my $base_dir = getcwd();
-my $patch_file = "$base_dir/patch_isnan_gcc.patch";
-
-#say "Patch file is $patch_file";
-#say -r $patch_file or die $!;
+my $patch_file_isnan
+  = "$base_dir/patch_isnan_gcc.patch";
+my $patch_file_configure
+  = "$base_dir/0001-Enable-shared-build-on-freebsd-10.patch";
 
 my $min_target_version = '2.2.0';
 
@@ -64,7 +64,8 @@ share {
     #  as it should be fixed in 2.2.4
     #  Update 2018-04-07: It is not fixed in 2.2.4.
     patch [
-      '%{patch} --verbose --backup port/cpl_port.h < ' . $patch_file,
+      '%{patch} --verbose --backup port/cpl_port.h < ' . $patch_file_isnan,
+      '%{patch} --verbose --backup configure < ' . $patch_file_configure,
     ];
   }
 
@@ -109,6 +110,13 @@ share {
   ];
 
 };
+
+sub patch_configure {
+    return if not $^O =~ /freebsd/;
+    #  we need to edit the configure file under freebsd
+    #  lines like freebsd1* match freebsd1 and freebsd10
+    system 'perl '
+}
 
 
 sub patch_pkgconfig {
