@@ -65,7 +65,12 @@ share {
     #  Update 2018-04-07: It is not fixed in 2.2.4.
     patch [
       '%{patch} --verbose --backup port/cpl_port.h < ' . $patch_file_isnan,
-      '%{patch} --verbose --backup configure < ' . $patch_file_configure,
+    ];
+  }
+  elsif ($^O =~ /freebsd/i) {
+    #  make sure we run a shared install on freebsd by default
+    patch [
+      '%{patch} --backup configure < ' . $patch_file_configure,
     ];
   }
 
