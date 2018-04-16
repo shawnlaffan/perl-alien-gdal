@@ -13,7 +13,7 @@ my %common_reqs = (
 );
 
 my %WriteMakefileArgs = (
-    "ABSTRACT" => "Find or build gdal",
+    "ABSTRACT" => "Alien package for the Geospatial Data Abstraction Library (GDAL)",
     "AUTHOR"   => 'Shawn Laffan <shawnlaffan@gmail.com>',
     "NAME"     => "Alien::gdal",
     "VERSION_FROM" => "lib/Alien/gdal.pm",
@@ -48,10 +48,6 @@ my %WriteMakefileArgs = (
 );
 
 use Alien::Build::MM;
-my %extra_includes = ();
-if ($^O =~ /bsd/i && -e '/usr/local/include') {
-    $extra_includes{alien_provides_cflags} = '-I/usr/local/include';
-}
 my $abmm = Alien::Build::MM->new (%extra_includes);
 %WriteMakefileArgs = $abmm->mm_args(%WriteMakefileArgs);
 
