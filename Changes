@@ -1,8 +1,10 @@
 Revision history for Alien::gdal
 
-1.03_006 2018-04-16
-    - patch configure so we generate a shared build on freebsd
+1.03_008 2018-04-17
     - disable cpp11 on freebsd to avoid CAD build failures
+
+1.03_007 2018-04-16
+    - patch configure so we generate a shared build on freebsd
 
 1.03_006 2018-04-16
     - bsd variants use --with-local config arg to ensure /usr/local/include is used

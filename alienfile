@@ -62,7 +62,8 @@ share {
   plugin 'Build::Autoconf' => ();
 
   my $build_static = ($^O =~ /mswin/i) ? '' : '--disable-shared';
-  #$build_static = '--enable-static=no';  #  override, but comment out for now
+  $build_static = '';
+  $build_static = '--enable-static=no';  #  override
   $build_static = '' if $ENV{FORCE_DYNAMIC};
   
   my $with_local = '';
