@@ -231,5 +231,6 @@ END_TEXT
   ;
   
     $text =~ s/\\[\r\n]+//g;
+    $text =~ s/[\r\n]+//;
     return $text;
 }
