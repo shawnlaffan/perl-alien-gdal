@@ -63,17 +63,17 @@ share {
 
   my $build_static = ($^O =~ /mswin/i) ? '' : '--disable-shared';
   $build_static = '';
-  $build_static = '--enable-static=no';  #  override
   $build_static = '' if $ENV{FORCE_DYNAMIC};
+  $build_static = '--enable-static=no';  #  override
   
-  my $with_local = '';
-  my $with_cpp11 = '';
+  my $with_local  = '';
+  my $build_flags = '';
   
   if ($^O =~ /bsd/) {
     #print "bsd OS detected, using gmake for make phase\n";
     #$make_cmd = 'gmake';
     plugin 'Build::Make' => 'gmake';
-    $with_cpp11 = ' --without-cpp11 ';
+    $build_flags = ' --without-cpp11 ';
     if (-d '/usr/local') {
         $with_local = '--with-local=/usr/local';
     }
@@ -95,14 +95,17 @@ share {
         $make_cmd =~ s/type/cat/;
         $make_cmd =~ s/"/'/g;
     }
-    $with_cpp11 ||= ' --without-cpp11 ';
+    if (not $build_flags =~ /--without-cpp11/) {
+        $build_flags .= ' --without-cpp11 ';
+    }
+    $build_flags .= get_minimised_drivers_flags();
   }
   
   # the build step is only necessary if you need to customize the
   # options passed to ./configure.  The default set by the
   # Build::Autoconf plugin is frequently sufficient.
   build [
-    '%{configure} --with-libtiff=internal ' . $with_local . $with_cpp11 . $build_static,
+    '%{configure} --with-libtiff=internal ' . $with_local . $build_flags . $build_static,
     $make_cmd,
     \&patch_pkgconfig,
     '%{make} install',
@@ -165,3 +168,68 @@ sub patch_pkgconfig {
     }
 }
 
+
+sub get_minimised_drivers_flags {
+
+#  list from https://trac.osgeo.org/gdal/wiki/BuildingOnUnixWithMinimizedDrivers
+#  except this flag which is not recognised at gdal v2.2.4
+#  --without-dwgdirect \
+
+    my $text = <<'END_TEXT'
+--with-geos \
+--with-geotiff=internal \
+--with-hide-internal-symbols \
+--with-libtiff=internal \
+--with-libz=internal \
+--with-threads \
+--without-bsb \
+--without-cfitsio \
+--without-cryptopp \
+--without-curl \
+--without-ecw \
+--without-expat \
+--without-fme \
+--without-freexl \
+--without-gif \
+--without-gif \
+--without-gnm \
+--without-grass \
+--without-grib \
+--without-hdf4 \
+--without-hdf5 \
+--without-idb \
+--without-ingres \
+--without-jasper \
+--without-jp2mrsid \
+--without-jpeg \
+--without-kakadu \
+--without-libgrass \
+--without-libkml \
+--without-libtool \
+--without-mrf \
+--without-mrsid \
+--without-mysql \
+--without-netcdf \
+--without-odbc \
+--without-ogdi \
+--without-openjpeg \
+--without-pcidsk \
+--without-pcraster \
+--without-pcre \
+--without-perl \
+--without-pg \
+--without-php \
+--without-png \
+--without-python \
+--without-qhull \
+--without-sde \
+--without-sqlite3 \
+--without-webp \
+--without-xerces \
+--without-xml2
+END_TEXT
+  ;
+  
+    $text =~ s/\\[\r\n]+//g;
+    return $text;
+}
