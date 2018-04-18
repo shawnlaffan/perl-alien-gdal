@@ -105,7 +105,7 @@ share {
   # options passed to ./configure.  The default set by the
   # Build::Autoconf plugin is frequently sufficient.
   build [
-    '%{configure} --with-libtiff=internal ' . $with_local . $build_flags . $build_static,
+    "\%{configure} --with-libtiff=internal $with_local $build_flags $build_static",
     $make_cmd,
     \&patch_pkgconfig,
     '%{make} install',
@@ -232,5 +232,6 @@ END_TEXT
   
     $text =~ s/\\[\r\n]+//g;
     $text =~ s/[\r\n]+//;
+    
     return $text;
 }
