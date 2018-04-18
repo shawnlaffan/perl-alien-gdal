@@ -95,6 +95,7 @@ share {
         $make_cmd =~ s/type/cat/;
         $make_cmd =~ s/"/'/g;
     }
+    $with_cpp11 ||= ' --without-cpp11 ';
   }
   
   # the build step is only necessary if you need to customize the

@@ -1,5 +1,8 @@
 Revision history for Alien::gdal
 
+1.03_010 2018-04-18
+    - Add patch file to manifest.  It is needed on freebsd.
+
 1.03_009 2018-04-17
     - Disable static build options to reduce build size (it was too big for many cpan testers).
       Total size should be ~1GB on most systems now.
