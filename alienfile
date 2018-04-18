@@ -180,7 +180,7 @@ sub get_minimised_drivers_flags {
 --with-geotiff=internal \
 --with-hide-internal-symbols \
 --with-libtiff=internal \
---with-libz=internal \
+--with-libz=no \
 --with-threads \
 --without-bsb \
 --without-cfitsio \
