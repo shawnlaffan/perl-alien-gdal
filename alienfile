@@ -98,8 +98,9 @@ share {
     if (not $build_flags =~ /--without-cpp11/) {
         $build_flags .= ' --without-cpp11 ';
     }
-    $build_flags .= get_minimised_drivers_flags();
+    #$build_flags .= get_minimised_drivers_flags();
   }
+  $build_flags .= get_minimised_drivers_flags();
   
   # the build step is only necessary if you need to customize the
   # options passed to ./configure.  The default set by the
