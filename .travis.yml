@@ -1,6 +1,6 @@
 language: perl
 perl:
-  - "5.26.1"
+  - "5.26"
 #  - "5.22"
 
 os:
@@ -30,7 +30,7 @@ before_install:
       && echo "[skip travis] has been found, exiting."
       && exit 0 || true
 # - if [ "$TRAVIS_OS_NAME" == "osx" ]; then /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"; fi;
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install perl; fi;
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update perl; fi;
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install cpanminus; fi;
 
 #  make sure we get the brewed perl and cpanm etc
