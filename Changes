@@ -1,5 +1,9 @@
 Revision history for Alien::gdal
 
+1.04 2018-04-25
+    - Run make clean on cpantesters to reduce number of build artefacts.
+    - See also 1.03_* release notes.  
+
 1.03_010 2018-04-18
     - Add patch file to manifest.  It is needed on freebsd.
 
