@@ -85,7 +85,7 @@ share {
   }
 
   my $make_cmd = '%{make}';
-  my $make_clean = '';
+  my @make_clean;
   #  try not to fill up the cpan-testers disk space
   if ($ENV{PERL_CPAN_REPORTER_DIR} || $ENV{AUTOMATED_TESTING}) {
     print "Running under automated testing\n";
@@ -96,7 +96,7 @@ share {
         $make_cmd =~ s/"/'/g;
     }
     $with_cpp11 ||= ' --without-cpp11 ';
-    $make_clean = '%{make} clean';
+    push @make_clean, '%{make} clean';
   }
   
   # the build step is only necessary if you need to customize the
@@ -107,7 +107,7 @@ share {
     $make_cmd,
     \&patch_pkgconfig,
     '%{make} install',
-    #$make_clean
+    @make_clean
   ];
 
 };
