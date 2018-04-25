@@ -107,7 +107,7 @@ share {
     $make_cmd,
     \&patch_pkgconfig,
     '%{make} install',
-    $make_clean
+    #$make_clean
   ];
 
 };
