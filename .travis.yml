@@ -30,8 +30,8 @@ before_install:
       && echo "[skip travis] has been found, exiting."
       && exit 0 || true
 # - if [ "$TRAVIS_OS_NAME" == "osx" ]; then /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"; fi;
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew upgrade perl; fi;
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew upgrade cpanminus; fi;
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew outdated perl || brew upgrade perl; fi;
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew outdated cpanminus || brew upgrade cpanminus; fi;
 
 #  make sure we get the brewed perl and cpanm etc
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then export PATH=/usr/local/bin:${PATH}; fi;
