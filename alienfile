@@ -98,7 +98,6 @@ share {
     $with_cpp11 ||= ' --without-cpp11 ';
     push @make_clean, '%{make} clean';
   }
-  push @make_clean, '%{make} clean';  # for CI debug only
   
   # the build step is only necessary if you need to customize the
   # options passed to ./configure.  The default set by the
