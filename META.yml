@@ -1,15 +1,15 @@
 ---
-abstract: 'Find or build gdal'
+abstract: 'Alien package for the Geospatial Data Abstraction Library (GDAL)'
 author:
-  - 'Jason Mumbulla <jasonmumbulla@gmail.com>'
+  - 'Shawn Laffan <shawnlaffan@gmail.com>'
 build_requires:
-  Alien::Build: '0.32'
-  Alien::Build::MM: '0.32'
+  Alien::Build: '1.41'
+  Alien::Build::MM: '1.41'
   Alien::MSYS: '0.07'
   Alien::patch: '0.09'
   Archive::Tar: '0'
   ExtUtils::MakeMaker: '6.52'
-  File::Find::Rule: 0
+  File::Find::Rule: '0'
   HTML::LinkExtor: '0'
   HTTP::Tiny: '0.044'
   IO::Zlib: '0'
@@ -18,12 +18,12 @@ build_requires:
   URI: '0'
   URI::Escape: '0'
 configure_requires:
-  Alien::Build: '0.32'
-  Alien::Build::MM: '0.32'
+  Alien::Build: '1.41'
+  Alien::Build::MM: '1.41'
   Alien::MSYS: '0'
   Alien::patch: '0'
   ExtUtils::MakeMaker: '6.52'
-  File::Find::Rule: 0
+  File::Find::Rule: '0'
   HTTP::Tiny: '0.044'
   PkgConfig: '0'
 dynamic_config: 1
@@ -40,9 +40,12 @@ no_index:
 requires:
   Alien::Base: '0.038'
   Alien::Build: '0.25'
-version: '1.00'
+resources:
+  bugtracker: https://github.com/shawnlaffan/perl-alien-gdal/issues/
+  repository: https://github.com/shawnlaffan/perl-alien-gdal
+version: '1.04'
 x_alienfile:
-  generated_by: 'Alien::Build::MM version 1.32'
+  generated_by: 'Alien::Build::MM version 1.41'
   requires:
     share:
       Alien::MSYS: '0.07'
