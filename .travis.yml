@@ -31,6 +31,7 @@ before_install:
       && echo "[skip travis] has been found, exiting."
       && exit 0 || true
 
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew ls --versions perl > /dev/null || brew install perl; fi;
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew outdated perl || brew upgrade perl; fi;
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew ls --versions cpanminus > /dev/null || brew install cpanminus; fi;
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew outdated cpanminus || brew upgrade cpanminus; fi;
@@ -43,10 +44,6 @@ before_install:
   - cpanm --notest local::lib
   - eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
 
-  # need to work out how make A::B::MM a dependency as macos fails if it is not installed
-  #  - maybe need it in inc/
-  #- cpanm --quiet --notest Alien::Build::MM
-  #- cpanm --quiet --notest Alien::patch
   - cpanm --quiet --notest --installdeps .
   
 
