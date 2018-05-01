@@ -7,6 +7,10 @@ os:
   - linux
   - osx
 
+#  for debug
+env:
+  - AUTOMATED_TESTING=1
+
 sudo: required 
 
 branches:
