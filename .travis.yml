@@ -8,8 +8,8 @@ os:
   - osx
 
 #  for debug
-#env:
-#  - AUTOMATED_TESTING=1
+env:
+  - AUTOMATED_TESTING=1
 
 sudo: required 
 
