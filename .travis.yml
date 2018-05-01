@@ -8,8 +8,8 @@ os:
   - osx
 
 #  for debug
-env:
-  - AUTOMATED_TESTING=1
+#env:
+#  - AUTOMATED_TESTING=1
 
 sudo: required 
 
@@ -34,6 +34,7 @@ before_install:
       && echo "[skip travis] has been found, exiting."
       && exit 0 || true
 # - if [ "$TRAVIS_OS_NAME" == "osx" ]; then /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"; fi;
+  #- if [ "$TRAVIS_OS_NAME" == "osx" && brew ls --versions cpanminus == 0 ]; then brew install cpanminus; fi;
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew outdated perl || brew upgrade perl; fi;
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew outdated cpanminus || brew upgrade cpanminus; fi;
 
