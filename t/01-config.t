@@ -15,5 +15,8 @@ SKIP: {
     like( $alien->libs,   qr/-L/ );
 }
 
+my $data_dir = eval {$alien->data_dir};
+ok ($data_dir && -d $data_dir, 'data dir exists');
+
 done_testing();
 

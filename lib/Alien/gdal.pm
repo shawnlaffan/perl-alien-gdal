@@ -4,7 +4,16 @@ use strict;
 use warnings;
 use base qw( Alien::Base );
 
-our $VERSION = '1.04';
+our $VERSION = '1.05';
+
+sub data_dir {
+    my $self = shift;    
+    
+    my $path = $alien->dist_dir . '/share/gdal';
+    die "Cannot find gdal share dir"
+      if !-d $path;
+    return $path;
+}
 
 1;
 
