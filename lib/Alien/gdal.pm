@@ -9,7 +9,7 @@ our $VERSION = '1.05';
 sub data_dir {
     my $self = shift;    
     
-    my $path = $alien->dist_dir . '/share/gdal';
+    my $path = $self->dist_dir . '/share/gdal';
     die "Cannot find gdal share dir"
       if !-d $path;
     return $path;
