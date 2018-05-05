@@ -22,14 +22,14 @@ TODO: {
     };
 }
 
+my $bin = Alien::gdal->bin_dir;
 if ($^O !~ /mswin/i) {
-    my $bin = Alien::gdal->bin_dir;
     diag join "", `ls -l $bin`;
     diag join "\n", `$bin/gdalwarp --version`;
 }
 
 #  check we can run one of the utilities
-run_ok([ 'gdalwarp', '--version' ])
+run_ok([ "$bin/gdalwarp", '--version' ])
   ->success
   ->out_like(qr{GDAL \d+\.\d+\.\d+, released \d{4}/\d{2}/\d{2}}); 
 
