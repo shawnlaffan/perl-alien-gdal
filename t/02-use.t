@@ -1,24 +1,25 @@
 use strict;
 use warnings;
 use Test::More;
-use Alien::gdal;
 use Config;
+use Test::Alien;
+use Alien::gdal;
 
-BEGIN {
-  plan skip_all => 'test requires Test::CChecker'
-    unless eval q{ use Test::CChecker; 1 };
-}
+alien_ok 'Alien::gdal';
+my $xs = do { local $/; <DATA> };
+xs_ok {xs => $xs, verbose => 0}, with_subtest {
+  my($module) = @_;
+  ok $module->version;
+};
 
-plan tests => 1;
+done_testing();
 
-compile_with_alien 'Alien::gdal';
-
-compile_output_to_note;
-
-compile_run_ok do { local $/; <DATA> }, "basic compile test";
-
+ 
 __DATA__
 
+#include "EXTERN.h"
+#include "perl.h"
+#include "XSUB.h"
 #include <stdio.h>
 #include <gdal.h>
 
@@ -27,3 +28,15 @@ int main()
    printf("Hello, World!");
    return 0;
 }
+
+const char *
+version(const char *class)
+{
+  return "v1";
+}
+
+MODULE = TA_MODULE PACKAGE = TA_MODULE
+ 
+const char *version(class);
+    const char *class;
+
