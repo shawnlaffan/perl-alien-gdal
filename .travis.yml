@@ -53,6 +53,7 @@ script:
   #- export AUTOMATED_TESTING=1  #  for debug
   - perl Makefile.PL
   - make | perl -ne 'BEGIN {$|=1; open our $log, ">", "build.log"}; print "\n" if 0 == ($. % 90); print "."; print {$log} $_;' || cat build.log
+  - tail -200 build.log
   #- make
   - make test
   #  minor debug
