@@ -1,7 +1,3 @@
-use lib 'C:\shawn\git\perl-alien-gdal\blib\lib';
-use lib 'C:\shawn\git\perl-alien-gdal\blib\arch';
-
-
 use strict;
 use warnings;
 use Test::More;
