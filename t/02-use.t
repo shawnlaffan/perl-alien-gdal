@@ -24,7 +24,8 @@ TODO: {
 
 if ($^O !~ /mswin/i) {
     my $bin = Alien::gdal->bin_dir;
-    diag join "\n", `ls -l $bin`;
+    diag join "", `ls -l $bin`;
+    diag join "\n", `$bin/gdalwarp --version`;
 }
 
 #  check we can run one of the utilities
