@@ -1,5 +1,11 @@
 Revision history for Alien::gdal
 
+1.07 2018-05-05
+    - Fallback to PkgConfig to find the share/gdal dir
+    - Use Test::Alien in tests
+    - Add test for utilities, although it is marked as to-do for
+      now due to dynamic lib issues in tests on some platforms
+
 1.05 2018-05-02
     - Add method to access the share/gdal directory.  This contains the data distributed with gdal.
     - Turn cpp11 back on, except for bsd cpan testers.
