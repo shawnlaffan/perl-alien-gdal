@@ -10,6 +10,7 @@ my %common_reqs = (
     "Alien::patch" => 0,
     "File::Find::Rule" => 0,
     "parent" => 0,
+    "PkgConfig" => 0.19026,
     ($^O =~ /mswin/i) ? ("Alien::MSYS" => 0) : (),
 );
 
