@@ -8,10 +8,28 @@ our $VERSION = '1.05';
 
 sub data_dir {
     my $self = shift;
-    
+ 
     my $path = $self->dist_dir . '/share/gdal';
-    die "Cannot find gdal share dir"
-      if !-d $path;
+    
+    if (!-d $path) {
+        #  try PkgConfig
+        use PkgConfig;
+        my %options;
+        if (-d $self->dist_dir . '/lib/pkgconfig') {
+            $options{search_path_override} = [$self->dist_dir . '/lib/pkgconfig'];
+        }
+        my $o = PkgConfig->find('gdal', %options);
+        if ($o->errmsg) {
+            warn $o->errmsg;       
+        }
+        else {
+            $path = $o->get_var('datadir');
+        }
+    }
+
+    warn "Cannot find gdal data dir"
+      if not (defined $path and -d $path);
+
     return $path;
 }
 
