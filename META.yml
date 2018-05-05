@@ -13,10 +13,12 @@ build_requires:
   HTML::LinkExtor: '0'
   HTTP::Tiny: '0.044'
   IO::Zlib: '0'
+  PkgConfig: '0.19026'
   Sort::Versions: '0'
   Test::CChecker: '0'
   URI: '0'
   URI::Escape: '0'
+  parent: '0'
 configure_requires:
   Alien::Build: '1.41'
   Alien::Build::MM: '1.41'
@@ -26,6 +28,7 @@ configure_requires:
   File::Find::Rule: '0'
   HTTP::Tiny: '0.044'
   PkgConfig: '0'
+  parent: '0'
 dynamic_config: 1
 generated_by: 'ExtUtils::MakeMaker version 7.3, CPAN::Meta::Converter version 2.150010'
 license: perl
@@ -43,7 +46,7 @@ requires:
 resources:
   bugtracker: https://github.com/shawnlaffan/perl-alien-gdal/issues/
   repository: https://github.com/shawnlaffan/perl-alien-gdal
-version: '1.04'
+version: 1.06_001
 x_alienfile:
   generated_by: 'Alien::Build::MM version 1.41'
   requires:

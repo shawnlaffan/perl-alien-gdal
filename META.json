@@ -32,9 +32,11 @@
             "HTML::LinkExtor" : "0",
             "HTTP::Tiny" : "0.044",
             "IO::Zlib" : "0",
+            "PkgConfig" : "0.19026",
             "Sort::Versions" : "0",
             "URI" : "0",
-            "URI::Escape" : "0"
+            "URI::Escape" : "0",
+            "parent" : "0"
          }
       },
       "configure" : {
@@ -46,7 +48,8 @@
             "ExtUtils::MakeMaker" : "6.52",
             "File::Find::Rule" : "0",
             "HTTP::Tiny" : "0.044",
-            "PkgConfig" : "0"
+            "PkgConfig" : "0",
+            "parent" : "0"
          }
       },
       "runtime" : {
@@ -61,7 +64,7 @@
          }
       }
    },
-   "release_status" : "stable",
+   "release_status" : "unstable",
    "resources" : {
       "bugtracker" : {
          "web" : "https://github.com/shawnlaffan/perl-alien-gdal/issues/"
@@ -71,7 +74,7 @@
          "url" : "https://github.com/shawnlaffan/perl-alien-gdal"
       }
    },
-   "version" : "1.04",
+   "version" : "1.06_001",
    "x_alienfile" : {
       "generated_by" : "Alien::Build::MM version 1.41",
       "requires" : {
