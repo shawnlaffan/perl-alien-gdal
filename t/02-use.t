@@ -1,11 +1,15 @@
 use strict;
 use warnings;
 use Test::More;
-use Config;
+#use Config;
 use Test::Alien;
 use Alien::gdal;
 
 alien_ok 'Alien::gdal';
+
+diag (Alien::gdal->libs);
+diag (Alien::gdal->cflags);
+
 my $xs = do { local $/; <DATA> };
 xs_ok {xs => $xs, verbose => 0}, with_subtest {
   my($module) = @_;
