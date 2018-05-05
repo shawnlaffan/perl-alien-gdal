@@ -9,6 +9,7 @@ my %common_reqs = (
     "Alien::Build::MM" => "1.41",
     "Alien::patch" => 0,
     "File::Find::Rule" => 0,
+    "parent" => 0,
     ($^O =~ /mswin/i) ? ("Alien::MSYS" => 0) : (),
 );
 

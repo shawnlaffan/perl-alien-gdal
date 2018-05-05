@@ -2,12 +2,12 @@ package Alien::gdal;
 
 use strict;
 use warnings;
-use base qw( Alien::Base );
+use parent qw( Alien::Base );
 
 our $VERSION = '1.05';
 
 sub data_dir {
-    my $self = shift;    
+    my $self = shift;
     
     my $path = $self->dist_dir . '/share/gdal';
     die "Cannot find gdal share dir"
