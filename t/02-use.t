@@ -11,6 +11,7 @@ diag ('libs: '   . Alien::gdal->libs);
 diag ('cflags: ' . Alien::gdal->cflags);
 diag ('Dynamic libs: ' . join ':', Alien::gdal->dynamic_libs);
 diag ('bin dir: ', Alien::gdal->bin_dir);
+my $bin = Alien::gdal->bin_dir;
 
 TODO: {
     local $TODO = 'known to fail under macos'
@@ -22,11 +23,11 @@ TODO: {
     };
 }
 
-my $bin = Alien::gdal->bin_dir;
-if ($^O !~ /mswin/i) {
-    diag join "", `ls -l $bin`;
+#if ($^O !~ /mswin/i) {
+    #diag join "", `ls -l $bin`;
+    diag "Calling $bin/gdalwarp --version";
     diag join "\n", `$bin/gdalwarp --version`;
-}
+#}
 
 #  check we can run one of the utilities
 TODO: {
