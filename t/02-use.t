@@ -7,9 +7,10 @@ use Alien::gdal;
 
 alien_ok 'Alien::gdal';
 
-diag (Alien::gdal->libs);
-diag (Alien::gdal->cflags);
+diag ('libs: '   . Alien::gdal->libs);
+diag ('cflags: ' . Alien::gdal->cflags);
 diag ('Dynamic libs: ' . join ':', Alien::gdal->dynamic_libs);
+diag ('bin dir: ', Alien::gdal->bin_dir);
 
 TODO: {
     local $TODO = 'known to fail under macos'
