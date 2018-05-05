@@ -28,7 +28,7 @@ my %WriteMakefileArgs = (
         %common_reqs,
     },
     "TEST_REQUIRES" => {
-        "Test::CChecker" => 0,
+        "Test::Alien" => 0,
     },
     "PREREQ_PM" => {
         "Alien::Base" => "0.038",
