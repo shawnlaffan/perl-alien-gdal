@@ -16,6 +16,12 @@ xs_ok {xs => $xs, verbose => 0}, with_subtest {
   ok $module->version;
 };
 
+#  check we can run one of the utilities
+run_ok([ 'gdalwarp', '--version' ])
+  ->success
+  ->out_like(qr{GDAL \d+\.\d+\.\d+, released \d{4}/\d{2}/\d{2}}); 
+
+
 done_testing();
 
  
