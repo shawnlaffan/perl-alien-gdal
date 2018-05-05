@@ -22,8 +22,8 @@ __DATA__
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
-#include <stdio.h>
-#include <gdal.h>
+#include "stdio.h"
+#include "gdal.h"
 
 int main()
 {
