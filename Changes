@@ -1,5 +1,8 @@
 Revision history for Alien::gdal
 
+1.08_001 2018-05-06
+    - Dev release, marking more tests as to-do
+
 1.07 2018-05-05
     - Fallback to PkgConfig to find the share/gdal dir
     - Use Test::Alien in tests
