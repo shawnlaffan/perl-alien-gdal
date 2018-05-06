@@ -1,5 +1,9 @@
 Revision history for Alien::gdal
 
+1.08_002 2018-05-06
+    - Mark the compilation test as to-do until we determine if
+      the failures to find libs are due to us or Alien::Test.
+
 1.08_001 2018-05-06
     - Dev release, marking more tests as to-do
 
