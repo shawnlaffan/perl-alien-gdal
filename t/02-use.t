@@ -16,21 +16,24 @@ my $bin = Alien::gdal->bin_dir;
 #  nasty hack
 $ENV{LD_LIBRARY_PATH} = Alien::gdal->dist_dir . '/lib';
 
+#if ($^O !~ /mswin/i) {
+    #diag join "", `ls -l $bin`;
+    diag '=====';
+    diag "Calling $bin/gdalwarp --version";
+    diag join "\n", `$bin/gdalwarp --version`;
+    diag '=====';
+#}
+
+
 TODO: {
     local $TODO = 'known to fail under macos'
       if $^O =~ /darwin/i;
     my $xs = do { local $/; <DATA> };
-    xs_ok {xs => $xs, verbose => 0}, with_subtest {
+    xs_ok {xs => $xs, verbose => 1}, with_subtest {
       my($module) = @_;
       ok $module->version;
     };
 }
-
-#if ($^O !~ /mswin/i) {
-    #diag join "", `ls -l $bin`;
-    diag "Calling $bin/gdalwarp --version";
-    diag join "\n", `$bin/gdalwarp --version`;
-#}
 
 #  check we can run one of the utilities
 TODO: {
