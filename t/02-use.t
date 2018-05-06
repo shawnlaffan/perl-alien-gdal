@@ -13,6 +13,9 @@ diag ('Dynamic libs: ' . join ':', Alien::gdal->dynamic_libs);
 diag ('bin dir: ', Alien::gdal->bin_dir);
 my $bin = Alien::gdal->bin_dir;
 
+#  nasty hack
+$ENV{LD_LIBRARY_PATH} = Alien::gdal->dist_dir . '/lib';
+
 TODO: {
     local $TODO = 'known to fail under macos'
       if $^O =~ /darwin/i;
