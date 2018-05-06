@@ -26,8 +26,8 @@ $ENV{LD_LIBRARY_PATH} = Alien::gdal->dist_dir . '/lib';
 
 
 TODO: {
-    local $TODO = 'known to fail under macos'
-      if $^O =~ /darwin/i;
+    local $TODO = 'known to fail under macos and bsd variants - need help'
+      if $^O =~ /darwin|bsd/i;
     my $xs = do { local $/; <DATA> };
     xs_ok {xs => $xs, verbose => 1}, with_subtest {
       my($module) = @_;
