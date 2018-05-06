@@ -43,13 +43,13 @@ done_testing();
  
 __DATA__
 
-//  A very simple test.  It really only tests that we can load gdal.h.
+//  A very simple test.  It really only tests that we can load gdal.
 
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
 #include "stdio.h"
-#include "gdal.h"
+#include <gdal.h>
 
 int main()
 {
