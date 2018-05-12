@@ -179,6 +179,7 @@ sub patch_pkgconfig {
 
 sub find_gdal_version {
     my $file = find_tarball();
+    return if !defined $file;
     #say "Checking $file for version";
     $file =~ qr/\bgdal-([0-9\.]+)\.tar\.gz$/;
     my $version = $1;
