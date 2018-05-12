@@ -53,6 +53,15 @@ share {
   my $gdal_version = find_gdal_version() // 'not yet defined';
   say "Tarball gdal version is $gdal_version";
 
+  #my $state_hash = get_alien_state_hash();
+  #use Data::Dumper;
+  #say '=======';
+  #say (Dumper $h);
+  #say '=======';
+  #my $gdal_version = $state_hash->
+  #say "Tarball gdal version is $gdal_version";
+
+  
   plugin Extract => 'tar.gz';
 
   #  should use a version package or Sort::Naturally::ncmp  
@@ -193,7 +202,7 @@ sub find_tarball {
     my @files
       = File::Find::Rule->file()
                         ->name( qr/gdal-([0-9\.]+)\.tar\.gz$/ )
-                        ->in( '.' );
+                        ->in( "$base_dir/_alien" );
     @files = map {$_ =~ /\b(gdal-[0-9\.]+\.tar\.gz)$/; $1} @files;  #  should use Path::Tiny
     #  assume we are using the most recent release if more than one
     if (@files > 1) {
@@ -202,4 +211,21 @@ sub find_tarball {
     }
     say join ' ', @files;
     return $files[0];
+}
+
+
+sub get_alien_state_hash {
+    use JSON::PP;
+    my $root = "$base_dir/_alien";
+    my $f = "$root/state.json";
+    my $h = {};
+    if (-e $f) {
+        open my $fh, '<', $f or die $!;
+        my $d = do {
+            local $/ = undef;
+            <$fh>;
+        };
+        $h = JSON::PP::decode_json($d);
+    }
+    return $h;
 }
