@@ -42,7 +42,8 @@ TODO: {
 
     run_ok([ "$bin/gdalwarp", '--version' ])
       ->success
-      ->out_like(qr{GDAL \d+\.\d+\.\d+, released \d{4}/\d{2}/\d{2}}); 
+      ->out_like(qr{GDAL \d+\.\d+\.\d+, released \d{4}/\d{2}/\d{2}})
+      ->note; 
 }
 
 done_testing();
