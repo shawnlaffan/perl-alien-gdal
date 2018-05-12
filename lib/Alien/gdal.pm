@@ -24,6 +24,14 @@ sub data_dir {
         }
         else {
             $path = $o->get_var('datadir');
+            if ($path =~ m|/data$|) {
+                my $alt_path = $path;
+                $alt_path =~ s|/data$||;
+                if (!-d $path && -d $alt_path) {
+                    #  GDAL 2.3.x and earlier erroneously appended /data
+                    $path = $alt_path;
+                }
+            }
         }
     }
 
@@ -39,7 +47,7 @@ __END__
 
 =head1 NAME
 
-Alien::gdal - Compile gdal, the Geographic Data Abstraction Library
+Alien::gdal - Compile GDAL, the Geographic Data Abstraction Library
 
 =head1 BUILD STATUS
  
