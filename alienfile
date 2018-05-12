@@ -192,10 +192,11 @@ sub find_tarball {
     my @files
       = File::Find::Rule->file()
                         ->name( qr/^gdal-([0-9\.]+)\.tar\.gz$/ )
-                        ->in( '.' );
-    #  find the most recent if more than one
+                        ->in( '_alien' );
+    #  assume the most recent release if more than one
     if (@files > 1) {
-        @files = reverse sort {(stat($a))[9] <=> (stat($b))[9]} @files;
+        #@files = reverse sort {(stat($a))[9] <=> (stat($b))[9]} @files;
+        @files = reverse sort @files;
     }
     #say join ' ', @files;
     return $files[0];
