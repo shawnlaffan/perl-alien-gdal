@@ -192,12 +192,13 @@ sub find_tarball {
     my @files
       = File::Find::Rule->file()
                         ->name( qr/^gdal-([0-9\.]+)\.tar\.gz$/ )
-                        ->in( '_alien' );
-    #  assume the most recent release if more than one
+                        ->in( '.' );
+    @files = map {$_ =~ s{.+/}{}; $_} @files;  #  should use Path::Tiny
+    #  assume we are using the most recent release if more than one
     if (@files > 1) {
         #@files = reverse sort {(stat($a))[9] <=> (stat($b))[9]} @files;
         @files = reverse sort @files;
     }
-    #say join ' ', @files;
+    say join ' ', @files;
     return $files[0];
 }
