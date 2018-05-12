@@ -50,7 +50,7 @@ share {
   plugin Extract => 'tar.gz';
   
   #  should ideally have access to the version determined by Alien::Build 
-  if ($min_target_version le '2.3.0') {
+  if ($min_target_version lt '2.3.0') {
     if ($^O =~ /mswin/i) {
       #  fix known issue in 2.2.3, harmless in 2.2.4.
       patch [
