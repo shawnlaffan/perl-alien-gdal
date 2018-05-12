@@ -191,9 +191,9 @@ sub find_tarball {
     #use File::Stat;
     my @files
       = File::Find::Rule->file()
-                        ->name( qr/^gdal-([0-9\.]+)\.tar\.gz$/ )
+                        ->name( qr/gdal-([0-9\.]+)\.tar\.gz$/ )
                         ->in( '.' );
-    @files = map {$_ =~ s{.+/}{}; $_} @files;  #  should use Path::Tiny
+    @files = map {$_ =~ /\b(gdal-[0-9\.]+\.tar\.gz)$/; $1} @files;  #  should use Path::Tiny
     #  assume we are using the most recent release if more than one
     if (@files > 1) {
         #@files = reverse sort {(stat($a))[9] <=> (stat($b))[9]} @files;
