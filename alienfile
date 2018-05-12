@@ -27,7 +27,7 @@ my $patch_file_isnan
 my $patch_file_configure
   = "$base_dir/0001-Enable-shared-build-on-freebsd-10.patch";
 
-my $min_target_version = '2.3.0';
+my $min_target_version = '2.2.0';
 
 plugin 'PkgConfig' => (
     pkg_name => 'gdal',
@@ -47,10 +47,16 @@ share {
     version => qr/^gdal-([0-9\.]+)\.tar\.gz$/,
   );
 
+  #  Fragile - should ideally have access to the version determined by Alien::Build
+  #  as we might be using a cached download via Alien::Build::Plugin::Fetch::Cache.
+  #  Could use the build dir name after extraction, though.
+  my $gdal_version = find_gdal_version() // $min_target_version;
+  say "Working with gdal version $gdal_version";
+
   plugin Extract => 'tar.gz';
-  
-  #  should ideally have access to the version determined by Alien::Build 
-  if ($min_target_version lt '2.3.0') {
+
+  #  should use a version package or Sort::Naturally::ncmp  
+  if ($gdal_version lt '2.3.0') {
     if ($^O =~ /mswin/i) {
       #  fix known issue in 2.2.3, harmless in 2.2.4.
       patch [
@@ -171,3 +177,26 @@ sub patch_pkgconfig {
     }
 }
 
+sub find_gdal_version {
+    my $file = find_tarball();
+    #say "Checking $file for version";
+    $file =~ qr/\bgdal-([0-9\.]+)\.tar\.gz$/;
+    my $version = $1;
+    #say "Version is $version";
+    return $version;
+}
+
+sub find_tarball {
+    use File::Find::Rule;
+    use File::Stat;
+    my @files
+      = File::Find::Rule->file()
+                        ->name( qr/^gdal-([0-9\.]+)\.tar\.gz$/ )
+                        ->in( '.' );
+    #  find the most recent if more than one
+    if (@files > 1) {
+        @files = reverse sort {(stat($a))[9] <=> (stat($b))[9]} @files;
+    }
+    #say join ' ', @files;
+    return $files[0];
+}
