@@ -80,7 +80,7 @@ share {
     #$make_cmd = 'gmake';
     plugin 'Build::Make' => 'gmake';
     if (-d '/usr/local') {
-        $with_local = '--with-local=/usr/local';
+        $with_local = ' --with-local=/usr/local ';
     }
   }
   elsif ($^O =~ /dragonfly/) {
@@ -107,7 +107,7 @@ share {
   # options passed to ./configure.  The default set by the
   # Build::Autoconf plugin is frequently sufficient.
   build [
-    '%{configure} --with-libtiff=internal ' . $with_local . $with_cpp11 . $build_static,
+    "%{configure} --with-libtiff=internal $with_local $with_cpp11 $build_static",
     $make_cmd,
     \&patch_pkgconfig,
     '%{make} install',
