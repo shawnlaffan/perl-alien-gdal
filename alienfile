@@ -188,7 +188,7 @@ sub find_gdal_version {
 
 sub find_tarball {
     use File::Find::Rule;
-    use File::Stat;
+    #use File::Stat;
     my @files
       = File::Find::Rule->file()
                         ->name( qr/^gdal-([0-9\.]+)\.tar\.gz$/ )
