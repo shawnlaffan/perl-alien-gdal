@@ -1,5 +1,6 @@
 use 5.010;
 use alienfile;
+use Sort::Versions;
 
 #  add existing alien files to path etc
 #  not very elegant...
@@ -41,7 +42,7 @@ share {
   my $with_cpp11 = '';
 
   start_url 'http://download.osgeo.org/gdal/CURRENT';
-  start_url 'file://$base_dir';  #  debug
+  #start_url "file://$base_dir";  #  debug
   plugin Download => (
     filter  => qr/^gdal-([0-9\.]+)\.tar\.gz$/,
     version => qr/^gdal-([0-9\.]+)\.tar\.gz$/,
@@ -53,7 +54,7 @@ share {
   plugin Extract => 'tar.gz';
 
   #  should use a version package or Sort::Naturally::ncmp  
-  if ($gdal_version lt '2.3.0') {
+  if (versioncmp($gdal_version, '2.3.0') == -1) {
     if ($^O =~ /mswin/i) {
       #  fix known issue in 2.2.3, harmless in 2.2.4.
       patch [
@@ -62,7 +63,7 @@ share {
     }
     elsif ($^O =~ /freebsd/i) {
       #  make sure we run a shared install on freebsd by default
-      #  before libtool files were updated
+      #  (before libtool files were updated for gdal 2.3.0)
       patch [
         '%{patch} configure < ' . $patch_file_configure,
       ];
@@ -74,7 +75,7 @@ share {
 
   my $build_static = ($^O =~ /mswin/i) ? '' : '--disable-shared';
   $build_static = '';
-  $build_static = '--enable-static=no';  #  override
+  $build_static = '--enable-static=no';  #  override - HUGE files if static
   $build_static = '' if $ENV{FORCE_DYNAMIC};
   
   

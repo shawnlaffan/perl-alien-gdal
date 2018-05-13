@@ -32,7 +32,7 @@ my %WriteMakefileArgs = (
         "Test::Alien" => 0,
     },
     "PREREQ_PM" => {
-        "Alien::Base" => "0.038",
+        "Alien::Base" => "1.41",
     },
     META_MERGE => {
         'meta-spec' => { version => 2 },
