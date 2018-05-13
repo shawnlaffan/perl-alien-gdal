@@ -48,7 +48,7 @@ share {
     version => qr/^gdal-([0-9\.]+)\.tar\.gz$/,
   );
 
-  my $gdal_version = find_gdal_version() // 'not yet defined';
+  my $gdal_version = get_gdal_version() // 'not yet defined';
   say "Downloaded gdal version is $gdal_version";
   
   plugin Extract => 'tar.gz';
@@ -170,17 +170,9 @@ sub patch_pkgconfig {
     }
 }
 
-sub find_gdal_version {
+sub get_gdal_version {
     my $h = get_alien_state_hash();
     return $h->{runtime}{version};
-    
-    #my $file = find_tarball();
-    #return if !defined $file;
-    ##say "Checking $file for version";
-    #$file =~ qr/\bgdal-([0-9\.]+)\.tar\.gz$/;
-    #my $version = $1;
-    ##say "Version is $version";
-    #return $version;
 }
 
 sub get_alien_state_hash {
