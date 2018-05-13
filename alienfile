@@ -41,26 +41,14 @@ share {
   my $with_cpp11 = '';
 
   start_url 'http://download.osgeo.org/gdal/CURRENT';
+  start_url 'file://$base_dir';  #  debug
   plugin Download => (
-    #url     => 'http://download.osgeo.org/gdal/CURRENT',
     filter  => qr/^gdal-([0-9\.]+)\.tar\.gz$/,
     version => qr/^gdal-([0-9\.]+)\.tar\.gz$/,
   );
 
-  #  Fragile - should ideally have access to the version determined by Alien::Build
-  #  as we might be using a cached download via Alien::Build::Plugin::Fetch::Cache.
-  #  Could use the build dir name after extraction, though.
   my $gdal_version = find_gdal_version() // 'not yet defined';
-  say "Tarball gdal version is $gdal_version";
-
-  #my $state_hash = get_alien_state_hash();
-  #use Data::Dumper;
-  #say '=======';
-  #say (Dumper $h);
-  #say '=======';
-  #my $gdal_version = $state_hash->
-  #say "Tarball gdal version is $gdal_version";
-
+  say "Downloaded gdal version is $gdal_version";
   
   plugin Extract => 'tar.gz';
 
@@ -187,32 +175,17 @@ sub patch_pkgconfig {
 }
 
 sub find_gdal_version {
-    my $file = find_tarball();
-    return if !defined $file;
-    #say "Checking $file for version";
-    $file =~ qr/\bgdal-([0-9\.]+)\.tar\.gz$/;
-    my $version = $1;
-    #say "Version is $version";
-    return $version;
+    my $h = get_alien_state_hash();
+    return $h->{runtime}{version};
+    
+    #my $file = find_tarball();
+    #return if !defined $file;
+    ##say "Checking $file for version";
+    #$file =~ qr/\bgdal-([0-9\.]+)\.tar\.gz$/;
+    #my $version = $1;
+    ##say "Version is $version";
+    #return $version;
 }
-
-sub find_tarball {
-    use File::Find::Rule;
-    #use File::Stat;
-    my @files
-      = File::Find::Rule->file()
-                        ->name( qr/gdal-([0-9\.]+)\.tar\.gz$/ )
-                        ->in( "$base_dir/_alien" );
-    @files = map {$_ =~ /\b(gdal-[0-9\.]+\.tar\.gz)$/; $1} @files;  #  should use Path::Tiny
-    #  assume we are using the most recent release if more than one
-    if (@files > 1) {
-        #@files = reverse sort {(stat($a))[9] <=> (stat($b))[9]} @files;
-        @files = reverse sort @files;
-    }
-    say join ' ', @files;
-    return $files[0];
-}
-
 
 sub get_alien_state_hash {
     use JSON::PP;
