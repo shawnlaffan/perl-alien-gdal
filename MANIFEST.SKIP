@@ -37,3 +37,8 @@ appveyor.yml
 gp_changer.pl
 
 tarballs.zip
+
+xt/.perlcritic-history
+
+^testalien
+ 
