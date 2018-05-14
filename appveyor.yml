@@ -5,6 +5,7 @@ skip_tags: true
 
 cache:
   - C:\strawberry
+  - $HOME\.alienbuild\plugin_fetch_cache
 
 install:
   - if not exist "C:\strawberry" choco install strawberryperl --version 5.26.1.1
@@ -18,7 +19,7 @@ install:
   #- cpanm --quiet --notest Test::CChecker
   #- cpanm --quiet --notest Alien::MSYS
   - cpanm --quiet --notest --installdeps .
-  - cpanm --quiet --notest --installdeps Alien::Build::Plugin::Fetch::Cache
+  - cpanm --quiet --notest Alien::Build::Plugin::Fetch::Cache
 
   - gcc -v
 

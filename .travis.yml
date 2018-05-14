@@ -18,6 +18,8 @@ cache:
   directories:
     - perl_modules
     - /usr/local
+    - ${HOME}/.alienbuild/plugin_fetch_cache
+
 
 #env:
 #  MAKEFLAGS='-j$(nproc)' - nope - exhausts memory
@@ -47,7 +49,7 @@ before_install:
   - eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
 
   - cpanm --quiet --notest --installdeps .
-  - cpanm --quiet --notest --installdeps Alien::Build::Plugin::Fetch::Cache
+  - cpanm --quiet --notest Alien::Build::Plugin::Fetch::Cache
   
 
 script:
