@@ -48,11 +48,11 @@ before_install:
 
   - cpanm --quiet --notest --installdeps .
   - cpanm --quiet --notest --installdeps Alien::Build::Plugin::Fetch::Cache
-  - export ALIEN_BUILD_PRELOAD=Fetch::Cache
   
 
 script:
   #- export AUTOMATED_TESTING=1  #  for debug
+  - export ALIEN_BUILD_PRELOAD=Fetch::Cache
   - perl Makefile.PL
   #- make | perl -ne 'BEGIN {$|=1; open our $log, ">", "build.log"}; print "\n" if 0 == ($. % 90); print "."; print {$log} $_;' || cat build.log
   - make

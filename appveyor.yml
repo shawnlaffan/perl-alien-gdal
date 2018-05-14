@@ -19,11 +19,11 @@ install:
   #- cpanm --quiet --notest Alien::MSYS
   - cpanm --quiet --notest --installdeps .
   - cpanm --quiet --notest --installdeps Alien::Build::Plugin::Fetch::Cache
-  - set ALIEN_BUILD_PRELOAD=Fetch::Cache
 
   - gcc -v
 
 build_script:
+  - set ALIEN_BUILD_PRELOAD=Fetch::Cache
   - perl Makefile.PL
   #- gmake | perl -ne "BEGIN {$|=1; open our $log, q|>|, q|build.log|}; print qq|\n| if 0 == ($. %% 100); print q|.|; print {$log} $_;" || type build.log
   - gmake
