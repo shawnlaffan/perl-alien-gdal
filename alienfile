@@ -91,6 +91,7 @@ share {
 
   my $make_cmd = '%{make}';
   my @make_clean;
+  say "=====\nENV CI IS $ENV{CI}\n=====\n";
   #  try not to fill up the cpan-testers disk space
   if ($ENV{PERL_CPAN_REPORTER_DIR} || $ENV{AUTOMATED_TESTING} || (lc ($ENV{CI} // '') eq 'true')) {
     print "Running under automated testing\n";
