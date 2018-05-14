@@ -56,7 +56,7 @@ share {
     if ($^O =~ /mswin/i) {
       #  fix known issue in 2.2.3, harmless in 2.2.4.
       patch [
-        '%{patch} --verbose port/cpl_port.h < ' . $patch_file_isnan,
+        '%{patch} port/cpl_port.h < ' . $patch_file_isnan,
       ];
     }
     elsif ($^O =~ /freebsd/i) {
@@ -92,9 +92,9 @@ share {
   my $make_cmd = '%{make}';
   my $make_inst_cmd = '%{make} install';
   my @make_clean;
-  #  try not to fill up the cpan-testers disk space
+  #  try not to exceed the cpan-testers log limits
   if ($ENV{PERL_CPAN_REPORTER_DIR} || $ENV{PERL_CPAN_REPORTER_CONFIG} || $ENV{AUTOMATED_TESTING} || $ENV{TRAVIS} || $ENV{APPVEYOR}) {
-    print "Running under CI or automated testing\n";
+    say "Running under CI or automated testing";
     $make_cmd .= q/ | perl -ne "BEGIN {$|=1; open our $log, q|>|, q|build.log|}; print qq|\n| if 0 == ($. %% 100); print q|.|; print {$log} $_;" || type build.log/;
     $make_inst_cmd .= q/ | perl -ne "BEGIN {$|=1; open our $log, q|>|, q|install.log|}; print qq|\n| if 0 == ($. %% 100); print q|.|; print {$log} $_;" || type install.log/;
     if (not $^O =~ /mswin/i) {
@@ -167,7 +167,7 @@ sub patch_pkgconfig {
         foreach my $line (@pkg_conf) {
             if ($line =~ /^CONFIG_INST_LIBS/) {
                 chomp $line;
-                $line .= ' ' . $dep_libs . "\n";
+                $line .= " $dep_libs\n";
             }
             print {$pk_fh} $line;
         }
