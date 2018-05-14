@@ -90,15 +90,20 @@ share {
   }
 
   my $make_cmd = '%{make}';
+  my $make_inst_cmd = '%{make} install';
   my @make_clean;
   #  try not to fill up the cpan-testers disk space
   if ($ENV{PERL_CPAN_REPORTER_DIR} || $ENV{AUTOMATED_TESTING} || $ENV{TRAVIS} || $ENV{APPVEYOR}) {
     print "Running under CI or automated testing\n";
     $make_cmd .= q/ | perl -ne "BEGIN {$|=1; open our $log, q|>|, q|build.log|}; print qq|\n| if 0 == ($. %% 100); print q|.|; print {$log} $_;" || type build.log/;
+    $make_inst_cmd .= q/ | perl -ne "BEGIN {$|=1; open our $log, q|>|, q|install.log|}; print qq|\n| if 0 == ($. %% 100); print q|.|; print {$log} $_;" || type install.log/;
     if (not $^O =~ /mswin/i) {
         $make_cmd =~ s/%%/%/;
         $make_cmd =~ s/type/cat/;
         $make_cmd =~ s/"/'/g;
+        $make_inst_cmd =~ s/%%/%/;
+        $make_inst_cmd =~ s/type/cat/;
+        $make_inst_cmd =~ s/"/'/g;
     }
     if (! ($ENV{TRAVIS} || $ENV{APPVEYOR})) {
         push @make_clean, '%{make} clean';
@@ -109,7 +114,7 @@ share {
     "%{configure} --with-libtiff=internal $with_local $with_cpp11 $build_static",
     $make_cmd,
     \&patch_pkgconfig,
-    '%{make} install',
+    $make_inst_cmd,
     @make_clean
   ];
 
