@@ -91,17 +91,18 @@ share {
 
   my $make_cmd = '%{make}';
   my @make_clean;
-  say "=====\nENV CI VARS: Travis $ENV{TRAVIS}, APPVEYOR $ENV{APPVEYOR}\n=====\n";
   #  try not to fill up the cpan-testers disk space
   if ($ENV{PERL_CPAN_REPORTER_DIR} || $ENV{AUTOMATED_TESTING} || $ENV{TRAVIS} || $ENV{APPVEYOR}) {
-    print "Running under automated testing\n";
+    print "Running under CI or automated testing\n";
     $make_cmd .= q/ | perl -ne "BEGIN {$|=1; open our $log, q|>|, q|build.log|}; print qq|\n| if 0 == ($. %% 100); print q|.|; print {$log} $_;" || type build.log/;
     if (not $^O =~ /mswin/i) {
         $make_cmd =~ s/%%/%/;
         $make_cmd =~ s/type/cat/;
         $make_cmd =~ s/"/'/g;
     }
-    push @make_clean, '%{make} clean';
+    if (! ($ENV{TRAVIS} || $ENV{APPVEYOR})) {
+        push @make_clean, '%{make} clean';
+    }
   }
   
   build [
