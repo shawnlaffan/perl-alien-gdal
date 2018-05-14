@@ -11,14 +11,13 @@ my $have_alien_gdal = eval 'require Alien::gdal';
 if (0 && $have_alien_gdal) {
     my $ag_version = Alien::gdal->version;
     say "Found existing gdal via alien ($ag_version) in " .  Alien::gdal->dist_dir;
-    #say -e Alien::gdal->dist_dir . '/lib/pkgconfig/' . 'gdal.pc';
     #  append the relevant path
     my $sep = ($^O =~ /mswin/i) ? ';' : ':';
     $ENV{PKG_CONFIG_PATH}
       = Alien::gdal->dist_dir . '/lib/pkgconfig/'
       . $sep
       . ($ENV{PKG_CONFIG_PATH} // '');
-    $ENV{PATH} = Alien::gdal->dist_dir . '/bin' . $sep . $ENV{PATH};
+    $ENV{PATH} = Alien::gdal->bin_dir . $sep . $ENV{PATH};
 }
 
 use Cwd;
@@ -53,7 +52,6 @@ share {
   
   plugin Extract => 'tar.gz';
 
-  #  should use a version package or Sort::Naturally::ncmp  
   if (versioncmp($gdal_version, '2.3.0') == -1) {
     if ($^O =~ /mswin/i) {
       #  fix known issue in 2.2.3, harmless in 2.2.4.
@@ -67,7 +65,7 @@ share {
       patch [
         '%{patch} configure < ' . $patch_file_configure,
       ];
-      $with_cpp11 = ' --without-cpp11 ';  #  issues with cad lib
+      $with_cpp11 = ' --without-cpp11 ';  #  issues with cad lib pre 2.3.0
     }
   }
 
@@ -94,7 +92,7 @@ share {
   my $make_cmd = '%{make}';
   my @make_clean;
   #  try not to fill up the cpan-testers disk space
-  if ($ENV{PERL_CPAN_REPORTER_DIR} || $ENV{AUTOMATED_TESTING}) {
+  if ($ENV{PERL_CPAN_REPORTER_DIR} || $ENV{AUTOMATED_TESTING} || (lc ($ENV{CI} // '') eq 'true')) {
     print "Running under automated testing\n";
     $make_cmd .= q/ | perl -ne "BEGIN {$|=1; open our $log, q|>|, q|build.log|}; print qq|\n| if 0 == ($. %% 100); print q|.|; print {$log} $_;" || type build.log/;
     if (not $^O =~ /mswin/i) {

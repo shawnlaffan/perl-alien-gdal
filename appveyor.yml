@@ -22,7 +22,8 @@ install:
 
 build_script:
   - perl Makefile.PL
-  - gmake | perl -ne "BEGIN {$|=1; open our $log, q|>|, q|build.log|}; print qq|\n| if 0 == ($. %% 100); print q|.|; print {$log} $_;" || type build.log
+  #- gmake | perl -ne "BEGIN {$|=1; open our $log, q|>|, q|build.log|}; print qq|\n| if 0 == ($. %% 100); print q|.|; print {$log} $_;" || type build.log
+  - gmake
   - gmake test
   #  some feedback
   - type blib\lib\auto\share\dist\Alien-gdal\lib\pkgconfig\gdal.pc
