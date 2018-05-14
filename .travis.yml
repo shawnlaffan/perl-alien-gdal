@@ -47,6 +47,8 @@ before_install:
   - eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
 
   - cpanm --quiet --notest --installdeps .
+  - cpanm --quiet --notest --installdeps Alien::Build::Plugin::Fetch::Cache
+  - export ALIEN_BUILD_PRELOAD=Fetch::Cache
   
 
 script:

@@ -18,6 +18,9 @@ install:
   #- cpanm --quiet --notest Test::CChecker
   #- cpanm --quiet --notest Alien::MSYS
   - cpanm --quiet --notest --installdeps .
+  - cpanm --quiet --notest --installdeps Alien::Build::Plugin::Fetch::Cache
+  - set ALIEN_BUILD_PRELOAD=Fetch::Cache
+
   - gcc -v
 
 build_script:
