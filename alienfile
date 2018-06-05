@@ -123,8 +123,8 @@ share {
 
 
 sub patch_pkgconfig {
-    my $h = get_alien_state_hash();
-    my $target_dir = $h->{install}{_ab_build_share} // '';
+    #  we are in the build dir when this is called
+    my $target_dir = '.';
     say "Searching for config files under $target_dir";
 
     use File::Find::Rule;
