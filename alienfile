@@ -108,6 +108,8 @@ share {
     if (! ($ENV{TRAVIS} || $ENV{APPVEYOR})) {
         push @make_clean, '%{make} clean';
     }
+    #  clean up the build dir on cpan testers etc
+    after 'build' => \&cleanse_build_dir;
   }
   
   build [
@@ -117,23 +119,24 @@ share {
     $make_inst_cmd,
     @make_clean
   ];
-  
-  after 'build' => sub {
-    use Cwd qw /getcwd/;
-    use File::Path qw /remove_tree/;
-    say 'Currently in: ' . getcwd();
-    if (getcwd() =~ /gdal-$gdal_version/) {
-        chdir '..';
-    }
-    my @build_dirs = glob ("gdal-$gdal_version");
-    say "Build dirs: " . join ' ', @build_dirs;
-    for my $build_dir (@build_dirs) {
-      remove_tree ($build_dir, {safe => 1});
-    }
-    
-  }
 
 };
+
+
+sub cleanse_build_dir {
+
+    use Cwd qw /getcwd/;
+    use File::Path qw /remove_tree/;
+    say 'cleanse_build_dir: Currently in: ' . getcwd();
+    
+    if (getcwd() =~ /\b(gdal-[0-9\.]+)$/) {
+        my $build_dir = $1;
+        chdir '..';
+        if (remove_tree ($build_dir, {safe => 1})) {
+            say "Removed $build_dir";
+        }
+    }
+}
 
 
 sub patch_pkgconfig {
