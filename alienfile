@@ -120,9 +120,10 @@ share {
   
   after 'build' => sub {
     my $base_dir = "$base_dir/_alien";
+    use File::Path qw /remove_tree/;
     my @build_dirs = glob ("$base_dir/build_*");
     for my $build_dir (@build_dirs) {
-        File::Path::remove_tree ($build_dir, {safe => 1});
+      File::Path::remove_tree ($build_dir, {safe => 1});
     }
   }
 
