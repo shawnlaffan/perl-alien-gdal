@@ -117,6 +117,14 @@ share {
     $make_inst_cmd,
     @make_clean
   ];
+  
+  after 'build' => sub {
+    my $base_dir = "$base_dir/_alien";
+    my @build_dirs = glob ("$base_dir/build_*");
+    for my $build_dir (@build_dirs) {
+        File::Path::remove_tree ($build_dir, {safe => 1});
+    }
+  }
 
 };
 
