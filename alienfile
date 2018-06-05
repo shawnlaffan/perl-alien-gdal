@@ -105,6 +105,7 @@ share {
         $make_inst_cmd =~ s/type/cat/;
         $make_inst_cmd =~ s/"/'/g;
     }
+    #  and clean up after ourselves
     if (! ($ENV{TRAVIS} || $ENV{APPVEYOR})) {
         push @make_clean, '%{make} clean';
     }
@@ -122,17 +123,21 @@ share {
 
 
 sub patch_pkgconfig {
-    #my $gdal_config_file = 'bin/gdal-config';
-    #my $pkg_config_file  = 'lib/pkgconfig/gdal.pc';
+    my $h = get_alien_state_hash();
+    my $target_dir = $h->{install}{_ab_build_share} // '';
+    say "Searching for config files under $target_dir";
+
     use File::Find::Rule;
-    my @gdal_configs
-      = File::Find::Rule->file()
+    my @gdal_configs = ($target_dir && -e "$target_dir/apps/gdal-config")
+      ? ("$target_dir/apps/gdal-config")
+      : File::Find::Rule->file()
                         ->name( 'gdal-config' )
-                        ->in( '.' );
-    my @pkg_configs
-      = File::Find::Rule->file()
+                        ->in( $target_dir );
+    my @pkg_configs = ($target_dir && -e "$target_dir/gdal.pc")
+      ? ("$target_dir/apps/gdal.pc")
+      : File::Find::Rule->file()
                         ->name( 'gdal.pc' )
-                        ->in( '.' );
+                        ->in( $target_dir );
     say 'gdal-configs: ' . join ' ', @gdal_configs;
     say 'pkg-configs:  ' . join ' ', @pkg_configs;
     
