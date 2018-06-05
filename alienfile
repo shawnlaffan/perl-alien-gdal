@@ -127,7 +127,7 @@ sub cleanse_build_dir {
 
     use Cwd qw /getcwd/;
     use File::Path qw /remove_tree/;
-    say 'cleanse_build_dir: Currently in: ' . getcwd();
+    say 'Cleansing build dir, currently in: ' . getcwd();
     
     if (getcwd() =~ /\b(gdal-[0-9\.]+)$/) {
         my $build_dir = $1;
