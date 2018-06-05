@@ -119,7 +119,7 @@ share {
   ];
   
   after 'build' => sub {
-    use Cwd qw /getwd/;
+    use Cwd qw /getcwd/;
     use File::Path qw /remove_tree/;
     say 'Currently in: ' . getcwd();
     my @build_dirs = glob ("build_*");
