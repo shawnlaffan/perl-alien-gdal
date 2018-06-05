@@ -119,12 +119,15 @@ share {
   ];
   
   after 'build' => sub {
-    my $base_dir = "$base_dir/_alien";
+    use Cwd qw /getwd/;
     use File::Path qw /remove_tree/;
-    my @build_dirs = glob ("$base_dir/build_*");
+    say 'Currently in: ' . getcwd();
+    my @build_dirs = glob ("build_*");
+    say "Build dirs: " . join ' ', @build_dirs;
     for my $build_dir (@build_dirs) {
-      File::Path::remove_tree ($build_dir, {safe => 1});
+      remove_tree ($build_dir, {safe => 1});
     }
+    
   }
 
 };
