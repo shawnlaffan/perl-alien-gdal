@@ -21,7 +21,7 @@ TODO: {
     diag $@ if $@;
     diag "Data dir is $data_dir";
     ok ($data_dir && -d $data_dir, "data dir exists (" . ($data_dir // '') . ")");
-    ok ($data_dir && -e "$data_dir/gcs.csv", "Found coordinate systems file");
+    ok ($data_dir && -e "$data_dir/gcs.csv", "Found coordinate systems file (gcs.csv)");
 }
 
 done_testing();
