@@ -118,11 +118,14 @@ share {
     @make_clean
   ];
   
-  after 'gather' => sub {
+  after 'build' => sub {
     use Cwd qw /getcwd/;
     use File::Path qw /remove_tree/;
     say 'Currently in: ' . getcwd();
-    my @build_dirs = glob ("build_*");
+    if (getcwd() =~ /gdal-$gdal_version/) {
+        chdir '..';
+    }
+    my @build_dirs = glob ("gdal-$gdal_version");
     say "Build dirs: " . join ' ', @build_dirs;
     for my $build_dir (@build_dirs) {
       remove_tree ($build_dir, {safe => 1});
