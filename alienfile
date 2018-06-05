@@ -118,7 +118,7 @@ share {
     @make_clean
   ];
   
-  after 'build' => sub {
+  after 'gather' => sub {
     use Cwd qw /getcwd/;
     use File::Path qw /remove_tree/;
     say 'Currently in: ' . getcwd();
