@@ -8,7 +8,7 @@ use Sort::Versions;
 #  it looks to be already noted in https://github.com/Perl5-Alien/Alien-Build/issues/12
 #  might also be able to access via old hash via https://metacpan.org/pod/Alien::Build#install_prop
 my $have_alien_gdal = eval 'require Alien::gdal';
-if (1 && $have_alien_gdal) {
+if (1 && $have_alien_gdal && Alien::gdal->install_type eq 'share') {
     my $ag_version = Alien::gdal->version;
     say "Found existing gdal via alien ($ag_version) in " .  Alien::gdal->dist_dir;
     #  append the relevant path
