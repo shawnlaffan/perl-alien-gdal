@@ -1,5 +1,8 @@
 Revision history for Alien::gdal
 
+1.10_004 2018-07-30
+    - use Alien::Build::Plugin::Cleanse::BuildDir
+
 1.10_003 2018-05-14
     - Abbreviate log output under more cpan tester rigs
     - Minor alienfile cleanups
