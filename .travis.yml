@@ -48,9 +48,9 @@ before_install:
   - cpanm --notest local::lib
   - eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
 
-  - export quiet=''
-  - cpanm ${quiet} --notest --installdeps .
+  - export quiet='--verbose'
   - cpanm ${quiet} --notest Alien::Build::Plugin::Fetch::Cache
+  - cpanm ${quiet} --notest --installdeps .
   - cpanm Alien::Build::Plugin::Cleanse::BuildDir
   
 
