@@ -8,7 +8,7 @@ use Sort::Versions;
 #  it looks to be already noted in https://github.com/Perl5-Alien/Alien-Build/issues/12
 #  might also be able to access via old hash via https://metacpan.org/pod/Alien::Build#install_prop
 my $have_alien_gdal = eval 'require Alien::gdal';
-if (0 && $have_alien_gdal) {
+if (0 && $have_alien_gdal && Alien::gdal->install_type eq 'share') {
     my $ag_version = Alien::gdal->version;
     say "Found existing gdal via alien ($ag_version) in " .  Alien::gdal->dist_dir;
     #  append the relevant path
@@ -95,7 +95,7 @@ share {
   #  try not to exceed the cpan-testers log limits
   if ($ENV{PERL_CPAN_REPORTER_DIR} || $ENV{PERL_CPAN_REPORTER_CONFIG} || $ENV{AUTOMATED_TESTING} || $ENV{TRAVIS} || $ENV{APPVEYOR}) {
     say "Running under CI or automated testing";
-    $make_cmd .= q/ | perl -ne "BEGIN {$|=1; open our $log, q|>|, q|build.log|}; print qq|\n| if 0 == ($. %% 100); print q|.|; print {$log} $_;" || type build.log/;
+    $make_cmd      .= q/ | perl -ne "BEGIN {$|=1; open our $log, q|>|, q|build.log|};   print qq|\n| if 0 == ($. %% 100); print q|.|; print {$log} $_;" || type build.log/;
     $make_inst_cmd .= q/ | perl -ne "BEGIN {$|=1; open our $log, q|>|, q|install.log|}; print qq|\n| if 0 == ($. %% 100); print q|.|; print {$log} $_;" || type install.log/;
     if (not $^O =~ /mswin/i) {
         $make_cmd =~ s/%%/%/;
@@ -124,12 +124,13 @@ share {
 
 
 sub cleanse_build_dir {
-
+#return;
     use Cwd qw /getcwd/;
     use File::Path qw /remove_tree/;
-    say 'Cleansing build dir, currently in: ' . getcwd();
-    
-    if (getcwd() =~ /\b(gdal-[0-9\.]+)$/) {
+    my $wd = getcwd();
+    say "Cleansing build dir, currently in: $wd";
+
+    if ($wd =~ '_alien' and $wd =~ /\b(gdal-[0-9\.]+)$/) {
         my $build_dir = $1;
         chdir '..';
         if (remove_tree ($build_dir, {safe => 1})) {
