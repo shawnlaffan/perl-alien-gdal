@@ -51,6 +51,7 @@
             "File::Find::Rule" : "0",
             "HTTP::Tiny" : "0.044",
             "PkgConfig" : "0",
+            "Sort::Versions" : "0",
             "parent" : "0"
          }
       },

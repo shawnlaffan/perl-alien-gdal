@@ -30,6 +30,7 @@ configure_requires:
   File::Find::Rule: '0'
   HTTP::Tiny: '0.044'
   PkgConfig: '0'
+  Sort::Versions: '0'
   parent: '0'
 dynamic_config: 1
 generated_by: 'ExtUtils::MakeMaker version 7.3, CPAN::Meta::Converter version 2.150010'
