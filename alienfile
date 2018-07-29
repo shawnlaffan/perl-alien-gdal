@@ -109,7 +109,8 @@ share {
         push @make_clean, '%{make} clean';
     }
     #  clean up the build dir on cpan testers etc
-    after 'build' => \&cleanse_build_dir;
+    #after 'build' => \&cleanse_build_dir;
+    plugin 'Cleanse::BuildDir';
   }
   
   build [
@@ -123,21 +124,21 @@ share {
 };
 
 
-sub cleanse_build_dir {
-#return;
-    use Cwd qw /getcwd/;
-    use File::Path qw /remove_tree/;
-    my $wd = getcwd();
-    say "Cleansing build dir, currently in: $wd";
-
-    if ($wd =~ '_alien' and $wd =~ /\b(gdal-[0-9\.]+)$/) {
-        my $build_dir = $1;
-        chdir '..';
-        if (remove_tree ($build_dir, {safe => 1})) {
-            say "Removed $build_dir";
-        }
-    }
-}
+#sub cleanse_build_dir {
+##return;
+#    use Cwd qw /getcwd/;
+#    use File::Path qw /remove_tree/;
+#    my $wd = getcwd();
+#    say "Cleansing build dir, currently in: $wd";
+#
+#    if ($wd =~ '_alien' and $wd =~ /\b(gdal-[0-9\.]+)$/) {
+#        my $build_dir = $1;
+#        chdir '..';
+#        if (remove_tree ($build_dir, {safe => 1})) {
+#            say "Removed $build_dir";
+#        }
+#    }
+#}
 
 
 sub patch_pkgconfig {
