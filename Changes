@@ -2,6 +2,8 @@ Revision history for Alien::gdal
 
 1.10_004 2018-07-30
     - use Alien::Build::Plugin::Cleanse::BuildDir
+    - add Sort::Versions as a configure and build dependency
+    - add URI::Escape and URI::File as dependencies
 
 1.10_003 2018-05-14
     - Abbreviate log output under more cpan tester rigs
