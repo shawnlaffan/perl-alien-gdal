@@ -35,8 +35,6 @@ my %WriteMakefileArgs = (
     },
     "PREREQ_PM" => {
         "Alien::Base" => "1.41",
-        "URI::File" => 0,
-        "URI::Escape" => 0,
     },
     META_MERGE => {
         'meta-spec' => { version => 2 },
