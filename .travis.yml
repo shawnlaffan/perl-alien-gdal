@@ -47,8 +47,10 @@ before_install:
   - cpanm --quiet --notest Alien::Build::MM
   - cpanm --notest local::lib
   - eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
+  
+  - cpanm -v https://github.com/shawnlaffan/perl-alien-geos
 
-  - export quiet='--verbose'
+  - export quiet='--quiet'
   - cpanm ${quiet} --notest Alien::Build::Plugin::Fetch::Cache
   - cpanm ${quiet} --notest --installdeps .
   - cpanm Alien::Build::Plugin::Cleanse::BuildDir
