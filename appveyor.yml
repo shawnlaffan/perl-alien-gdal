@@ -18,7 +18,7 @@ install:
   #- cpanm --quiet --notest HTML::LinkExtor
   #- cpanm --quiet --notest Test::CChecker
   #- cpanm --quiet --notest Alien::MSYS
-  - cpanm -v https://github.com/shawnlaffan/perl-alien-geos
+  - cpanm -v https://github.com/shawnlaffan/perl-alien-geos.git
   - cpanm --quiet --notest --installdeps .
   - cpanm --quiet --notest Alien::Build::Plugin::Fetch::Cache
 

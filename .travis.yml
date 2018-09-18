@@ -48,7 +48,7 @@ before_install:
   - cpanm --notest local::lib
   - eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
   
-  - cpanm -v https://github.com/shawnlaffan/perl-alien-geos
+  - cpanm -v https://github.com/shawnlaffan/perl-alien-geos.git
 
   - export quiet='--quiet'
   - cpanm ${quiet} --notest Alien::Build::Plugin::Fetch::Cache
