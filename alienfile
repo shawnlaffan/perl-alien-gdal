@@ -2,6 +2,10 @@ use 5.010;
 use alienfile;
 use Sort::Versions;
 
+use Alien::geos;
+my $sep = ($^O =~ /mswin/i) ? ';' : ':';
+$ENV{PATH} = Alien::geos->bin_dir . $sep . $ENV{PATH};
+
 #  add existing alien files to path etc
 #  not very elegant...
 #  disable for now - config tests fail
