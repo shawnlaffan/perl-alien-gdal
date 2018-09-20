@@ -119,6 +119,8 @@ share {
   
   build [
     "%{configure} --with-libtiff=internal $with_local $with_cpp11 $build_static",
+    \&update_makefile,
+    #\&pause,
     $make_cmd,
     \&patch_pkgconfig,
     $make_inst_cmd,
@@ -127,6 +129,18 @@ share {
 
 };
 
+sub update_makefile {
+    return if $^O  != /mswin/i;
+    system ($^X, '-p', '-i.bak', q{-e"s/\$\(GDAL_ROOT\)/\./"}, "GNUmakefile");
+}
+
+sub pause {
+    say "CONTINUE?";
+    my $response = <>;
+    while (not $response =~ /yes/) {
+        $response = <>;
+    }
+}
 
 #sub cleanse_build_dir {
 ##return;
