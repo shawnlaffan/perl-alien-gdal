@@ -105,6 +105,9 @@ share {
         $make_inst_cmd =~ s/type/cat/;
         $make_inst_cmd =~ s/"/'/g;
     }
+    if ($^O =~ /mswin/i) {
+        $make_cmd = '%{make}';  #  temporary override
+    }
     if (! ($ENV{TRAVIS} || $ENV{APPVEYOR})) {
         push @make_clean, '%{make} clean';
     }
