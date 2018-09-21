@@ -130,7 +130,7 @@ share {
 };
 
 sub update_makefile {
-    return if $^O  != /mswin/i;
+    return if $^O  !~ /mswin/i;
     system ($^X, '-p', '-i.bak', q{-e"s/\$\(GDAL_ROOT\)/\./"}, "GNUmakefile");
 }
 
