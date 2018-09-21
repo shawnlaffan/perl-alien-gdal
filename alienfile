@@ -112,6 +112,9 @@ share {
     if (! ($ENV{TRAVIS} || $ENV{APPVEYOR})) {
         push @make_clean, '%{make} clean';
     }
+    if ($^O =~ /mswin/i) {
+        $make_cmd = '%{make}';  #  temporary override
+    }
     #  clean up the build dir on cpan testers etc
     #after 'build' => \&cleanse_build_dir;
     plugin 'Cleanse::BuildDir';
