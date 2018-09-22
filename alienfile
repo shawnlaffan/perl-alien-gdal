@@ -2,9 +2,14 @@ use 5.010;
 use alienfile;
 use Sort::Versions;
 
+my $on_windows = $^O =~ /mswin/i;
+
 use Alien::geos;
-my $sep = ($^O =~ /mswin/i) ? ';' : ':';
+my $sep = $on_windows ? ';' : ':';
 $ENV{PATH} = Alien::geos->bin_dir . $sep . $ENV{PATH};
+
+#  make libtool noisy for debug purposes
+$ENV{LTFLAGS} = "--debug --verbose" if $on_windows;
 
 #  add existing alien files to path etc
 #  not very elegant...
@@ -123,7 +128,7 @@ share {
   build [
     "%{configure} --with-libtiff=internal $with_local $with_cpp11 $build_static",
     \&update_makefile,
-    #\&pause,
+    \&pause,
     $make_cmd,
     \&patch_pkgconfig,
     $make_inst_cmd,
