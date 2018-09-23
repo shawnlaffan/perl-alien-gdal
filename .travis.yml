@@ -53,7 +53,7 @@ before_install:
   - cpanm --quiet Alien::Build::Plugin::Cleanse::BuildDir
   - cpanm --quiet --notest File::Find::Rule
   
-  - cpanm -v https://github.com/shawnlaffan/perl-alien-geos.git
+  - cpanm --notest -v https://github.com/shawnlaffan/perl-alien-geos.git
 
   - export quiet='--quiet'
   - cpanm ${quiet} --notest Alien::Build::Plugin::Fetch::Cache
