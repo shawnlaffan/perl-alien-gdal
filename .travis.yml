@@ -52,6 +52,7 @@ before_install:
   - cpanm --quiet --notest PkgConfig
   - cpanm Alien::Build::Plugin::Cleanse::BuildDir
   - cpanm --quiet --notest Sort::Versions
+  - cpanm --quiet --notest File::Find::Rule
   - cpanm -v https://github.com/shawnlaffan/perl-alien-geos.git
 
   - export quiet='--quiet'
