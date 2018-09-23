@@ -3,13 +3,19 @@ use alienfile;
 use Sort::Versions;
 
 my $on_windows = $^O =~ /mswin/i;
+my $on_automated_rig
+  =  $ENV{PERL_CPAN_REPORTER_DIR}
+  || $ENV{PERL_CPAN_REPORTER_CONFIG}
+  || $ENV{AUTOMATED_TESTING}
+  || $ENV{TRAVIS}
+  || $ENV{APPVEYOR};
 
 use Alien::geos;
 my $sep = $on_windows ? ';' : ':';
 $ENV{PATH} = Alien::geos->bin_dir . $sep . $ENV{PATH};
 
 #  make libtool noisy for debug purposes
-$ENV{LTFLAGS} = "--debug --verbose" if $on_windows;
+#$ENV{LTFLAGS} = "--debug --verbose" if $on_windows;
 
 #  add existing alien files to path etc
 #  not very elegant...
@@ -128,7 +134,7 @@ share {
   build [
     "%{configure} --with-libtiff=internal $with_local $with_cpp11 $build_static",
     \&update_makefile,
-    #\&pause,
+    \&pause,
     $make_cmd,
     \&patch_pkgconfig,
     $make_inst_cmd,
@@ -138,11 +144,16 @@ share {
 };
 
 sub update_makefile {
+    return;  #  should not be needed now
     return if $^O  !~ /mswin/i;
     system ($^X, '-p', '-i.bak', q{-e"s/\$\(GDAL_ROOT\)/\./"}, "GNUmakefile");
 }
 
 sub pause {
+    return;  #  re-enable in case of debug
+    return if $on_automated_rig;
+    return if !$on_windows;
+
     say "CONTINUE?";
     my $response = <>;
     while (not $response =~ /yes/) {
