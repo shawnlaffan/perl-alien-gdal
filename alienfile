@@ -128,7 +128,7 @@ share {
   build [
     "%{configure} --with-libtiff=internal $with_local $with_cpp11 $build_static",
     \&update_makefile,
-    \&pause,
+    #\&pause,
     $make_cmd,
     \&patch_pkgconfig,
     $make_inst_cmd,
