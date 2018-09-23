@@ -12,6 +12,8 @@ diag ('cflags: ' . Alien::gdal->cflags);
 diag ('Dynamic libs: ' . join ':', Alien::gdal->dynamic_libs);
 diag ('bin dir: ' . Alien::gdal->bin_dir);
 my $bin = Alien::gdal->bin_dir;
+warn "no gdal bin dir found via bin_dir method\n" if not $bin;
+$bin = Alien::gdal->dist_dir . '/bin';
 
 #  nasty hack
 $ENV{LD_LIBRARY_PATH}   = Alien::gdal->dist_dir . '/lib';
