@@ -6,6 +6,82 @@ use parent qw( Alien::Base );
 
 our $VERSION = '1.10_003';
 
+my $have_geos;
+BEGIN {
+    $have_geos = eval 'require Alien::geos';
+    my $pushed_to_env = 0;
+    if ($have_geos && !$pushed_to_env) {
+        my $sep_char = ($^O =~ /mswin/i) ? ';' : ':';
+        #  crude, but otherwise Geo::GDAL::FFI does not
+        #  get fed all the neeed info
+        #warn "Adding Alien::geos bin to path: " . Alien::geos->bin_dir;
+        $ENV{PATH} =~ s/;$//;
+        $ENV{PATH} .= $sep_char . join ($sep_char, Alien::geos->bin_dir);
+        $pushed_to_env++;
+        #warn $ENV{PATH};
+    }
+}
+
+sub dynamic_libs {
+    my $self = shift;
+    
+    my (@libs) = $self->SUPER::dynamic_libs;
+    
+    if ($have_geos) {
+        push @libs, Alien::geos->dynamic_libs;
+    }
+    
+    return @libs;
+}
+
+sub cflags {
+    my $self = shift;
+    
+    my $cflags = $self->SUPER::cflags;
+    
+    if ($have_geos) {
+        $cflags .= Alien::geos->cflags;
+    }
+    
+    return $cflags;
+}
+
+sub libs {
+    my $self = shift;
+    
+    my $cflags = $self->SUPER::libs;
+    
+    if ($have_geos) {
+        $cflags .= Alien::geos->libs;
+    }
+    
+    return $cflags;
+}
+
+#sub cflags_static {
+#    my $self = shift;
+#    
+#    my $cflags = $self->SUPER::cflags_static;
+#    
+#    if ($have_geos) {
+#        $cflags .= Alien::geos->cflags_static;
+#    }
+#    
+#    return $cflags;
+#}
+#
+#sub libs_static {
+#    my $self = shift;
+#    
+#    my $cflags = $self->SUPER::libs_static;
+#    
+#    if ($have_geos) {
+#        $cflags .= Alien::geos->libs_static;
+#    }
+#    
+#    return $cflags;
+#}
+
 sub data_dir {
     my $self = shift;
  
