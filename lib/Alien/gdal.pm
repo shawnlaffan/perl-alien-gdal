@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use parent qw( Alien::Base );
 
-our $VERSION = '1.10_003';
+our $VERSION = '1.11';
 
 sub data_dir {
     my $self = shift;
