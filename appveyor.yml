@@ -14,6 +14,7 @@ install:
   - cd C:\projects\%APPVEYOR_PROJECT_NAME%
   
   #  ensure we have some packages that aren't picked up by the install system
+  - cpanm --quiet --notest Alien::Build
   - cpanm --quiet --notest Sort::Versions
   - cpanm --quiet --notest PkgConfig
   - cpanm Alien::Build::Plugin::Cleanse::BuildDir
