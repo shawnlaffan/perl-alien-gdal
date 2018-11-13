@@ -7,6 +7,11 @@ use Alien::gdal;
 
 alien_ok 'Alien::gdal';
 
+#  nasty hack
+$ENV{LD_LIBRARY_PATH}   = Alien::gdal->dist_dir . '/lib';
+$ENV{DYLD_LIBRARY_PATH} = Alien::gdal->dist_dir . '/lib';
+
+
 diag ('libs: '   . Alien::gdal->libs);
 diag ('cflags: ' . Alien::gdal->cflags);
 eval {
@@ -18,10 +23,6 @@ diag ('bin dir: ' . join (' ', Alien::gdal->bin_dir));
 my @bin = Alien::gdal->bin_dir;
 warn "no gdal bin dir found via bin_dir method\n" if not @bin;
 #$bin = Alien::gdal->dist_dir . '/bin';
-
-#  nasty hack
-$ENV{LD_LIBRARY_PATH}   = Alien::gdal->dist_dir . '/lib';
-$ENV{DYLD_LIBRARY_PATH} = Alien::gdal->dist_dir . '/lib';
 
 #if ($^O !~ /mswin/i) {
     #diag join "", `ls -l $bin`;
