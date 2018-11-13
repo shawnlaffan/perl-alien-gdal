@@ -6,6 +6,9 @@ build_requires:
   Alien::Build: '1.41'
   Alien::Build::MM: '1.41'
   Alien::Build::Plugin::Cleanse::BuildDir: '0'
+  Alien::MSYS: '0.07'
+  Alien::geos: '0'
+  Alien::geos::af: '0'
   Alien::patch: '0'
   Archive::Tar: '0'
   ExtUtils::MakeMaker: '6.52'
@@ -23,6 +26,7 @@ configure_requires:
   Alien::Build: '1.41'
   Alien::Build::MM: '1.41'
   Alien::Build::Plugin::Cleanse::BuildDir: '0'
+  Alien::geos::af: '0'
   Alien::patch: '0'
   ExtUtils::MakeMaker: '6.52'
   File::Find::Rule: '0'
@@ -31,7 +35,7 @@ configure_requires:
   Sort::Versions: '0'
   parent: '0'
 dynamic_config: 1
-generated_by: 'ExtUtils::MakeMaker version 7.3, CPAN::Meta::Converter version 2.150010'
+generated_by: 'ExtUtils::MakeMaker version 7.34, CPAN::Meta::Converter version 2.150010'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -47,11 +51,12 @@ requires:
 resources:
   bugtracker: https://github.com/shawnlaffan/perl-alien-gdal/issues/
   repository: https://github.com/shawnlaffan/perl-alien-gdal
-version: 1.10_003
+version: '1.12'
 x_alienfile:
-  generated_by: 'Alien::Build::MM version 1.43'
+  generated_by: 'Alien::Build::MM version 1.49'
   requires:
     share:
+      Alien::MSYS: '0.07'
       Archive::Tar: '0'
       HTML::LinkExtor: '0'
       HTTP::Tiny: '0.044'

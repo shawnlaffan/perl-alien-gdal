@@ -10,9 +10,10 @@ my $on_automated_rig
   || $ENV{TRAVIS}
   || $ENV{APPVEYOR};
 
-use Alien::geos;
+#  make sure we get GEOS support
+use Alien::geos::af;
 my $sep = $on_windows ? ';' : ':';
-$ENV{PATH} = Alien::geos->bin_dir . $sep . $ENV{PATH};
+$ENV{PATH} = Alien::geos::af->bin_dir . $sep . $ENV{PATH};
 
 #  make libtool noisy for debug purposes
 #$ENV{LTFLAGS} = "--debug --verbose" if $on_windows;
