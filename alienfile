@@ -12,8 +12,8 @@ my $on_automated_rig
 
 #  make sure we get GEOS support
 use Alien::geos::af;
-my $sep = $on_windows ? ';' : ':';
-$ENV{PATH} = Alien::geos::af->bin_dir . $sep . $ENV{PATH};
+my $sep_char = $on_windows ? ';' : ':';
+$ENV{PATH} .= $sep_char . join ($sep_char, Alien::geos::af->bin_dir);
 
 #  make libtool noisy for debug purposes
 #$ENV{LTFLAGS} = "--debug --verbose" if $on_windows;
@@ -28,12 +28,11 @@ if (0 && $have_alien_gdal && Alien::gdal->install_type eq 'share') {
     my $ag_version = Alien::gdal->version;
     say "Found existing gdal via alien ($ag_version) in " .  Alien::gdal->dist_dir;
     #  append the relevant path
-    my $sep = ($^O =~ /mswin/i) ? ';' : ':';
     $ENV{PKG_CONFIG_PATH}
       = Alien::gdal->dist_dir . '/lib/pkgconfig/'
-      . $sep
+      . $sep_char
       . ($ENV{PKG_CONFIG_PATH} // '');
-    $ENV{PATH} = Alien::gdal->bin_dir . $sep . $ENV{PATH};
+    $ENV{PATH} = Alien::gdal->bin_dir . $sep_char . $ENV{PATH};
 }
 
 use Cwd;
