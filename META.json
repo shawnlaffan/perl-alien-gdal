@@ -26,7 +26,6 @@
             "Alien::Build::MM" : "1.41",
             "Alien::Build::Plugin::Cleanse::BuildDir" : "0",
             "Alien::MSYS" : "0.07",
-            "Alien::geos" : "0",
             "Alien::geos::af" : "0",
             "Alien::patch" : "0",
             "Archive::Tar" : "0",
