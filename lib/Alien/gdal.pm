@@ -40,7 +40,7 @@ sub cflags {
     my $cflags = $self->SUPER::cflags;
     
     if ($have_geos) {
-        $cflags .= Alien::geos::af->cflags;
+        $cflags .= ' ' . Alien::geos::af->cflags;
     }
     
     return $cflags;
@@ -52,7 +52,7 @@ sub libs {
     my $cflags = $self->SUPER::libs;
     
     if ($have_geos) {
-        $cflags .= Alien::geos::af->libs;
+        $cflags .= ' ' . Alien::geos::af->libs;
     }
     
     return $cflags;
@@ -64,7 +64,7 @@ sub libs {
 #    my $cflags = $self->SUPER::cflags_static;
 #    
 #    if ($have_geos) {
-#        $cflags .= Alien::geos::af->cflags_static;
+#        $cflags .= ' ' . Alien::geos::af->cflags_static;
 #    }
 #    
 #    return $cflags;
@@ -76,7 +76,7 @@ sub libs {
 #    my $cflags = $self->SUPER::libs_static;
 #    
 #    if ($have_geos) {
-#        $cflags .= Alien::geos::af->libs_static;
+#        $cflags .= ' ' . Alien::geos::af->libs_static;
 #    }
 #    
 #    return $cflags;
