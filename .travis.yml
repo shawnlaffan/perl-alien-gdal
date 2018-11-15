@@ -43,11 +43,12 @@ before_install:
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then /usr/local/bin/cpanm --version; fi;
   
   #  local::lib target is cached
+  - cpanm --notest local::lib
+  - eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
+  
   - cpanm --quiet --notest Alien::Build 
   #  Alien::Build::MM sometimes goes missing
   - cpanm --quiet --notest Alien::Build::MM
-  - cpanm --notest local::lib
-  - eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
 
   - cpanm --quiet --notest Sort::Versions
   - cpanm --quiet --notest PkgConfig
@@ -56,6 +57,7 @@ before_install:
   
   #  this is on cpan now
   #- cpanm --notest -v https://github.com/shawnlaffan/perl-alien-geos.git
+  - cpanm --quiet --notest --installdeps Alien::geos::af
   - cpanm -v Alien::geos::af
 
   #  TESTING - should set up as a matrix option so we get both
