@@ -60,9 +60,9 @@ before_install:
   #- cpanm --notest -v https://github.com/shawnlaffan/perl-alien-geos.git
   - cpanm --quiet --notest --installdeps Alien::geos::af
   - cpanm -v Alien::geos::af
-  - echo "==="
-  - perl -MAlien::geos::af -E 'Alien::geos::af->dynamic_libs'
-  - echo "==="
+  #- echo "==="
+  #- perl -MAlien::geos::af -E 'say eval {Alien::geos::af->dynamic_libs} // ""'
+  #- echo "==="
 
   #  TESTING - should set up as a matrix option so we get both
   #  for this run, make sure it does not apply to Alien::geos::af
