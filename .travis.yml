@@ -41,6 +41,9 @@ before_install:
 #  make sure we get the brewed perl and cpanm etc
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then export PATH=/usr/local/bin:${PATH}; fi;
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then /usr/local/bin/cpanm --version; fi;
+  
+  #  TESTING - should set up as a matrix option so we get both
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then export ALIEN_INSTALL_TYPE=share; fi;
 
   #  local::lib target is cached
   - cpanm --quiet --notest Alien::Build 
