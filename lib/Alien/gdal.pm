@@ -147,9 +147,9 @@ Alien::gdal - Compile GDAL, the Geographic Data Abstraction Library
     print Alien::gdal->dist_dir;
 
     #  assuming you have populated @args already
-    system (Alien::gdal->bin_dir, 'gdalwarp', @args);
+    system (Alien::gdal->bin_dir . '/gdalwarp', @args);
     
-    #  access the example data distributed with gdal
+    #  access the GDAL data directory (note that not all system installs include it)
     my $path = Alien::gdal->data_dir;
     
 =head1 DESCRIPTION
