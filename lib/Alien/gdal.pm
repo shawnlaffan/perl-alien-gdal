@@ -4,16 +4,16 @@ use strict;
 use warnings;
 use parent qw( Alien::Base );
 
-our $VERSION = '1.12';
+our $VERSION = '1.13';
 
 my $have_geos;
 BEGIN {
     $have_geos = eval 'require Alien::geos::af';
     my $pushed_to_env = 0;
-    if ($have_geos && !$pushed_to_env) {
+    if ($have_geos && !$pushed_to_env && Alien::geos::af->install_type eq 'share') {
         my $sep_char = ($^O =~ /mswin/i) ? ';' : ':';
         #  crude, but otherwise Geo::GDAL::FFI does not
-        #  get fed all the neeed info
+        #  get fed all the needed info
         #warn "Adding Alien::geos bin to path: " . Alien::geos::af->bin_dir;
         $ENV{PATH} =~ s/;$//;
         $ENV{PATH} .= $sep_char . join ($sep_char, Alien::geos::af->bin_dir);
