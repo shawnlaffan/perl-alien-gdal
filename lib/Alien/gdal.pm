@@ -1,17 +1,19 @@
 package Alien::gdal;
 
+use 5.010;
 use strict;
 use warnings;
 use parent qw( Alien::Base );
+use FFI::CheckLib;
 
 our $VERSION = '1.13';
 
-my $have_geos;
+my ($have_geos, $have_proj);
 BEGIN {
+    my $sep_char = ($^O =~ /mswin/i) ? ';' : ':';
     $have_geos = eval 'require Alien::geos::af';
     my $pushed_to_env = 0;
     if ($have_geos && !$pushed_to_env && Alien::geos::af->install_type eq 'share') {
-        my $sep_char = ($^O =~ /mswin/i) ? ';' : ':';
         #  crude, but otherwise Geo::GDAL::FFI does not
         #  get fed all the needed info
         #warn "Adding Alien::geos bin to path: " . Alien::geos::af->bin_dir;
@@ -19,6 +21,21 @@ BEGIN {
         $ENV{PATH} .= $sep_char . join ($sep_char, Alien::geos::af->bin_dir);
         $pushed_to_env++;
         #warn $ENV{PATH};
+    }
+    # 
+    if (!$ENV{PROJSO} and $^O =~ /mswin/i) {
+        my $libpath;
+        $have_proj = eval 'require Alien::proj';
+        if ($have_proj) {
+            #  make sure we get the proj lib early in the search
+            ($libpath) = Alien::proj->bin_dir;
+        }
+        my $proj_lib = FFI::CheckLib::find_lib (
+            libpath => $libpath,
+            lib     => 'proj',
+        );
+        warn "PROJ_LIB FILE IS $proj_lib";
+        $ENV{PROJSO} //= $proj_lib;
     }
 }
 
