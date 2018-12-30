@@ -1,5 +1,8 @@
 Revision history for Alien::gdal
 
+1.14 2018-12-30
+    - Add Alien::spatialite, Alien::proj and Alien::sqlite as dependencies.
+
 1.13 2018-11-27
     - Add Alien::geos::af as a dependency.  This gives us access to the GEOS library.
     
