@@ -58,8 +58,11 @@ before_install:
 
   #  this is on cpan now
   #- cpanm --notest -v https://github.com/shawnlaffan/perl-alien-geos.git
-  - cpanm --quiet --notest --installdeps Alien::geos::af
-  - cpanm -v Alien::geos::af
+  - cpanm -v --notest --installdeps Alien::geos::af
+  - cpanm -v --notest Alien::geos::af
+  - cpanm -v --notest --installdeps Alien::spatialite
+  - cpanm -v --notest Alien::proj
+  
   #- echo "==="
   #- perl -MAlien::geos::af -E 'say eval {Alien::geos::af->dynamic_libs} // ""'
   #- echo "==="

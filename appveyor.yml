@@ -22,7 +22,10 @@ install:
   #  this is on cpan now
   #- cpanm -v https://github.com/shawnlaffan/perl-alien-geos.git
 
-  - cpanm Alien::geos::af  
+  - cpanm -v --notest Alien::geos::af
+  - cpanm -v --notest Alien::proj
+  - cpanm -v --notest Alien::spatialite
+  
   - cpanm --quiet --notest --installdeps .
   - cpanm --quiet --notest Alien::Build::Plugin::Fetch::Cache
 
