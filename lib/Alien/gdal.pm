@@ -9,6 +9,7 @@ use FFI::CheckLib;
 our $VERSION = '1.14';
 
 my ($have_geos, $have_proj);
+my @have_aliens;
 BEGIN {
     my $sep_char = ($^O =~ /mswin/i) ? ';' : ':';
     $have_geos = eval 'require Alien::geos::af';
@@ -16,6 +17,7 @@ BEGIN {
         my $have_lib = eval "require $alien_lib";
         my $pushed_to_env = 0;
         if ($have_lib && $alien_lib->install_type eq 'share') {
+            push @have_aliens, $alien_lib;
             #  crude, but otherwise Geo::GDAL::FFI does not
             #  get fed all the needed info
             #warn "Adding Alien::geos bin to path: " . Alien::geos::af->bin_dir;
@@ -46,11 +48,20 @@ sub dynamic_libs {
     
     my (@libs) = $self->SUPER::dynamic_libs;
     
-    if ($have_geos) {
-        push @libs, Alien::geos::af->dynamic_libs;
+    #if ($have_geos) {
+    #    push @libs, Alien::geos::af->dynamic_libs;
+    #}
+    foreach my $alien (@have_aliens) {
+        push @libs, $alien->dynamic_libs;
+    }
+    my (%seen, @libs2);
+    foreach my $lib (@libs) {
+        next if $seen{$lib};
+        push @libs2, $lib;
+        $seen{$lib}++;
     }
     
-    return @libs;
+    return @libs2;
 }
 
 sub cflags {
