@@ -33,12 +33,12 @@ install:
 
 build_script:
   - set ALIEN_BUILD_PRELOAD=Fetch::Cache
-  #- perl Makefile.PL
-  ##- gmake | perl -ne "BEGIN {$|=1; open our $log, q|>|, q|build.log|}; print qq|\n| if 0 == ($. %% 100); print q|.|; print {$log} $_;" || type build.log
-  #- gmake
-  #- gmake test
-  ##  some feedback
-  #- type blib\lib\auto\share\dist\Alien-gdal\lib\pkgconfig\gdal.pc
+  - perl Makefile.PL
+  #- gmake | perl -ne "BEGIN {$|=1; open our $log, q|>|, q|build.log|}; print qq|\n| if 0 == ($. %% 100); print q|.|; print {$log} $_;" || type build.log
+  - gmake
+  - gmake test
+  #  some feedback
+  - type blib\lib\auto\share\dist\Alien-gdal\lib\pkgconfig\gdal.pc
   #  temporary until we cache deps
-  - perl -e"1"
+  #- perl -e"1"
 
