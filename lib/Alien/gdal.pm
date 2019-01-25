@@ -6,14 +6,14 @@ use warnings;
 use parent qw( Alien::Base );
 use FFI::CheckLib;
 
-our $VERSION = '1.14';
+our $VERSION = '1.15';
 
 my ($have_geos, $have_proj);
 my @have_aliens;
 BEGIN {
     my $sep_char = ($^O =~ /mswin/i) ? ';' : ':';
     $have_geos = eval 'require Alien::geos::af';
-    foreach my $alien_lib (qw /Alien::geos::af Alien::sqlite Alien::spatialite Alien::freexl/) {
+    foreach my $alien_lib (qw /Alien::geos::af Alien::sqlite Alien::spatialite Alien::freexl Alien::proj/) {
         my $have_lib = eval "require $alien_lib";
         my $pushed_to_env = 0;
         if ($have_lib && $alien_lib->install_type eq 'share') {
@@ -47,10 +47,7 @@ sub dynamic_libs {
     my $self = shift;
     
     my (@libs) = $self->SUPER::dynamic_libs;
-    
-    #if ($have_geos) {
-    #    push @libs, Alien::geos::af->dynamic_libs;
-    #}
+
     foreach my $alien (@have_aliens) {
         push @libs, $alien->dynamic_libs;
     }
