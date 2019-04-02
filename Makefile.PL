@@ -14,7 +14,6 @@ my %common_reqs = (
     "Alien::Build::Plugin::Cleanse::BuildDir" => 0,
     'Sort::Versions' => 0,
     "Alien::geos::af" => '1.005',
-    "Alien::spatialite" => '1.03',
     "Alien::proj" => '1.02',
     "Alien::sqlite" => '1.02',
     "FFI::CheckLib"   => "0.23",
@@ -50,6 +49,13 @@ my %WriteMakefileArgs = (
             },
             bugtracker => {
                 web => 'https://github.com/shawnlaffan/perl-alien-gdal/issues/',
+            },
+        },
+        prereqs => {
+            build => {
+                suggests => {
+                    "Alien::spatialite" => '1.03',
+                },
             },
         },
     },
