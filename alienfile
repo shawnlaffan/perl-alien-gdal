@@ -31,7 +31,7 @@ $ENV{PATH} .= $sep_char
 my $have_spatialite = eval 'require
   Alien::spatialite';
 if ($have_spatialite) {
-    $have_spatialite = 'Alien::spatialite';  #  hide from scanners
+    $have_spatialite = 'Alien' . '::' . 'spatialite';  #  hide from scanners
     $ENV{PATH} .= $sep_char
     . $have_spatialite->bin_dir;
     push @aliens_l_and_I, $have_spatialite;
