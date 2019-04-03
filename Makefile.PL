@@ -51,13 +51,13 @@ my %WriteMakefileArgs = (
                 web => 'https://github.com/shawnlaffan/perl-alien-gdal/issues/',
             },
         },
-        prereqs => {
-            build => {
-                suggests => {
-                    "Alien::spatialite" => '1.03',
-                },
-            },
-        },
+        #prereqs => {
+        #    build => {
+        #        suggests => {
+        #            "Alien::spatialite" => '1.03',
+        #        },
+        #    },
+        #},
     },
     "DISTNAME" => "Alien-gdal",
     "LICENSE"  => "perl",
@@ -65,7 +65,9 @@ my %WriteMakefileArgs = (
 
 use Alien::Build::MM;
 my $abmm = Alien::Build::MM->new ();
-%WriteMakefileArgs = $abmm->mm_args(%WriteMakefileArgs);
+%WriteMakefileArgs = $abmm->mm_args(
+    %WriteMakefileArgs,
+);
 
 WriteMakefile(%WriteMakefileArgs);
 

@@ -28,11 +28,13 @@ $ENV{PATH} .= $sep_char
     Alien::proj->bin_dir,
     Alien::sqlite->bin_dir,
   );
-my $have_spatialite = eval 'require Alien::spatialite';
+my $have_spatialite = eval 'require
+  Alien::spatialite';
 if ($have_spatialite) {
+    $have_spatialite = 'Alien::spatialite';  #  hide from scanners
     $ENV{PATH} .= $sep_char
-    . Alien::spatialite->bin_dir;
-    push @aliens_l_and_I, 'Alien::spatialite';
+    . $have_spatialite->bin_dir;
+    push @aliens_l_and_I, $have_spatialite;
 }
 
 
@@ -168,8 +170,8 @@ share {
   if (Alien::sqlite->install_type eq 'share') {
     $with_sqlite3 = '--with-sqlite3=' . Alien::sqlite->dist_dir;
   }
-  if (Alien::spatialite->install_type eq 'share') {
-    $with_spatialite = '--with-spatialite=' . Alien::spatialite->dist_dir;
+  if ($have_spatialite && $have_spatialite->install_type eq 'share') {
+    $with_spatialite = '--with-spatialite=' . $have_spatialite->dist_dir;
   }
 
   build [
