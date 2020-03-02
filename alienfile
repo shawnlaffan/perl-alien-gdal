@@ -164,7 +164,7 @@ share {
         $make_inst_cmd =~ s/"/'/g;
     }
     if (! ($ENV{TRAVIS} || $ENV{APPVEYOR})) {
-        #  build will be slightly faster, and we do not use it yet
+        #  build will be slightly faster, and we do not use GNM yet
         $with_gnm = '--with-gnm=no'
     }
     #  clean up the build dir on cpan testers etc
@@ -182,7 +182,7 @@ share {
   }
 
   build [
-    "%{configure} --with-libtiff=internal $with_local $with_cpp11 $with_sqlite3 $with_spatialite $build_static",
+    "%{configure} --with-libtiff=internal --without-pg $with_local $with_cpp11 $with_sqlite3 $with_spatialite $build_static",
     \&update_makefile,
     \&pause,
     $make_cmd,
