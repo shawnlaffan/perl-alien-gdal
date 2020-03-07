@@ -189,7 +189,7 @@ share {
     push @with_args, ' --with-spatialite=' . $have_spatialite->dist_dir;
   }
   my $config_args = $ENV{ALIEN_GDAL_CONFIG_ARGS} // '';
-  $config_args =~ s/[^-\s\w,]//g;  #  overkill?
+  $config_args =~ s/[^-\s\w,=]//g;  #  overkill?
   $config_args = join (' ', @with_args) . " $config_args";
 
   build [
