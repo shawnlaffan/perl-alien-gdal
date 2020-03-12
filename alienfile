@@ -20,20 +20,19 @@ my @aliens_l_and_I = qw(
 use Alien::geos::af;
 use Alien::proj;
 use Alien::sqlite;
+use Env qw /@PATH/;
 my $sep_char = $on_windows ? ';' : ':';
-$ENV{PATH} .= $sep_char
-  . join (
-    $sep_char,
-    Alien::geos::af->bin_dir,
-    Alien::proj->bin_dir,
-    Alien::sqlite->bin_dir,
+unshift @PATH,
+  (
+      Alien::geos::af->bin_dir,
+      Alien::proj->bin_dir,
+      Alien::sqlite->bin_dir,
   );
 my $have_spatialite = eval 'require
   Alien::spatialite';
 if ($have_spatialite) {
     $have_spatialite = 'Alien' . '::' . 'spatialite';  #  hide from scanners
-    $ENV{PATH} .= $sep_char
-    . $have_spatialite->bin_dir;
+    unshift @PATH, $have_spatialite->bin_dir;
     push @aliens_l_and_I, $have_spatialite;
 }
 
@@ -189,7 +188,7 @@ share {
     push @with_args, ' --with-spatialite=' . $have_spatialite->dist_dir;
   }
   my $config_args = $ENV{ALIEN_GDAL_CONFIG_ARGS} // '';
-  $config_args =~ s/[^-\s\w,=]//g;  #  overkill?
+  $config_args =~ s/[^-\s\w,=+]//g;  #  overkill?
   $config_args = join (' ', @with_args) . " $config_args";
 
   build [
