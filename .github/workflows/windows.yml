@@ -1,7 +1,5 @@
 name: Windows
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
 on:
   push:
     branches: '*'
@@ -18,8 +16,8 @@ jobs:
 
       - name: Set up Perl
         run: |
-            choco install strawberryperl
-            echo "##[add-path]C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin"
+          choco install strawberryperl
+          echo "##[add-path]C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin"
   
       - name: perl -V
         run: perl -V 
