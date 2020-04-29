@@ -2,10 +2,12 @@ name: Windows
 
 on:
   push:
-    branches: '*'
+    branches:
+      - '*'
+    tags-ignore:
+      - '*'
   pull_request:
-    branches: '*'
-  tags-ignore: '*'
+
 
 jobs:
   perl:
