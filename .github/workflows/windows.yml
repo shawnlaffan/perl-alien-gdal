@@ -13,6 +13,7 @@ env:
   PERL_LOCAL_LIB_ROOT: c:/cx
   PERL_MB_OPT: --install_base C:/cx
   PERL_MM_OPT: INSTALL_BASE=C:/cx
+  ALIEN_BUILD_PRELOAD="Fetch::Cache"
 
 jobs:
   perl:
@@ -29,7 +30,7 @@ jobs:
       - name: perl -V
         run: perl -V
         
-      - name: Prepare for cache
+      - name: Prepare for CPAN cache
         run: |
           perl -V > perlversion.txt
           dir perlversion.txt
@@ -41,6 +42,19 @@ jobs:
           key: ${{ runner.os }}-build-${{ hashFiles('perlversion.txt') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ hashFiles('perlversion.txt') }}
+
+      - name: Prepare for Alien cache
+        run: |
+          perl -V > aliencache.txt
+          dir aliencache.txt
+
+      - name: Cache Alien downloads
+        uses: actions/cache@v1
+        with:
+          path: %HOMEPATH%\.alienbuild
+          key: ${{ runner.os }}-build-${{ hashFiles('aliencache.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ hashFiles('aliencache.txt') }}
 
       #- name: Install Dependencies
       #  run: curl -sL https://git.io/cpm | perl - install -g --show-build-log-on-failure
@@ -56,7 +70,7 @@ jobs:
           cpanm --quiet --notest Alien::Build::Plugin::Cleanse::BuildDir
           cpanm --quiet --notest File::Find::Rule
           cpanm --quiet --notest Alien::Build::Plugin::Fetch::Cache
-          cpanm -v --notest --installdeps Alien::geos::af
+          #cpanm -v --notest --installdeps Alien::geos::af
           cpanm -v --notest Alien::geos::af
           cpanm -v --notest Alien::sqlite
           cpanm -v --notest Alien::proj
