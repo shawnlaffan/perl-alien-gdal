@@ -29,8 +29,8 @@ jobs:
   
       - name: Install dependencies
         run: |
-          cpanm --notest local::lib
-          eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
+          #cpanm --notest local::lib
+          #eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
           cpanm --quiet --notest Alien::Build
           cpanm --quiet --notest Alien::Build::MM
           cpanm --quiet --notest Sort::Versions
