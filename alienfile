@@ -8,7 +8,8 @@ my $on_automated_rig
   || $ENV{PERL_CPAN_REPORTER_CONFIG}
   || $ENV{AUTOMATED_TESTING}
   || $ENV{TRAVIS}
-  || $ENV{APPVEYOR};
+  || $ENV{APPVEYOR}
+  || $ENV{CI};
 
 my @aliens_l_and_I = qw(
         Alien::geos::af
