@@ -192,6 +192,8 @@ share {
   $config_args = join (' ', @with_args) . " $config_args";
 
   build [
+    '%{make} -v',
+    \&patch_makefile_long_line,
     "%{configure} $config_args $build_static",
     \&update_makefile,
     \&pause,
@@ -207,6 +209,54 @@ sub update_makefile {
     return;  #  should not be needed now
     return if !$on_windows;
     system ($^X, '-p', '-i.bak', q{-e"s/\$\(GDAL_ROOT\)/\./"}, "GNUmakefile");
+}
+
+sub patch_makefile_long_line {
+    return if !$on_windows;
+
+    my $target = "GNUmakefile";
+    say "Patching $target to cope with long lines";
+    #my $target_line = quotemeta q{$(LD) $(LDFLAGS) $(LIBS) -o $@ $(sort $(wildcard $(GDAL_OBJ:.o=.lo))) \ };
+    
+    my $text_target1 = '$(LIBGDAL):	$(GDAL_OBJ:.o=.lo)';
+    my $x = quotemeta $text_target1;
+    my $qr_target1 = qr /^$x/;
+    my $new_contents1 = 'SORTED = $(sort $(wildcard $(GDAL_OBJ:.o=.lo)))' . "\n";
+    
+    my $qr_target2 = qr /sort .+wildcard/;
+    my $new_contents2 = << 'NEW_CONTENTS'
+$(LD) $(LDFLAGS) $(LIBS) -o $@ \
+$(wordlist 1,100,$(SORTED)) \
+$(wordlist 101,$(words $(SORTED)),$(SORTED)) \
+NEW_CONTENTS
+#echo '$(LDFLAGS) $(LIBS) -o $@ $(sort $(wildcard $(GDAL_OBJ:.o=.lo)))' > xxx.in
+#$(LD) @xxx.in \
+#  @rm $@.in  
+  ;
+    $new_contents2 =~ s/^/\t/gms;
+    open my $fh , '<', $target
+      or die "Could not open GNUmakefile for reading, $!";
+    my $file_contents;
+    while (my $line = <$fh>) {
+        if ($line =~ $qr_target1) {
+            $file_contents .= $new_contents1;
+        }
+        elsif ($line =~ $qr_target2) {
+            say "Replacing lines";
+            say $line;
+            say "=====";
+            say $new_contents2;
+            say "=====";
+            $line = $new_contents2;
+        };
+        $file_contents .= $line;
+    }
+    $fh->close;
+    rename $target, "$target.bak";
+    open my $ofh, '>', $target
+      or die "Could not open $target for writing, $!";
+    print {$ofh} $file_contents;
+    return;
 }
 
 sub pause {
