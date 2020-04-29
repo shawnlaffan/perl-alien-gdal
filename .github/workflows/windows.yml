@@ -8,6 +8,11 @@ on:
       - '*'
   pull_request:
 
+env:
+  PERL5LIB: c:\cx\lib\perl5
+  PERL_LOCAL_LIB_ROOT: c:/cx
+  PERL_MB_OPT: --install_base C:/cx
+  PERL_MM_OPT: INSTALL_BASE=C:/cx
 
 jobs:
   perl:
@@ -22,8 +27,21 @@ jobs:
           echo "##[add-path]C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin"
   
       - name: perl -V
-        run: perl -V 
-  
+        run: perl -V
+        
+      - name: Prepare for cache
+        run: |
+          perl -V > perlversion.txt
+          dir perlversion.txt
+
+      - name: Cache CPAN modules
+        uses: actions/cache@v1
+        with:
+          path: c:\cx
+          key: ${{ runner.os }}-build-${{ hashFiles('perlversion.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ hashFiles('perlversion.txt') }}
+
       #- name: Install Dependencies
       #  run: curl -sL https://git.io/cpm | perl - install -g --show-build-log-on-failure
   
