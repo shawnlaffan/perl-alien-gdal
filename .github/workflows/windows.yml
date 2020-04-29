@@ -51,7 +51,7 @@ jobs:
       - name: Cache Alien downloads
         uses: actions/cache@v1
         with:
-          path: %HOMEPATH%\.alienbuild
+          path: $HOMEPATH\.alienbuild
           key: ${{ runner.os }}-build-${{ hashFiles('aliencache.txt') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ hashFiles('aliencache.txt') }}
