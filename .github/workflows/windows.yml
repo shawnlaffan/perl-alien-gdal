@@ -61,7 +61,7 @@ jobs:
       #- name: Install Dependencies
       #  run: curl -sL https://git.io/cpm | perl - install -g --show-build-log-on-failure
   
-      - name: Install dependencies
+      - name: Install dependencies 1
         run: |
           #cpanm --notest local::lib
           #eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
@@ -72,11 +72,21 @@ jobs:
           cpanm --quiet --notest Alien::Build::Plugin::Cleanse::BuildDir
           cpanm --quiet --notest File::Find::Rule
           cpanm --quiet --notest Alien::Build::Plugin::Fetch::Cache
-          #cpanm -v --notest --installdeps Alien::geos::af
+
+      - name: Install dependencies 2
+        run: |
           cpanm -v --notest Alien::sqlite
-          #cpanm -v --notest --installdeps Alien::proj
+
+      - name: Install dependencies 3
+        run: |
           cpanm -v --notest https://github.com/shawnlaffan/perl-alien-proj.git
+
+      - name: Install dependencies 4
+        run: |
           cpanm -v --notest Alien::geos::af
+
+      - name: Install dependencies 5
+        run: |
           cpanm --notest --installdeps Alien::gdal
   
       # Runs a set of commands using the runners shell
