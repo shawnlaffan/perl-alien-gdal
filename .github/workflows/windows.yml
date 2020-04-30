@@ -73,19 +73,23 @@ jobs:
           cpanm --quiet --notest File::Find::Rule
           cpanm --quiet --notest Alien::Build::Plugin::Fetch::Cache
 
-      - name: Install dependencies 2
+      - name: Install dependencies Alien::MSYS
+        run: |
+          cpanm --notest Alien::MSYS
+
+      - name: Install dependencies Alien::sqlite
         run: |
           cpanm -v --notest Alien::sqlite
 
-      - name: Install dependencies 3
+      - name: Install dependencies Alien::proj
         run: |
           cpanm -v --notest https://github.com/shawnlaffan/perl-alien-proj.git
 
-      - name: Install dependencies 4
+      - name: Install dependencies Alien::geos::af
         run: |
           cpanm -v --notest Alien::geos::af
 
-      - name: Install dependencies 5
+      - name: Install dependencies for Alien::gdal
         run: |
           cpanm --notest --installdeps Alien::gdal
   
