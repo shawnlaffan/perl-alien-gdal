@@ -5,13 +5,13 @@ use strict;
 use warnings;
 use parent qw( Alien::Base );
 use FFI::CheckLib;
+use Env qw ( @PATH );
 
 our $VERSION = '1.18';
 
 my ($have_geos, $have_proj);
 my @have_aliens;
 BEGIN {
-    my $sep_char = ($^O =~ /mswin/i) ? ';' : ':';
     $have_geos = eval 'require Alien::geos::af';
     foreach my $alien_lib (qw /Alien::geos::af Alien::sqlite Alien::spatialite Alien::freexl Alien::proj/) {
         my $have_lib = eval "require $alien_lib";
@@ -21,8 +21,7 @@ BEGIN {
             #  crude, but otherwise Geo::GDAL::FFI does not
             #  get fed all the needed info
             #warn "Adding Alien::geos bin to path: " . Alien::geos::af->bin_dir;
-            $ENV{PATH} =~ s/;$//;
-            $ENV{PATH} .= $sep_char . join ($sep_char, $alien_lib->bin_dir);
+            push @PATH, $alien_lib->bin_dir;
             #warn $ENV{PATH};
         }
     }
