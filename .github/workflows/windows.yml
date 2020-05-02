@@ -72,6 +72,7 @@ jobs:
           cpanm --quiet --notest Alien::Build::Plugin::Cleanse::BuildDir
           cpanm --quiet --notest File::Find::Rule
           cpanm --quiet --notest Alien::Build::Plugin::Fetch::Cache
+          cpanm --quiet --notest Env::ShellWords
 
       - name: Install dependencies Alien::MSYS
         run: |
@@ -79,7 +80,7 @@ jobs:
 
       - name: Install dependencies Alien::sqlite
         run: |
-          cpanm -v --notest Alien::sqlite
+          cpanm -v Alien::sqlite~1.05
 
       - name: Install dependencies Alien::proj
         run: |
@@ -87,7 +88,7 @@ jobs:
 
       - name: Install dependencies Alien::geos::af
         run: |
-          cpanm -v --notest Alien::geos::af
+          cpanm -v Alien::geos::af
 
       - name: Install dependencies for Alien::gdal
         run: |
