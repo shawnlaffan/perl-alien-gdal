@@ -193,7 +193,7 @@ share {
   $config_args = join (' ', @with_args) . " $config_args";
 
   build [
-    '%{make} -v',
+    \&update_pkg_conf_path,
     \&patch_makefile_long_line,
     "%{configure} $config_args $build_static",
     \&update_makefile,
@@ -211,6 +211,18 @@ sub update_makefile {
     return if !$on_windows;
     system ($^X, '-p', '-i.bak', q{-e"s/\$\(GDAL_ROOT\)/\./"}, "GNUmakefile");
 }
+
+sub update_pkg_conf_path {
+    return if !$on_windows;
+    use Env qw /@PKG_CONFIG_PATH/;
+    say 'Modifying drive paths in PKG_CONFIG_PATH';
+    say $ENV{PKG_CONFIG_PATH};
+    #  msys-ificate drive paths
+    @PKG_CONFIG_PATH = map {s{^([a-z]):}{/$1}ri} @PKG_CONFIG_PATH;
+    say $ENV{PKG_CONFIG_PATH};
+    return;
+}
+
 
 sub patch_makefile_long_line {
     return if !$on_windows;
