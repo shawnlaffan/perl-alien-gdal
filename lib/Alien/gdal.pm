@@ -13,7 +13,7 @@ my ($have_geos, $have_proj);
 my @have_aliens;
 BEGIN {
     $have_geos = eval 'require Alien::geos::af';
-    foreach my $alien_lib (qw /Alien::geos::af Alien::sqlite Alien::spatialite Alien::freexl Alien::proj/) {
+    foreach my $alien_lib (qw /Alien::geos::af Alien::sqlite Alien::proj Alien::spatialite Alien::freexl/) {
         my $have_lib = eval "require $alien_lib";
         my $pushed_to_env = 0;
         if ($have_lib && $alien_lib->install_type eq 'share') {
@@ -26,7 +26,7 @@ BEGIN {
         }
     }
     # 
-    if (!$ENV{PROJSO} and $^O =~ /mswin/i) {
+    if ($^O =~ /mswin/i and !$ENV{PROJSO} and Alien::gdal->version lt 3) {
         my $libpath;
         $have_proj = eval 'require Alien::proj';
         if ($have_proj) {
