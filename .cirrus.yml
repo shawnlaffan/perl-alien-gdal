@@ -3,6 +3,7 @@ freebsd_instance:
 
 task:
   install_script:
+    - sudo pkg install -y autoconf automake libtool pkgconf sqlite3 tiff gmake
     - sudo pkg install -y p5-App-cpanminus
     - sudo cpanm -v Alien::proj
     - sudo cpanm --installdeps --notest Alien::gdal
