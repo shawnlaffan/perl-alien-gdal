@@ -19,8 +19,6 @@ nytprof.out
 *.bs
 /_eumm/
 
-^_alien
-^__alien
-^___alien
+/_alien*/*
 /tarballs.zip
 
