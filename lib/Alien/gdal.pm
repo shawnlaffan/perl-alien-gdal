@@ -13,7 +13,7 @@ my ($have_geos, $have_proj);
 my @have_aliens;
 BEGIN {
     $have_geos = eval 'require Alien::geos::af';
-    foreach my $alien_lib (qw /Alien::geos::af Alien::sqlite Alien::proj Alien::spatialite Alien::freexl/) {
+    foreach my $alien_lib (qw /Alien::geos::af Alien::sqlite Alien::proj Alien::spatialite Alien::freexl Alien::libtiff/) {
         my $have_lib = eval "require $alien_lib";
         my $pushed_to_env = 0;
         if ($have_lib && $alien_lib->install_type eq 'share') {
