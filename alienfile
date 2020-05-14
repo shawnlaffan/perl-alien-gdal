@@ -12,8 +12,6 @@ my $on_automated_rig
   || $ENV{APPVEYOR}
   || $ENV{CI};
 
-my $sep_char = $on_windows ? ';' : ':';
-
 my @aliens_l_and_I = qw(
         Alien::geos::af
         Alien::proj
@@ -59,6 +57,7 @@ plugin 'Build::SearchDep' => (
 #  might also be able to access via old hash via https://metacpan.org/pod/Alien::Build#install_prop
 my $have_alien_gdal = eval 'require Alien::gdal';
 if (0 && $have_alien_gdal && Alien::gdal->install_type eq 'share') {
+    my $sep_char = $on_windows ? ';' : ':';
     my $ag_version = Alien::gdal->version;
     say "Found existing gdal via alien ($ag_version) in " .  Alien::gdal->dist_dir;
     #  append the relevant path
