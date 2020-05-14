@@ -24,7 +24,9 @@ my @aliens_l_and_I = qw(
 #  make sure we get GEOS, PROJ and other support
 foreach my $alien (@aliens_l_and_I) {
   eval "require $alien";
-  unshift @PATH, $alien->bin_dir;
+  if ($alien->install_type eq 'share') {
+    unshift @PATH, $alien->bin_dir;
+  }
 }
 my $have_spatialite = eval 'require
   Alien::spatialite';
