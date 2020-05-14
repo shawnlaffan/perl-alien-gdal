@@ -163,9 +163,9 @@ share {
         $make_inst_cmd =~ s/type/cat/;
         $make_inst_cmd =~ s/"/'/g;
     }
-    if (! ($ENV{TRAVIS} || $ENV{APPVEYOR})) {
-        #  build will be slightly faster, and we do not use GNM yet
-        $with_gnm = '--with-gnm=no'
+    if (! ($ENV{TRAVIS} || $ENV{APPVEYOR} || $ENV{CI})) {
+        #  make build slightly faster and smaller on cpan testers
+        $with_gnm = '--with-gnm=no --disable-all-optional-drivers'
     }
     #  clean up the build dir on cpan testers etc
     plugin 'Cleanse::BuildDir';
@@ -186,7 +186,7 @@ share {
     push @with_args, '--with-proj=' . Alien::proj->dist_dir;
   }
   if ($have_spatialite && $have_spatialite->install_type eq 'share') {
-    push @with_args, ' --with-spatialite=' . $have_spatialite->dist_dir;
+    push @with_args, '--with-spatialite=' . $have_spatialite->dist_dir;
   }
   my $config_args = $ENV{ALIEN_GDAL_CONFIG_ARGS} // '';
   $config_args =~ s/[^-\s\w,=+]//g;  #  overkill?
