@@ -82,6 +82,10 @@ jobs:
         run: |
           cpanm -v Alien::sqlite~1.05
 
+      - name: Install dependencies Alien::libtiff
+        run: |
+          cpanm -v --notest Alien::libtiff
+
       - name: Install dependencies Alien::proj
         run: |
           cpanm -v --notest https://github.com/shawnlaffan/perl-alien-proj.git
@@ -98,6 +102,7 @@ jobs:
       - name: Build
         run: |
           perl Makefile.PL
+          cpanm --notest --installdeps .
           gmake
           gmake test
           

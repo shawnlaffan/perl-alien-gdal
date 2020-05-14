@@ -28,7 +28,7 @@ install:
   - cpanm -v --notest https://github.com/shawnlaffan/perl-alien-proj.git
   - cpanm -v --notest Alien::sqlite
   
-  - cpanm --quiet --notest --installdeps .
+  #- cpanm --quiet --notest --installdeps .
   - cpanm --quiet --notest Alien::Build::Plugin::Fetch::Cache
 
   - gcc -v
@@ -36,11 +36,10 @@ install:
 build_script:
   - set ALIEN_BUILD_PRELOAD=Fetch::Cache
   - perl Makefile.PL
+  - cpanm --notest --installdeps .
   #- gmake | perl -ne "BEGIN {$|=1; open our $log, q|>|, q|build.log|}; print qq|\n| if 0 == ($. %% 100); print q|.|; print {$log} $_;" || type build.log
   - gmake
   - gmake test
   #  some feedback
   - type blib\lib\auto\share\dist\Alien-gdal\lib\pkgconfig\gdal.pc
-  #  temporary until we cache deps
-  #- perl -e"1"
 

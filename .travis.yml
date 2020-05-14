@@ -64,6 +64,7 @@ before_install:
   #- cpanm -v --notest Alien::spatialite
   - cpanm -v --notest Alien::sqlite
   - cpanm -v --notest Alien::proj
+  - cpanm -v --notest Alien::libtiff
   
   #- echo "==="
   #- perl -MAlien::geos::af -E 'say eval {Alien::geos::af->dynamic_libs} // ""'
@@ -88,6 +89,6 @@ script:
   #- make
   - make test
   #  minor debug
-  - perl -Iblib/lib -Iblib/arch -MAlien::gdal -E 'say $ENV{PATH}'
+  #- perl -Mblib -MAlien::gdal -E 'say $ENV{PATH}'
   #  disable for now - osx builds hit issues
   #- [ "$TRAVIS_OS_NAME" != "osx" ] && cat blib/lib/auto/share/dist/Alien-gdal/lib/pkgconfig/gdal.pc

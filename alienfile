@@ -1,6 +1,7 @@
 use 5.010;
 use alienfile;
 use Sort::Versions;
+use Env qw /@PATH/;
 
 my $on_windows = $^O =~ /mswin/i;
 my $on_automated_rig
@@ -11,24 +12,20 @@ my $on_automated_rig
   || $ENV{APPVEYOR}
   || $ENV{CI};
 
+my $sep_char = $on_windows ? ';' : ':';
+
 my @aliens_l_and_I = qw(
         Alien::geos::af
         Alien::proj
         Alien::sqlite
+        Alien::libtiff
   );
 
 #  make sure we get GEOS, PROJ and other support
-use Alien::geos::af;
-use Alien::proj;
-use Alien::sqlite;
-use Env qw /@PATH/;
-my $sep_char = $on_windows ? ';' : ':';
-unshift @PATH,
-  (
-      Alien::geos::af->bin_dir,
-      Alien::proj->bin_dir,
-      Alien::sqlite->bin_dir,
-  );
+foreach my $alien (@aliens_l_and_I) {
+  eval "require $alien";
+  unshift @PATH, $alien->bin_dir;
+}
 my $have_spatialite = eval 'require
   Alien::spatialite';
 if ($have_spatialite) {
@@ -110,7 +107,7 @@ share {
   plugin Extract => (format => 'tar.gz');
 
   if (versioncmp($gdal_version, '2.3.0') == -1) {
-    if ($^O =~ /mswin/i) {
+    if ($on_windows) {
       #  fix known issue in 2.2.3, harmless in 2.2.4.
       patch [
         '%{patch} port/cpl_port.h < ' . $patch_file_isnan,
@@ -172,7 +169,7 @@ share {
   }
   
   my @with_args = (
-    '--with-libtiff=internal',
+    #'--with-libtiff=internal',
     $with_cpp11,
     $with_local,
     $with_gnm,
@@ -184,6 +181,9 @@ share {
   }
   if (Alien::proj->install_type eq 'share') {
     push @with_args, '--with-proj=' . Alien::proj->dist_dir;
+  }
+  if (Alien::libtiff->install_type eq 'share') {
+    push @with_args, '--with-libtiff=' . Alien::libtiff->dist_dir;
   }
   if ($have_spatialite && $have_spatialite->install_type eq 'share') {
     push @with_args, '--with-spatialite=' . $have_spatialite->dist_dir;
@@ -242,9 +242,6 @@ $(LD) $(LDFLAGS) $(LIBS) -o $@ \
 $(wordlist 1,100,$(SORTED)) \
 $(wordlist 101,$(words $(SORTED)),$(SORTED)) \
 NEW_CONTENTS
-#echo '$(LDFLAGS) $(LIBS) -o $@ $(sort $(wildcard $(GDAL_OBJ:.o=.lo)))' > xxx.in
-#$(LD) @xxx.in \
-#  @rm $@.in  
   ;
     $new_contents2 =~ s/^/\t/gms;
     open my $fh , '<', $target
