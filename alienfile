@@ -240,7 +240,7 @@ SORTED  := $(sort $(wildcard $(GDAL_OBJ:.o=.lo)))
 NSORTED := $(words $(SORTED))
 #  mid left and right indices
 MIDL := $(shell echo $$(( $(NSORTED) / 2 )) )
-MIDR := $(shell echo $$(( $(MID) + 1 )) )
+MIDR := $(shell echo $$(( $(MIDL) + 1 )) )
 NEW_CONTENTS
   ;
     my $qr_target2 = qr /sort .+wildcard/;
