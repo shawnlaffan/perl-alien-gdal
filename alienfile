@@ -235,19 +235,26 @@ sub patch_makefile_long_line {
     my $text_target1 = '$(LIBGDAL):	$(GDAL_OBJ:.o=.lo)';
     my $x = quotemeta $text_target1;
     my $qr_target1 = qr /^$x/;
-    my $new_contents1 = 'SORTED = $(sort $(wildcard $(GDAL_OBJ:.o=.lo)))' . "\n";
-    
+    my $new_contents1 = <<'NEW_CONTENTS'
+SORTED  := $(sort $(wildcard $(GDAL_OBJ:.o=.lo)))
+NSORTED := $(words $(SORTED))
+#  mid left and right indices
+MIDL := $(shell echo $$(( $(NSORTED) / 2 )) )
+MIDR := $(shell echo $$(( $(MID) + 1 )) )
+NEW_CONTENTS
+  ;
     my $qr_target2 = qr /sort .+wildcard/;
     my $new_contents2 = << 'NEW_CONTENTS'
 $(LD) $(LDFLAGS) $(LIBS) -o $@ \
-$(wordlist 1,100,$(SORTED)) \
-$(wordlist 101,$(words $(SORTED)),$(SORTED)) \
+$(wordlist 1,$(MIDL),$(SORTED)) \
+$(wordlist $(MIDR),$(words $(SORTED)),$(SORTED)) \
 NEW_CONTENTS
   ;
     $new_contents2 =~ s/^/\t/gms;
     open my $fh , '<', $target
       or die "Could not open GNUmakefile for reading, $!";
     my $file_contents;
+    
     while (my $line = <$fh>) {
         if ($line =~ $qr_target1) {
             $file_contents .= $new_contents1;
