@@ -91,7 +91,7 @@ script:
   - MAKEFLAGS=-j4 make
   #- tail -200 build.log
   #- make
-  - make test
+  - make test TEST_VERBOSE=1
   #  minor debug
   #- perl -Mblib -MAlien::gdal -E 'say $ENV{PATH}'
   #  disable for now - osx builds hit issues

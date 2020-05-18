@@ -104,10 +104,6 @@ jobs:
           perl Makefile.PL
           cpanm --notest --installdeps .
           gmake
-          prove -vb
-          echo
-          echo
-          echo
-          gmake test
+          gmake test TEST_VERBOSE=1
           
           
