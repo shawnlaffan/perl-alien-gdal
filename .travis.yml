@@ -17,7 +17,7 @@ branches:
 
 cache:
   directories:
-    - perl_modules
+    - ${HOME}/perl_modules
     - /usr/local
     - ${HOME}/.alienbuild/plugin_fetch_cache
 
