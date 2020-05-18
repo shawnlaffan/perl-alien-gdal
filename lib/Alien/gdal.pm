@@ -116,7 +116,7 @@ sub run_utility {
         map {$_->bin_dir}
         ($self, @have_aliens);
     
-    #local $ENV{PATH};
+    local $ENV{PATH} = $ENV{PATH};
     unshift @PATH, @alien_bins;
 
     #  something of a hack
