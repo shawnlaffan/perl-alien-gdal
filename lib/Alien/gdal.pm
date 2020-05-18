@@ -108,6 +108,23 @@ sub libs {
 #    return $cflags;
 #}
 
+sub run_utility {
+    my ($self, $utility, @args) = @_;
+
+    my @alien_bins = map {$_->bin_dir} @have_aliens;
+    local @PATH = @alien_bins, @PATH;
+
+    my $bin;
+    if ($self->install_type eq 'share') {
+        my @bin_dirs = $self->bin_dir;
+        $bin = $bin_dirs[0] // '';
+        $utility = "$bin/$utility";  #  should strip path from $utility?  
+    }
+
+    #  user gets the pieces 
+    qx {$utility, @args};
+}
+
 sub data_dir {
     my $self = shift;
  
