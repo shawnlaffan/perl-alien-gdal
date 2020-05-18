@@ -127,12 +127,11 @@ sub run_utility {
     local $ENV{DYLD_LIBRARY_PATH} = $ENV{DYLD_LIBRARY_PATH};
     push @DYLD_LIBRARY_PATH, Alien::gdal->dist_dir . '/lib';
 
-    my $bin;
-    #if ($self->install_type eq 'share') {
-    #    my @bin_dirs = $self->bin_dir;
-    #    $bin = $bin_dirs[0] // '';
-    #    $utility = "$bin/$utility";  #  should strip path from $utility?  
-    #}
+    if ($self->install_type eq 'share') {
+        my @bin_dirs = $self->bin_dir;
+        my $bin = $bin_dirs[0] // '';
+        $utility = "$bin/$utility";  #  should strip path from $utility first?
+    }
     #  needed?
     if ($^O =~ /mswin/i) {
         if ($utility =~ /\s/) {
@@ -145,7 +144,7 @@ sub run_utility {
     
     my $cmd = join ' ', ($utility, @args);
     warn "Running $cmd";
-
+    warn "Path is " . join ' ', @PATH;
     #  user gets the pieces (should use Capture::Tiny?)
     qx {$cmd};
 }
