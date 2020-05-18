@@ -130,6 +130,9 @@ sub run_utility {
         $bin = $bin_dirs[0] // '';
         $utility = "$bin/$utility";  #  should strip path from $utility?  
     }
+    if ($^O =~ /mswin/i && $utility !~ /\.exe$/) {
+        $utility .= 'exe';
+    }
 
     #  user gets the pieces (should use Capture::Tiny?)
     qx {$utility @args};
