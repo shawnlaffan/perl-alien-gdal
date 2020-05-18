@@ -115,14 +115,11 @@ sub run_utility {
     local @PATH = (@alien_bins, @PATH);
 
     #  something of a hack
-    local
-    @LD_LIBRARY_PATH = (Alien::gdal->dist_dir . '/lib', @LD_LIBRARY_PATH)
-      #if $self->install_type eq 'share';
-      ;
-    local
-    @DYLD_LIBRARY_PATH = (Alien::gdal->dist_dir . '/lib', @DYLD_LIBRARY_PATH)
-      #if $self->install_type eq 'share';
-      ;
+    local @LD_LIBRARY_PATH = @LD_LIBRARY_PATH;
+    push @LD_LIBRARY_PATH, Alien::gdal->dist_dir . '/lib';
+      
+    local @DYLD_LIBRARY_PATH = @DYLD_LIBRARY_PATH;
+    push @DYLD_LIBRARY_PATH, Alien::gdal->dist_dir . '/lib';
 
     my $bin;
     if ($self->install_type eq 'share') {
