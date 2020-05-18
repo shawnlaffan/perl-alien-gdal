@@ -120,10 +120,10 @@ sub run_utility {
     unshift @PATH, @alien_bins;
 
     #  something of a hack
-    #local $ENV{LD_LIBRARY_PATH};
+    local $ENV{LD_LIBRARY_PATH} = $ENV{LD_LIBRARY_PATH};
     push @LD_LIBRARY_PATH, Alien::gdal->dist_dir . '/lib';
 
-    #local $ENV{DYLD_LIBRARY_PATH};
+    local $ENV{DYLD_LIBRARY_PATH} = $ENV{DYLD_LIBRARY_PATH};
     push @DYLD_LIBRARY_PATH, Alien::gdal->dist_dir . '/lib';
 
     my $bin;
