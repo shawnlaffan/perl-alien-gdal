@@ -5,7 +5,7 @@ use strict;
 use warnings;
 use parent qw( Alien::Base );
 use FFI::CheckLib;
-use Env qw ( @PATH );
+use Env qw ( @PATH @LD_LIBRARY_PATH @DYLD_LIBRARY_PATH );
 
 our $VERSION = '1.18';
 
@@ -113,6 +113,12 @@ sub run_utility {
 
     my @alien_bins = map {$_->bin_dir} @have_aliens;
     local @PATH = (@alien_bins, @PATH);
+
+    #  something of a hack
+    local @LD_LIBRARY_PATH = (Alien::gdal->dist_dir . '/lib', @LD_LIBRARY_PATH)
+      if $self->install_type eq 'share';
+    local @DYLD_LIBRARY_PATH = (Alien::gdal->dist_dir . '/lib', @DYLD_LIBRARY_PATH)
+      if $self->install_type eq 'share';
 
     my $bin;
     if ($self->install_type eq 'share') {
