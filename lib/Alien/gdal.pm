@@ -121,8 +121,8 @@ sub run_utility {
         $utility = "$bin/$utility";  #  should strip path from $utility?  
     }
 
-    #  user gets the pieces 
-    qx {$utility, @args};
+    #  user gets the pieces (should use Capture::Tiny?)
+    qx {$utility @args};
 }
 
 sub data_dir {
