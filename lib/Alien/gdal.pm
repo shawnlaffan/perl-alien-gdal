@@ -133,12 +133,20 @@ sub run_utility {
         $utility = "$bin/$utility";  #  should strip path from $utility?  
     }
     #  needed?
-    if ($^O =~ /mswin/i && $utility !~ /\.exe$/) {
-        $utility .= '.exe';
+    if ($^O =~ /mswin/i) {
+        if ($utility =~ /\s/) {
+            $utility = qq{"$utility"};
+        }
     }
+    else {
+        $utility =~ s|(\s)|\$1|g;
+    }
+    
+    my $cmd = join ' ', ($utility, @args);
+    warn "Running $cmd";
 
     #  user gets the pieces (should use Capture::Tiny?)
-    qx {$utility @args};
+    qx {$cmd};
 }
 
 sub data_dir {
