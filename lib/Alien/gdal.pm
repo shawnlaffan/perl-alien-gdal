@@ -117,7 +117,8 @@ sub run_utility {
         ($self, @have_aliens);
     
     local $ENV{PATH} = $ENV{PATH};
-    unshift @PATH, @alien_bins;
+    unshift @PATH, @alien_bins
+      if @alien_bins;
 
     #  something of a hack
     local $ENV{LD_LIBRARY_PATH} = $ENV{LD_LIBRARY_PATH};
@@ -127,11 +128,11 @@ sub run_utility {
     push @DYLD_LIBRARY_PATH, Alien::gdal->dist_dir . '/lib';
 
     my $bin;
-    if ($self->install_type eq 'share') {
-        my @bin_dirs = $self->bin_dir;
-        $bin = $bin_dirs[0] // '';
-        $utility = "$bin/$utility";  #  should strip path from $utility?  
-    }
+    #if ($self->install_type eq 'share') {
+    #    my @bin_dirs = $self->bin_dir;
+    #    $bin = $bin_dirs[0] // '';
+    #    $utility = "$bin/$utility";  #  should strip path from $utility?  
+    #}
     #  needed?
     if ($^O =~ /mswin/i) {
         if ($utility =~ /\s/) {
