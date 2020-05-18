@@ -142,7 +142,7 @@ share {
   my $with_gnm = '';
   my $make_cmd = '%{make}';
   my $make_inst_cmd = '%{make} install';
-  my @make_clean;
+  
   #  try not to exceed the cpan-testers log limits
   if ($on_automated_rig) {
     say "Running under CI or automated testing";
@@ -194,14 +194,11 @@ share {
   
   build [
     \&update_pkg_conf_path,
-    #\&patch_makefile_long_line($gdal_version),
     "%{configure} $config_args $build_static",
-    \&update_makefile,
     \&pause,
     $make_cmd,
     \&patch_pkgconfig,
     $make_inst_cmd,
-    @make_clean
   ];
 
 };
