@@ -35,5 +35,5 @@ task:
     - eval $(perl -I ${PERL_MOD_DIR}/lib/perl5/ -Mlocal::lib)
     - perl Makefile.PL
     - cpanm --installdeps .
-    - make -j4
+    - MAKEFLAGS=-j4 make
     - make test
