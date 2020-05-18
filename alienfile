@@ -132,16 +132,11 @@ share {
   $build_static = '' if $ENV{FORCE_DYNAMIC};
   
   
-  if ($^O =~ /bsd/) {
+  if ($^O =~ /bsd|dragonfly/) {
     plugin 'Build::Make' => 'gmake';
     if (-d '/usr/local') {
         $with_local = '--with-local=/usr/local';
     }
-  }
-  elsif ($^O =~ /dragonfly/) {
-    #  might need to be combined with bsd check above
-    #  but not sure if /usr/local is needed yet
-    plugin 'Build::Make' => 'gmake';
   }
 
   my $with_gnm = '';
