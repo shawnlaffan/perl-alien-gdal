@@ -67,8 +67,8 @@ before_install:
   - MAKEFLAGS=-j4 cpanm -v --notest Alien::sqlite
   - ALIEN_INSTALL_TYPE=share cpanm -v Alien::libtiff
   - cpanm -v --notest --installdeps Alien::proj
-  #- MAKEFLAGS=-j4 cpanm -v --notest Alien::proj
-  - MAKEFLAGS=-j4 cpanm -v --notest https://github.com/shawnlaffan/perl-alien-proj.git
+  - MAKEFLAGS=-j4 cpanm -v --notest Alien::proj
+  #- MAKEFLAGS=-j4 cpanm -v --notest https://github.com/shawnlaffan/perl-alien-proj.git
   
   #- echo "==="
   #- perl -MAlien::geos::af -E 'say eval {Alien::geos::af->dynamic_libs} // ""'
