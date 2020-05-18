@@ -112,7 +112,7 @@ sub run_utility {
     my ($self, $utility, @args) = @_;
 
     my @alien_bins = map {$_->bin_dir} @have_aliens;
-    local @PATH = @alien_bins, @PATH;
+    local @PATH = (@alien_bins, @PATH);
 
     my $bin;
     if ($self->install_type eq 'share') {
