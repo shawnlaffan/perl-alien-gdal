@@ -188,9 +188,13 @@ share {
   $config_args =~ s/[^-\s\w,=+]//g;  #  overkill?
   $config_args = join (' ', @with_args) . " $config_args";
 
+  if (versioncmp ($gdal_version, 3.1) > 0) {
+    meta->before_hook( build => \&patch_makefile_long_line );
+  }
+  
   build [
     \&update_pkg_conf_path,
-    \&patch_makefile_long_line,
+    #\&patch_makefile_long_line($gdal_version),
     "%{configure} $config_args $build_static",
     \&update_makefile,
     \&pause,
@@ -221,10 +225,12 @@ sub update_pkg_conf_path {
 
 
 sub patch_makefile_long_line {
-    return if !$on_windows;
+    my ($build) = @_;
 
+    return if !$on_windows;
+    
     my $target = "GNUmakefile";
-    say "Patching $target to cope with long lines";
+    $build->log ("Patching $target to cope with long lines");
     #my $target_line = quotemeta q{$(LD) $(LDFLAGS) $(LIBS) -o $@ $(sort $(wildcard $(GDAL_OBJ:.o=.lo))) \ };
     
     my $text_target1 = '$(LIBGDAL):	$(GDAL_OBJ:.o=.lo)';
@@ -242,7 +248,7 @@ NEW_CONTENTS
     my $new_contents2 = << 'NEW_CONTENTS'
 $(LD) $(LDFLAGS) $(LIBS) -o $@ \
 $(wordlist 1,$(MIDL),$(SORTED)) \
-$(wordlist $(MIDR),$(words $(SORTED)),$(SORTED)) \
+$(wordlist $(MIDR),$(NSORTED),$(SORTED)) \
 NEW_CONTENTS
   ;
     $new_contents2 =~ s/^/\t/gms;
@@ -255,11 +261,6 @@ NEW_CONTENTS
             $file_contents .= $new_contents1;
         }
         elsif ($line =~ $qr_target2) {
-            say "Replacing lines";
-            say $line;
-            say "=====";
-            say $new_contents2;
-            say "=====";
             $line = $new_contents2;
         };
         $file_contents .= $line;
