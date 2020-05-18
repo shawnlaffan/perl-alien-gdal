@@ -50,7 +50,8 @@ TODO: {
     run_ok([ Alien::gdal->run_utility ("gdalwarp", '--version') ])
       ->success
       ->out_like(qr{GDAL \d+\.\d+\.\d+, released \d{4}/\d{2}/\d{2}})
-      ->note; 
+      ->note;
+   diag Alien::gdal->run_utility ("gdalwarp", '--version');
 }
 
 done_testing();
