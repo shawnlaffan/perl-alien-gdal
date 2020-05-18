@@ -112,13 +112,14 @@ sub run_utility {
     my ($self, $utility, @args) = @_;
 
     my @alien_bins = map {$_->bin_dir} @have_aliens;
-    local @PATH = (@alien_bins, @PATH);
+    local $ENV{PATH};
+    unshift @PATH, @alien_bins;
 
     #  something of a hack
-    #local @LD_LIBRARY_PATH = @LD_LIBRARY_PATH;
+    local $ENV{LD_LIBRARY_PATH};
     push @LD_LIBRARY_PATH, Alien::gdal->dist_dir . '/lib';
       
-    #local @DYLD_LIBRARY_PATH = @DYLD_LIBRARY_PATH;
+    local $ENV{DYLD_LIBRARY_PATH};
     push @DYLD_LIBRARY_PATH, Alien::gdal->dist_dir . '/lib';
 
     my $bin;
@@ -127,6 +128,7 @@ sub run_utility {
         $bin = $bin_dirs[0] // '';
         $utility = "$bin/$utility";  #  should strip path from $utility?  
     }
+    #  needed?
     if ($^O =~ /mswin/i && $utility !~ /\.exe$/) {
         $utility .= '.exe';
     }
