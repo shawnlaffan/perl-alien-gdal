@@ -15,10 +15,12 @@ use Alien::gdal;
 #TODO: {
 #    local $TODO = 'There are known issues running utilities';
 
-    my $results = Alien::gdal->run_utility ("gdalwarp", '--version');
-    like ($results, qr{GDAL \d+\.\d+\.\d+, released \d{4}/\d{2}/\d{2}},
+    my ($result, $stderr, $exit) = Alien::gdal->run_utility ("gdalwarp", '--version');
+    like ($result, qr{GDAL \d+\.\d+\.\d+, released \d{4}/\d{2}/\d{2}},
         'Got expected result from utility');
-    diag ("\nUtility results:\n" . $results);
+    diag ("\nUtility results:\n" . $result);
+    diag $stderr if $stderr;
+    diag "Exit code is $exit";
     diag '';
 #}
 

@@ -6,6 +6,7 @@ use warnings;
 use parent qw( Alien::Base );
 use FFI::CheckLib;
 use Env qw ( @PATH @LD_LIBRARY_PATH @DYLD_LIBRARY_PATH );
+use Capture::Tiny qw /:all/;
 
 our $VERSION = '1.18';
 
@@ -146,7 +147,7 @@ sub run_utility {
     warn "Running $cmd";
     warn "Path is " . join ' ', @PATH;
     #  user gets the pieces (should use Capture::Tiny?)
-    qx {$cmd};
+    capture {system $utility, @args};
 }
 
 sub data_dir {

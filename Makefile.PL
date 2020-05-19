@@ -40,6 +40,7 @@ my %WriteMakefileArgs = (
     },
     "PREREQ_PM" => {
         "Alien::Base" => "1.41",
+        "Capture::Tiny" => 0,
     },
     META_MERGE => {
         'meta-spec' => { version => 2 },
