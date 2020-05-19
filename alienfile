@@ -192,6 +192,8 @@ share {
     meta->before_hook( build => \&patch_makefile_long_line );
   }
   
+  meta->around_hook( build => \&remove_git_from_path );
+  
   build [
     \&update_pkg_conf_path,
     "%{configure} $config_args $build_static",
@@ -268,6 +270,22 @@ NEW_CONTENTS
       or die "Could not open $target for writing, $!";
     print {$ofh} $file_contents;
     return;
+}
+
+sub remove_git_from_path {
+  my ($orig, $build, @args) = @_;
+
+  $orig->($build, @args)
+    if !$on_windows;
+  
+  local @PATH = @PATH;
+
+  $build->log ('Found .../Git/usr/bin in path and removed it for compilation')
+    if grep {$_ =~ m|Git[/\\]usr[/\\]bin|} @PATH;
+
+  @PATH = grep {not $_ =~ m|Git[/\\]usr[/\\]bin$|} @PATH;
+  
+  $orig->($build, @args);
 }
 
 sub pause {
