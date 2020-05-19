@@ -133,7 +133,6 @@ sub run_utility {
         my $bin = $bin_dirs[0] // '';
         $utility = "$bin/$utility";  #  should strip path from $utility first?
     }
-    #  needed?
     if ($^O =~ /mswin/i) {
         if ($utility =~ /\s/) {
             $utility = qq{"$utility"};
@@ -145,6 +144,8 @@ sub run_utility {
     
     my $cmd = join ' ', ($utility, @args);
     warn "Running $cmd";
+    warn "Utility does not exist or is not executable"
+      if !-x $utility;
     warn "Path is " . join ' ', @PATH;
     #  user gets the pieces (should use Capture::Tiny?)
     capture {system $utility, @args};
