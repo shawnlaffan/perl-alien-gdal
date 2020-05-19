@@ -111,7 +111,7 @@ jobs:
         if: ${{ always() }}
         run: |
           pwd
-          & 7z.exe a _alien.7z
+          & 7z.exe a _alien.7z _alien
           
       - name: Upload artefact
         if: ${{ always() }}
