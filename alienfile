@@ -272,6 +272,8 @@ NEW_CONTENTS
     return;
 }
 
+#  git for windows clashes with MSYS
+#  if its /usr/bin dir is in the path
 sub remove_gitfw_from_path {
   my ($orig, $build, @args) = @_;
 
