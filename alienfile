@@ -278,9 +278,9 @@ NEW_CONTENTS
 sub remove_gitfw_from_path {
   my ($orig, $build, @args) = @_;
 
-  $orig->($build, @args)
+  return $orig->($build, @args)
     if !$on_windows;
-  
+
   local $ENV{PATH} = $ENV{PATH};
 
   my $msys_path = eval {
