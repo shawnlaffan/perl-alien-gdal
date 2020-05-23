@@ -2,6 +2,7 @@ use 5.010;
 use alienfile;
 use Sort::Versions;
 use Env qw /@PATH/;
+use Path::Tiny qw /path/;
 
 my $on_windows = $^O =~ /mswin/i;
 my $on_automated_rig
@@ -282,11 +283,18 @@ sub remove_gitfw_from_path {
   
   local $ENV{PATH} = $ENV{PATH};
 
-  $build->log ('Found .../Git/usr/bin in path and removed it for compilation')
-    if grep {$_ =~ m|Git[/\\]usr[/\\]bin|} @PATH;
+  my $msys_path = path(Alien::MSYS::msys_path());
+  my $count = @PATH;
 
-  @PATH = grep {not $_ =~ m|Git[/\\]usr[/\\]bin$|} @PATH;
-  
+  @PATH
+    = grep {path($_)->stringify =~ m|/usr/bin$| && path($_) ne $msys_path ? () : $_}
+      @PATH;
+
+  my $removed = $count - @PATH;
+  if ($removed) {
+    $build->log ("$removed additional .../usr/bin dirs were removed from the path for compilation");
+  }
+
   $orig->($build, @args);
 }
 
