@@ -88,7 +88,8 @@ jobs:
 
       - name: Install dependencies Alien::proj
         run: |
-          perl -E"eval qq{require Alien::proj} || system (qw {cpanm -v --notest https://github.com/shawnlaffan/perl-alien-proj.git})"
+          #perl -E"eval qq{require Alien::proj} || system (qw {cpanm -v --notest https://github.com/shawnlaffan/perl-alien-proj.git})"
+          cpanm -v --notest Alien::proj@1.07
 
       - name: Install dependencies Alien::geos::af
         run: |
