@@ -283,7 +283,10 @@ sub remove_gitfw_from_path {
   
   local $ENV{PATH} = $ENV{PATH};
 
-  my $msys_path = path(Alien::MSYS::msys_path());
+  my $msys_path = eval {
+    path('Alien::MSYS'->msys_path())
+  };
+  return if !defined $msys_path;
   my $count = @PATH;
 
   @PATH
