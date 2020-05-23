@@ -106,16 +106,16 @@ jobs:
           gmake
           gmake test TEST_VERBOSE=1
 
-      - name: Zip _alien
-        #if: ${{ failure() }}
-        if: ${{ always() }}
-        run: |
-          pwd
-          & 7z.exe a _alien.7z _alien
-          
-      - name: Upload artefact
-        if: ${{ always() }}
-        uses: actions/upload-artifact@v1
-        with:
-          name: _alien.7z
-          path: ./_alien.7z
+      #- name: Zip _alien
+      #  #if: ${{ failure() }}
+      #  if: ${{ always() }}
+      #  run: |
+      #    pwd
+      #    & 7z.exe a _alien.7z _alien
+      #    
+      #- name: Upload artefact
+      #  if: ${{ always() }}
+      #  uses: actions/upload-artifact@v1
+      #  with:
+      #    name: _alien.7z
+      #    path: ./_alien.7z
