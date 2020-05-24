@@ -7,6 +7,8 @@ use parent qw( Alien::Base );
 use FFI::CheckLib;
 use Env qw ( @PATH @LD_LIBRARY_PATH @DYLD_LIBRARY_PATH );
 use Capture::Tiny qw /:all/;
+use Path::Tiny qw /path/;
+
 
 our $VERSION = '1.18';
 
@@ -116,6 +118,8 @@ sub run_utility {
       = grep {defined}
         map {$_->bin_dir}
         ($self, @have_aliens);
+    push @alien_bins, 'Alien::proj'->get_bin_dirs
+      if 'Alien::proj'->can ('get_bin_dirs');
     
     local $ENV{PATH} = $ENV{PATH};
     unshift @PATH, @alien_bins
