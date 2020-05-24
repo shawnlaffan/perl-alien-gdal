@@ -15,7 +15,7 @@ my %common_reqs = (
     'Sort::Versions' => 0,
     'Alien::libtiff' => 0,
     "Alien::geos::af" => '1.005',
-    "Alien::proj" => '1.07',
+    "Alien::proj" => '1.08',
     "Alien::sqlite" => '1.02',
     "FFI::CheckLib"   => "0.23",
     #"File::Stat" => 0,
@@ -68,8 +68,12 @@ my %WriteMakefileArgs = (
 
 use Alien::Build::MM;
 my $abmm = Alien::Build::MM->new (
+    clean_install => 1,
     #my_alienfile_meta => 0,
 );
+sub MY::install {
+  $abmm->mm_install(@_);
+}
 %WriteMakefileArgs = $abmm->mm_args(
     %WriteMakefileArgs,
 );
