@@ -36,4 +36,4 @@ task:
     - perl Makefile.PL
     - cpanm --installdeps .
     - MAKEFLAGS=-j4 make
-    - make test TEST_VERBOSE=1
+    #- make test TEST_VERBOSE=1
