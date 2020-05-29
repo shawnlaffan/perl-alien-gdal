@@ -205,8 +205,12 @@ share {
   
   #  debug
   if (Alien::proj->install_type eq 'share') {
-    my $dir = path(Alien::proj->dist_dir, 'include');
-    my @files = glob ("$dir/*");
+    my $dir = path(Alien::proj->dist_dir);
+    my @files = File::Find::Rule
+      ->file()
+      ->name( '*' )
+      #->recursive
+      ->in( "$dir" );;
     say 'PROJ INCLUDE FILES: ' . join ' ', @files;
   }
   
