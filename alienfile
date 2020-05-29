@@ -185,6 +185,10 @@ share {
   if ($have_spatialite && $have_spatialite->install_type eq 'share') {
     push @with_args, '--with-spatialite=' . $have_spatialite->dist_dir;
   }
+  #  get dynamic proj extra deps, one day will not be needed
+  push @with_args,
+    '--with-proj-extra-lib-for-test=' . Alien::proj->libs;
+  
   my $config_args = $ENV{ALIEN_GDAL_CONFIG_ARGS} // '';
   $config_args =~ s/[^-\s\w,=+]//g;  #  overkill?
   $config_args = join (' ', @with_args) . " $config_args";
@@ -194,6 +198,13 @@ share {
   }
   
   meta->around_hook( build => \&remove_gitfw_from_path );
+  
+  #  debug
+  if (Alien::proj->install_type eq 'share') {
+    say path(Alien::proj->dist_dir, 'include', 'proj.h')->exists
+     ? 'Found proj.h'
+     : 'proj.h not in include dir';
+  }
   
   build [
     \&update_pkg_conf_path,
