@@ -173,9 +173,6 @@ share {
     #'--without-pg',
   ); 
   #  system installs won't necessarily have dist dirs
-  if (Alien::sqlite->install_type eq 'share') {
-    push @with_args, '--with-sqlite3=' . Alien::sqlite->dist_dir;
-  }
   if (Alien::proj->install_type eq 'share') {
     push @with_args, '--with-proj=' . Alien::proj->dist_dir;
   }
@@ -188,6 +185,12 @@ share {
   #  get dynamic proj extra deps, one day will not be needed
   push @with_args,
     q{--with-proj-extra-lib-for-test="} . Alien::proj->libs . q{"};
+  if (Alien::sqlite->install_type eq 'share') {
+    push @with_args, '--with-sqlite3=' . Alien::sqlite->dist_dir;
+    push @with_args, 'LDFLAGS=' . Alien::sqlite->libs;
+    #'-L/home/libraries/intel/sqlite/lib -lsqlite3'
+  }
+  
   
   my $config_args = $ENV{ALIEN_GDAL_CONFIG_ARGS} // '';
   $config_args =~ s/[^-\s\w,=+]//g;  #  overkill?
