@@ -205,9 +205,9 @@ share {
   
   #  debug
   if (Alien::proj->install_type eq 'share') {
-    say path(Alien::proj->dist_dir, 'include', 'proj.h')->exists
-     ? 'Found proj.h'
-     : 'proj.h not in include dir';
+    my $dir = path(Alien::proj->dist_dir, 'include');
+    my @files = glob ("$dir/*");
+    say 'PROJ INCLUDE FILES: ' . join ' ', @files;
   }
   
   local $ENV{LDFLAGS} = join ' ', @ld_flags;
