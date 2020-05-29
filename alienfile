@@ -204,7 +204,7 @@ share {
   meta->around_hook( build => \&remove_gitfw_from_path );
   
   #  debug
-  if (Alien::proj->install_type eq 'share') {
+  if ($ENV{CI} && Alien::proj->install_type eq 'share') {
     my $dir = path(Alien::proj->dist_dir);
     my @files = File::Find::Rule
       ->file()
@@ -215,7 +215,8 @@ share {
     say 'PROJ CFLAGS: ' . Alien::proj->cflags;
   }
   
-  local $ENV{LDFLAGS} = join ' ', @ld_flags;
+  #  not sure this is needed, or if it is to deal with a cirrus quirk 
+  #local $ENV{LDFLAGS} = join ' ', @ld_flags;
   build [
     \&update_pkg_conf_path,
     "%{configure} $config_args $build_static",
