@@ -171,7 +171,8 @@ share {
     $with_local,
     $with_gnm,
     #'--without-pg',
-  ); 
+  );
+  my @ld_flags;
   #  system installs won't necessarily have dist dirs
   if (Alien::proj->install_type eq 'share') {
     push @with_args, '--with-proj=' . Alien::proj->dist_dir;
@@ -187,7 +188,7 @@ share {
     q{--with-proj-extra-lib-for-test="} . Alien::proj->libs . q{"};
   if (Alien::sqlite->install_type eq 'share') {
     push @with_args, '--with-sqlite3=' . Alien::sqlite->dist_dir;
-    push @with_args, 'LDFLAGS=' . Alien::sqlite->libs;
+    push @ld_flags, 'LDFLAGS=' . Alien::sqlite->libs;
     #'-L/home/libraries/intel/sqlite/lib -lsqlite3'
   }
   
@@ -209,6 +210,7 @@ share {
      : 'proj.h not in include dir';
   }
   
+  local $ENV{LDFLAGS} = join ' ', @ld_flags;
   build [
     \&update_pkg_conf_path,
     "%{configure} $config_args $build_static",
