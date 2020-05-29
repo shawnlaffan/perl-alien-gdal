@@ -187,7 +187,7 @@ share {
   }
   #  get dynamic proj extra deps, one day will not be needed
   push @with_args,
-    '--with-proj-extra-lib-for-test=' . Alien::proj->libs;
+    q{--with-proj-extra-lib-for-test="} . Alien::proj->libs . q{"};
   
   my $config_args = $ENV{ALIEN_GDAL_CONFIG_ARGS} // '';
   $config_args =~ s/[^-\s\w,=+]//g;  #  overkill?
