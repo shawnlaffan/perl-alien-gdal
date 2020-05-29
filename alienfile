@@ -189,7 +189,7 @@ share {
   $config_args =~ s/[^-\s\w,=+]//g;  #  overkill?
   $config_args = join (' ', @with_args) . " $config_args";
 
-  if (versioncmp ($gdal_version, 3.1) > 0) {
+  if (versioncmp ($gdal_version, '3.2') < 0) {
     meta->before_hook( build => \&patch_makefile_long_line );
   }
   
