@@ -212,6 +212,7 @@ share {
       #->recursive
       ->in( "$dir" );;
     say 'PROJ INCLUDE FILES: ' . join ' ', @files;
+    say 'PROJ CFLAGS: ' . Alien::proj->cflags;
   }
   
   local $ENV{LDFLAGS} = join ' ', @ld_flags;
