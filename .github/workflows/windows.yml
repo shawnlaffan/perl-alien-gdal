@@ -73,6 +73,7 @@ jobs:
           cpanm --quiet --notest File::Find::Rule
           cpanm --quiet --notest Alien::Build::Plugin::Fetch::Cache
           cpanm --quiet --notest Env::ShellWords
+          cpanm --quiet --notest FFI::Platypus
 
       - name: Install dependencies Alien::MSYS
         run: |

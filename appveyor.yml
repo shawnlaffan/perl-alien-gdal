@@ -31,6 +31,7 @@ install:
   
   #- cpanm --quiet --notest --installdeps .
   - cpanm --quiet --notest Alien::Build::Plugin::Fetch::Cache
+  - cpanm --quiet --notest FFI::Platypus 
 
   - gcc -v
 
