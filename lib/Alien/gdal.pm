@@ -118,8 +118,8 @@ sub run_utility {
       = grep {defined}
         map {$_->bin_dir}
         ($self, @have_aliens);
-    push @alien_bins, 'Alien::proj'->get_bin_dirs
-      if 'Alien::proj'->can ('get_bin_dirs');
+    push @alien_bins, Alien::proj->bin_dirs
+      if Alien::proj->can ('bin_dirs');
     
     local $ENV{PATH} = $ENV{PATH};
     unshift @PATH, @alien_bins
@@ -219,8 +219,10 @@ Alien::gdal - Compile GDAL, the Geographic Data Abstraction Library
     #  assuming you have populated @args already
     my ($stdout, $stderr, $exit_code)
       = Alien::gdal->run_utility ('gdalwarp', @args);
+    #  Note that this is currently experimental.
+    #  Please report issues and solutions.  
     
-    #  access the GDAL data directory
+    #  Access the GDAL data directory
     #  (note that not all system installs include it)
     my $path = Alien::gdal->data_dir;
     
