@@ -8,7 +8,7 @@ use FFI::CheckLib;
 use Env qw ( @PATH @LD_LIBRARY_PATH @DYLD_LIBRARY_PATH );
 use Capture::Tiny qw /:all/;
 use Path::Tiny qw /path/;
-
+use Alien::proj;
 
 our $VERSION = '1.18';
 
@@ -42,6 +42,10 @@ BEGIN {
         );
         #warn "PROJ_LIB FILE IS $proj_lib";
         $ENV{PROJSO} //= $proj_lib;
+    }
+    if (Alien::gdal->version ge '3') {
+        push @PATH, 'Alien::proj'->bin_dirs
+          if 'Alien::proj'->can('bin_dirs');
     }
 }
 
