@@ -17,6 +17,8 @@ task:
   install_script:
     - sudo pkg install -y autoconf automake libtool pkgconf sqlite3 gmake
     - sudo pkg install -y p5-App-cpanminus
+    - sudo pkg install postgresql11-server postgresql11-client
+
     - sudo cpanm local::lib
     #- cpanm --local-lib=$PERL_MOD_DIR local::lib && eval $(perl -I ${PERL_MOD_DIR}/lib/perl5/ -Mlocal::lib)
     - echo probe local::lib
