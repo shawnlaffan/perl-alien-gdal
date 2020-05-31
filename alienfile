@@ -159,7 +159,7 @@ share {
     }
     if (! ($ENV{TRAVIS} || $ENV{APPVEYOR} || $ENV{CI})) {
         #  make build slightly faster and smaller on cpan testers
-        $with_gnm = '--with-gnm=no --disable-all-optional-drivers'
+        $with_gnm = '--with-gnm=no'
     }
     #  clean up the build dir on cpan testers etc
     plugin 'Cleanse::BuildDir';

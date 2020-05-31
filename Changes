@@ -1,7 +1,12 @@
 Revision history for Alien::gdal
 
-1.18 2020-05-23
-    - Add run_utiliy method
+1.19 2020-05-31 22:00 AEST
+    - Re-enable optional drivers on CPAN testers.
+      Interdependencies between drivers mean this
+      can cause build failures.
+
+1.18 2020-05-31
+    - Add run_utility method
     - Add --with-local arg to dragonfly builds
     - Bump minimum Alien::proj to 1.13.  As a result,
       the minimum Proj version is now 6.1, so the 
