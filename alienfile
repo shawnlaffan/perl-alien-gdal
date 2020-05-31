@@ -141,6 +141,7 @@ share {
   }
 
   my $with_gnm = '';
+  my $with_pg  = '';
   my $make_cmd = '%{make}';
   my $make_inst_cmd = '%{make} install';
   
@@ -161,6 +162,7 @@ share {
         #  make build slightly faster and smaller on cpan testers
         $with_gnm = '--with-gnm=no --disable-all-optional-drivers'
     }
+    $with_pg = '--with-pg=no';
     #  clean up the build dir on cpan testers etc
     plugin 'Cleanse::BuildDir';
   }
@@ -170,6 +172,7 @@ share {
     $with_cpp11,
     $with_local,
     $with_gnm,
+    $with_pg,
     #'--without-pg',
   );
   my @ld_flags;
