@@ -3,12 +3,12 @@ Revision history for Alien::gdal
 1.18 2020-05-23
     - Add run_utiliy method
     - Add --with-local arg to dragonfly builds
-    - Bump minimum Alien::proj to 1.10.  As a result,
+    - Bump minimum Alien::proj to 1.13.  As a result,
       the minimum Proj version is now 6.1, so the 
       minimum GDAL version is 3.0.
 
 1.17 2019-08-03
-    - Make sure we install GDAL 2.4 if Proj version is less than 6
+    - Make sure we install GDAL 2.4 if Proj version is less than 6.0
 
 1.16 2019-04-04
     - Disable Alien::spatialite for now, as it needs
