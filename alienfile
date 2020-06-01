@@ -159,8 +159,8 @@ share {
     }
     else {
         #  fake exit codes on failure, not sure how to get originals
-        $make_cmd      .= qw/ || perl -e"system ('type', 'build.log'); exit 1"/;
-        $make_inst_cmd .= qw/ || perl -e"system ('type', 'install.log'); exit 1"/;
+        $make_cmd      .= q/ || perl -e"system ('type', 'build.log'); exit 1"/;
+        $make_inst_cmd .= q/ || perl -e"system ('type', 'install.log'); exit 1"/;
     }
     if (! ($ENV{TRAVIS} || $ENV{APPVEYOR} || $ENV{CI})) {
         #  make build slightly faster and smaller on cpan testers
