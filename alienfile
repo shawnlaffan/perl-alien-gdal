@@ -158,8 +158,9 @@ share {
         $make_inst_cmd .= ' || (E=$? && cat install.log && exit $E)';
     }
     else {
-        $make_cmd      .= ' || (set E=%errorlevel% & type build.log & echo %E%)/';
-        $make_inst_cmd .= ' || (set E=%errorlevel% & type install.log & echo %E%)/';
+        #  fake exit codes on failure, not sure how to get originals
+        $make_cmd      .= qw/ || perl -e"system ('type', 'build.log'); exit 1"/;
+        $make_inst_cmd .= qw/ || perl -e"system ('type', 'install.log'); exit 1"/;
     }
     if (! ($ENV{TRAVIS} || $ENV{APPVEYOR} || $ENV{CI})) {
         #  make build slightly faster and smaller on cpan testers
