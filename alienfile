@@ -254,7 +254,7 @@ sub update_pkg_conf_path {
 sub patch_makefile_long_line {
     my ($build) = @_;
 
-    return if !$on_windows;
+    #return if !$on_windows;
     
     my $target = "GNUmakefile";
     $build->log ("Patching $target to cope with long lines");
