@@ -147,15 +147,19 @@ share {
   #  try not to exceed the cpan-testers log limits
   if ($on_automated_rig) {
     say "Running under CI or automated testing";
-    $make_cmd      .= q/ | perl -ne "BEGIN {$|=1; open our $log, q|>|, q|build.log|};   print qq|\n| if 0 == ($. %% 100); print q|.|; print {$log} $_;" || type build.log/;
-    $make_inst_cmd .= q/ | perl -ne "BEGIN {$|=1; open our $log, q|>|, q|install.log|}; print qq|\n| if 0 == ($. %% 100); print q|.|; print {$log} $_;" || type install.log/;
+    $make_cmd      .= q/ | perl -ne "BEGIN {$|=1; open our $log, q|>|, q|build.log|};   print qq|\n| if 0 == ($. %% 100); print q|.|; print {$log} $_;" /;
+    $make_inst_cmd .= q/ | perl -ne "BEGIN {$|=1; open our $log, q|>|, q|install.log|}; print qq|\n| if 0 == ($. %% 100); print q|.|; print {$log} $_;" /;
     if (!$on_windows) {
         $make_cmd =~ s/%%/%/;
-        $make_cmd =~ s/type/cat/;
         $make_cmd =~ s/"/'/g;
+        $make_cmd .= ' || (E=$? && cat build.log && exit $E)';
         $make_inst_cmd =~ s/%%/%/;
-        $make_inst_cmd =~ s/type/cat/;
         $make_inst_cmd =~ s/"/'/g;
+        $make_inst_cmd .= ' || (E=$? && cat install.log && exit $E)';
+    }
+    else {
+        $make_cmd      .= ' || (set E=%errorlevel% & type build.log & echo %E%)/';
+        $make_inst_cmd .= ' || (set E=%errorlevel% & type install.log & echo %E%)/';
     }
     if (! ($ENV{TRAVIS} || $ENV{APPVEYOR} || $ENV{CI})) {
         #  make build slightly faster and smaller on cpan testers
