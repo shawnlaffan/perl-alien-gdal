@@ -164,10 +164,10 @@ share {
     }
     if (! ($ENV{TRAVIS} || $ENV{APPVEYOR} || $ENV{CI})) {
         #  make build slightly faster and smaller on cpan testers
-        $with_gnm = '--with-gnm=no --with-openjpeg=no --without-jasper';
+        $with_gnm = '--with-gnm=no --with-openjpeg=no --with-jasper=no';
     }
     else {
-        $with_gnm = '--with-openjpeg=no --without-jasper';
+        $with_gnm = '--with-openjpeg=no --with-jasper=no';
     }
     #  clean up the build dir on cpan testers etc
     plugin 'Cleanse::BuildDir';
