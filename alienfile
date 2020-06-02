@@ -140,9 +140,10 @@ share {
     }
   }
 
-  my $with_gnm = '';
+
   my $make_cmd = '%{make}';
-  my $make_inst_cmd = '%{make} install';
+  my $make_inst_cmd = '%{make} install';  
+  my @automated_rig_config_args;
   
   #  try not to exceed the cpan-testers log limits
   if ($on_automated_rig) {
@@ -164,11 +165,12 @@ share {
     }
     if (! ($ENV{TRAVIS} || $ENV{APPVEYOR} || $ENV{CI})) {
         #  make build slightly faster and smaller on cpan testers
-        $with_gnm = '--with-gnm=no --with-openjpeg=no --with-jasper=no';
+        push @automated_rig_config_args, '--with-gnm=no';
     }
-    else {
-        $with_gnm = '--with-openjpeg=no --with-jasper=no';
-    }
+    #  debug
+    push @automated_rig_config_args,
+      (qw/--with-openjpeg=no --with-jasper=no/);
+
     #  clean up the build dir on cpan testers etc
     plugin 'Cleanse::BuildDir';
   }
@@ -177,7 +179,7 @@ share {
     #'--with-libtiff=internal',
     $with_cpp11,
     $with_local,
-    $with_gnm,
+    @automated_rig_config_args,
     #'--without-pg',
   );
   my @ld_flags;
