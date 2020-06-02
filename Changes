@@ -1,5 +1,14 @@
 Revision history for Alien::gdal
 
+1.20 20200602
+    - Modify make steps to exit on first failure.
+    - Disable PostgreSQL driver on CPAN testers.
+      Some GDAL configuration or PostgreSQL packaging
+      issue is causing failures.
+    - Apply fix for long makefile lines on all platforms.
+      This is harmless on those that have no line limits,
+      and is version guarded to GDAL<3.2.
+
 1.19 2020-05-31 22:00 AEST
     - Re-enable optional drivers on CPAN testers.
       Interdependencies between drivers mean this
