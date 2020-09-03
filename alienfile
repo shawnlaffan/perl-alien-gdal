@@ -211,6 +211,7 @@ share {
       @automated_rig_config_args,
       #'--without-pg',
       '--without-ogdi',
+      '--with-mongocxxv3=no',
     );
     my @ld_flags;
     #  system installs won't necessarily have dist dirs
