@@ -241,7 +241,8 @@ share {
     }
     
     meta->around_hook( build => \&remove_gitfw_from_path );
-    
+    plugin 'PkgConfig::PPWrapper';
+
     #  debug
     if ($ENV{CI} && Alien::proj->install_type eq 'share') {
       my $dir = path(Alien::proj->dist_dir);
@@ -257,7 +258,7 @@ share {
     #  not sure this is needed, or if it is to deal with a cirrus quirk 
     #local $ENV{LDFLAGS} = join ' ', @ld_flags;
     build [
-      \&update_pkg_conf_path,
+      #\&update_pkg_conf_path,
       "%{configure} $config_args $build_static",
       \&pause,
       $make_cmd,
