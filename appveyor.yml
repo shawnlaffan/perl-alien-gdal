@@ -18,6 +18,7 @@ install:
   - cpanm --quiet --notest Sort::Versions
   - cpanm --quiet --notest PkgConfig
   - cpanm Alien::Build::Plugin::Cleanse::BuildDir
+  - cpanm Alien::Build::Plugin::PkgConfig::PPWrapper
   - cpanm --quiet --notest Sort::Versions
   #  this is on cpan now
   #- cpanm -v https://github.com/shawnlaffan/perl-alien-geos.git
