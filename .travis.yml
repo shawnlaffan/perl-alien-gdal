@@ -56,6 +56,7 @@ before_install:
   - cpanm --quiet --notest Sort::Versions
   - cpanm --quiet --notest PkgConfig
   - cpanm --quiet --notest Alien::Build::Plugin::Cleanse::BuildDir
+  - cpanm --quiet --notest Alien::Build::Plugin::PkgConfig::PPWrapper
   - cpanm --quiet --notest File::Find::Rule
   - cpanm --quiet --notest Alien::Build::Plugin::Fetch::Cache
 
@@ -67,7 +68,7 @@ before_install:
   - MAKEFLAGS=-j4 cpanm -v --notest Alien::sqlite
   - ALIEN_INSTALL_TYPE=share cpanm -v Alien::libtiff
   #- cpanm -v --notest --installdeps Alien::proj
-  - MAKEFLAGS=-j4 cpanm -v --notest Alien::proj~1.07
+  - MAKEFLAGS=-j4 cpanm -v --notest Alien::proj
   #- perl -MAlien::proj -e1 || MAKEFLAGS=-j4 cpanm -v https://github.com/shawnlaffan/perl-alien-proj.git
 
   - cpanm --quiet --notest FFI::Platypus
@@ -76,8 +77,8 @@ before_install:
   #  so it will be a system install
   #- if [ "$TRAVIS_OS_NAME" == "osx" ]; then export ALIEN_INSTALL_TYPE=share; fi;
 
-  - export quiet='--quiet'
-  - cpanm ${quiet} --notest --installdeps .
+  #- export quiet='--quiet'
+  #- cpanm ${quiet} --notest --installdeps .
   
 
 script:
