@@ -72,6 +72,7 @@ jobs:
           cpanm --quiet --notest Sort::Versions
           cpanm --quiet --notest PkgConfig
           cpanm --quiet --notest Alien::Build::Plugin::Cleanse::BuildDir
+          cpanm --quiet --notest Alien::Build::Plugin::PkgConfig::PPWrapper
           cpanm --quiet --notest File::Find::Rule
           cpanm --quiet --notest Alien::Build::Plugin::Fetch::Cache
           cpanm --quiet --notest Env::ShellWords
