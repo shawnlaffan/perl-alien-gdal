@@ -245,7 +245,7 @@ share {
     #  }
     #}
     if ($^O eq 'MSWin32') {
-      push @with_args, '--with-hide-internal-symbols=yes';
+      push @with_args, '--with-hide-internal-symbols';
     }    
     
     
