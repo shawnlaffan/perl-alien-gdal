@@ -212,6 +212,7 @@ share {
       #'--without-pg',
       '--without-ogdi',
       '--with-mongocxxv3=no',
+      $^O eq 'MSWin32' ? '--without-hdf5' : (),  #  issues with strawberry perl hdf5 dlls
     );
     my @ld_flags;
     #  system installs won't necessarily have dist dirs
@@ -232,6 +233,20 @@ share {
       push @ld_flags, 'LDFLAGS=' . Alien::sqlite->libs;
       #'-L/home/libraries/intel/sqlite/lib -lsqlite3'
     }
+    #  an attempt to get hdf5 support under strawberry,
+    #  but which did not work so now it is turned off
+    #if ($^O eq 'MSWin32' && !$ENV{HDF5_LIBS}) {
+    #  my $c_dir = path ($^X)->parent->parent->parent->child('c');
+    #  if ($c_dir->exists) {
+    #    #$ENV{HDF5_LIBS} = "-L$c_dir/lib -lhdf5";
+    #    #warn 'adding HDF5_LIBS var: ' . $ENV{HDF5_LIBS};
+    #    push @with_args, '--without-hdf5';
+    #    #push @ld_flags, "-L$c_dir/lib -lhdf5";
+    #  }
+    #}
+    if ($^O eq 'MSWin32' && !$ENV{HDF5_LIBS}) {
+      push @with_args, '--with-hide_internal_symbols';
+    }    
     
     
     my $config_args = $ENV{ALIEN_GDAL_CONFIG_ARGS} // '';
