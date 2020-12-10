@@ -244,8 +244,8 @@ share {
     #    #push @ld_flags, "-L$c_dir/lib -lhdf5";
     #  }
     #}
-    if ($^O eq 'MSWin32' && !$ENV{HDF5_LIBS}) {
-      push @with_args, '--with-hide_internal_symbols';
+    if ($^O eq 'MSWin32') {
+      push @with_args, '--with-hide-internal-symbols=yes';
     }    
     
     
