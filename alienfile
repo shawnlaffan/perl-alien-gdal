@@ -261,17 +261,6 @@ share {
     meta->around_hook( build => \&remove_gitfw_from_path );
     plugin 'PkgConfig::PPWrapper';
 
-    #  debug
-    if ($ENV{CI} && Alien::proj->install_type eq 'share') {
-      my $dir = path(Alien::proj->dist_dir);
-      my @files = File::Find::Rule
-        ->file()
-        ->name( '*' )
-        #->recursive
-        ->in( "$dir" );;
-      say 'PROJ INCLUDE FILES: ' . join ' ', @files;
-      say 'PROJ CFLAGS: ' . Alien::proj->cflags;
-    }
     
     my $drivers_to_disable = join ' ', get_drivers_to_disable();
     
