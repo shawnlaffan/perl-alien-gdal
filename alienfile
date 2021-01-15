@@ -29,10 +29,12 @@ foreach my $alien (@aliens_l_and_I) {
 }
 my $have_spatialite = eval 'require
   Alien::spatialite';
-if ($have_spatialite) {
-    $have_spatialite = 'Alien' . '::' . 'spatialite';  #  hide from scanners
-    unshift @PATH, $have_spatialite->bin_dir;
-    push @aliens_l_and_I, $have_spatialite;
+if ($have_spatialite && Alien::spatialite->version ge 5) {
+  unshift @PATH, $have_spatialite->bin_dir;
+  push @aliens_l_and_I, $have_spatialite;
+}
+else {
+  $have_spatialite = undef;
 }
 
 
@@ -247,6 +249,8 @@ share {
     if ($^O eq 'MSWin32') {
       unshift @with_args, '--with-hide-internal-symbols=yes';
       push @with_args, '--without-gnm';
+      #  should add an env flag for this
+      push @with_args, '--with-curl=no';
     }    
     
     
@@ -263,7 +267,7 @@ share {
 
     
     my $drivers_to_disable = join ' ', get_drivers_to_disable();
-    
+    ## --with-curl=no
     #  not sure this is needed, or if it is to deal with a cirrus quirk 
     #local $ENV{LDFLAGS} = join ' ', @ld_flags;
     build [
@@ -477,6 +481,7 @@ sub get_drivers_to_disable {
     gtm
     htf
     openair
+    cloudant
     rec
     sdts
     sua

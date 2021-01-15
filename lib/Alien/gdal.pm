@@ -12,11 +12,12 @@ use Alien::proj;
 
 our $VERSION = '1.23';
 
-my ($have_geos, $have_proj);
+my ($have_geos, $have_proj, $have_spatialite);
 my @have_aliens;
 BEGIN {
     $have_geos = eval 'require Alien::geos::af';
-    foreach my $alien_lib (qw /Alien::geos::af Alien::sqlite Alien::proj Alien::spatialite Alien::freexl Alien::libtiff/) {
+    $have_spatialite = eval 'require Alien::spatialite';
+    foreach my $alien_lib (qw /Alien::geos::af Alien::sqlite Alien::proj Alien::freexl Alien::libtiff/) {
         my $have_lib = eval "require $alien_lib";
         my $pushed_to_env = 0;
         if ($have_lib && $alien_lib->install_type eq 'share') {
@@ -46,6 +47,11 @@ BEGIN {
     if (Alien::gdal->version ge '3') {
         push @PATH, 'Alien::proj'->bin_dirs
           if 'Alien::proj'->can('bin_dirs');
+        if ($have_spatialite && Alien::spatialite->version ge 5) {
+          push @PATH, 'Alien::spatialite'->bin_dirs
+            if 'Alien::spatialite'->can('bin_dirs');
+          push @have_aliens, 'Alien::spatialite';
+        }
     }
 }
 
