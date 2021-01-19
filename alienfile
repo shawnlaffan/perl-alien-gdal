@@ -237,6 +237,12 @@ share {
       push @ld_flags, 'LDFLAGS=' . Alien::sqlite->libs;
       #'-L/home/libraries/intel/sqlite/lib -lsqlite3'
     }
+    if (Alien::geos::af->install_type eq 'share') {
+      push @with_args,
+          '--with-geos='
+        . Alien::geos::af->bin_dir
+        . '/geos-config'; 
+    }
     #  an attempt to get hdf5 support under strawberry,
     #  but which did not work so now it is turned off
     #if ($^O eq 'MSWin32' && !$ENV{HDF5_LIBS}) {
