@@ -69,6 +69,14 @@ sub dynamic_libs {
         push @libs2, $lib;
         $seen{$lib}++;
     }
+    if ($have_geos
+        && $^O =~ /bsd/
+        && Alien::geos::af->install_type eq 'share'
+        ) {
+        #  underhanded, but we are getting failures if this is not set
+        #  maybe should be done in A::g::af
+        push @LD_LIBRARY_PATH, (Alien::geos::af->dist_dir . q{/lib});
+    }
     
     return @libs2;
 }
