@@ -78,6 +78,8 @@ sub dynamic_libs {
         my $libdir = Alien::geos::af->dist_dir . q{/lib};
         push @LD_LIBRARY_PATH, $libdir
           if !grep {/^$libdir$/} @LD_LIBRARY_PATH;
+        push @DYLD_LIBRARY_PATH, $libdir
+          if !grep {/^$libdir$/} @DYLD_LIBRARY_PATH;
         warn "Adding $libdir to LD_LIBRARY_PATH";
         warn 'Path is: ' . join ' ', @LD_LIBRARY_PATH;
         warn 'Bare env var: ' . $ENV{LD_LIBRARY_PATH};
