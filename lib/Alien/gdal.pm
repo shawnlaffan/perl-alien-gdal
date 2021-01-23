@@ -58,17 +58,6 @@ BEGIN {
 sub dynamic_libs {
     my $self = shift;
     
-    my (@libs) = $self->SUPER::dynamic_libs;
-
-    foreach my $alien (@have_aliens) {
-        push @libs, $alien->dynamic_libs;
-    }
-    my (%seen, @libs2);
-    foreach my $lib (@libs) {
-        next if $seen{$lib};
-        push @libs2, $lib;
-        $seen{$lib}++;
-    }
     if ($have_geos
         && $^O =~ /bsd/
         && Alien::geos::af->install_type eq 'share'
@@ -80,9 +69,23 @@ sub dynamic_libs {
           if !grep {/^$libdir$/} @LD_LIBRARY_PATH;
         push @DYLD_LIBRARY_PATH, $libdir
           if !grep {/^$libdir$/} @DYLD_LIBRARY_PATH;
-        warn "Adding $libdir to LD_LIBRARY_PATH";
-        warn 'Path is: ' . join ' ', @LD_LIBRARY_PATH;
+        warn "Adding $libdir to LD_LIBRARY_PATH and DYLD_LIBRARY_PATH";
+        warn 'LD Path is: ' . join ' ', @LD_LIBRARY_PATH;
         warn 'Bare env var: ' . $ENV{LD_LIBRARY_PATH};
+        warn 'DYLD Path is: ' . join ' ', @DYLD_LIBRARY_PATH;
+        warn 'Bare env var: ' . $ENV{DYLD_LIBRARY_PATH};
+    }
+
+    my (@libs) = $self->SUPER::dynamic_libs;
+
+    foreach my $alien (@have_aliens) {
+        push @libs, $alien->dynamic_libs;
+    }
+    my (%seen, @libs2);
+    foreach my $lib (@libs) {
+        next if $seen{$lib};
+        push @libs2, $lib;
+        $seen{$lib}++;
     }
     
     return @libs2;
