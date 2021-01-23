@@ -75,7 +75,10 @@ sub dynamic_libs {
         ) {
         #  underhanded, but we are getting failures if this is not set
         #  maybe should be done in A::g::af
-        push @LD_LIBRARY_PATH, (Alien::geos::af->dist_dir . q{/lib});
+        my $libdir = Alien::geos::af->dist_dir . q{/lib};
+        push @LD_LIBRARY_PATH, $libdir
+          if !grep {/$libdir/} @LD_LIBRARY_PATH;
+        warn "Adding $libdir to LD_LIBRARY_PATH";
     }
     
     return @libs2;
