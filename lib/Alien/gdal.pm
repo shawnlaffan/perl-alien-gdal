@@ -53,11 +53,6 @@ BEGIN {
           push @have_aliens, 'Alien::spatialite';
         }
     }
-}
-
-sub dynamic_libs {
-    my $self = shift;
-    
     if ($have_geos
         && $^O =~ /bsd/
         && Alien::geos::af->install_type eq 'share'
@@ -73,13 +68,18 @@ sub dynamic_libs {
           if !grep {/^$libdir$/}
               grep {defined}
               @DYLD_LIBRARY_PATH;
-        warn "Adding $libdir to LD_LIBRARY_PATH and DYLD_LIBRARY_PATH";
+        #warn "Adding $libdir to LD_LIBRARY_PATH and DYLD_LIBRARY_PATH";
         warn 'LD Path is: ' . join ' ', @LD_LIBRARY_PATH;
         warn 'Bare env var: ' . $ENV{LD_LIBRARY_PATH};
         warn 'DYLD Path is: ' . join ' ', @DYLD_LIBRARY_PATH;
         warn 'Bare env var: ' . $ENV{DYLD_LIBRARY_PATH};
     }
 
+}
+
+sub dynamic_libs {
+    my $self = shift;
+    
     my (@libs) = $self->SUPER::dynamic_libs;
 
     foreach my $alien (@have_aliens) {
