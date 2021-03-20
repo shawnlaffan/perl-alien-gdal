@@ -65,6 +65,10 @@ jobs:
           cpanm --notest Alien::Build
           cpanm --notest Alien::Build::MM
           cpanm --notest Sort::Versions
+          cpanm --notest Alien::Build::Plugin::PkgConfig::PPWrapper
+          cpanm --notest Alien::geos::af
+          cpanm --notest Alien::libtiff
+          cpanm --notest Alien::proj
       
       - name: Build and then run tests
         run: |
