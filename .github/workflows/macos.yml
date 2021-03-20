@@ -69,4 +69,5 @@ jobs:
         run: |
           perl Makefile.PL
           cpanm --installdeps .
-          prove -l -j4
+          MAKEFLAGS=-j4 make test
+          #prove -l -j4
