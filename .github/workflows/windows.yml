@@ -64,11 +64,11 @@ jobs:
       #- name: Install Dependencies
       #  run: curl -sL https://git.io/cpm | perl - install -g --show-build-log-on-failure
   
-      - name: Install dependencies 1
-        run: |
+      #- name: Install dependencies 1
+      #  run: |
           #cpanm --notest local::lib
           #eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
-          cpanm --notest --installdeps .
+          #cpanm --notest --installdeps .
           #cpanm --quiet --notest Alien::Build
           #cpanm --quiet --notest Alien::Build::MM
           #cpanm --quiet --notest Sort::Versions
