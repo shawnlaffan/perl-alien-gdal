@@ -76,10 +76,10 @@ BEGIN {
 sub dynamic_libs {
     my $self = shift;
     
-    warn 'LD Path is: ' . join ' ', grep {defined} @LD_LIBRARY_PATH;
-    warn 'Bare env var: ' . ($ENV{LD_LIBRARY_PATH} // '');
-    warn 'DYLD Path is: ' . join ' ', grep {defined} @DYLD_LIBRARY_PATH;
-    warn 'Bare env var: ' . ($ENV{DYLD_LIBRARY_PATH} // '');
+    #warn 'LD Path is: ' . join ' ', grep {defined} @LD_LIBRARY_PATH;
+    #warn 'Bare env var: ' . ($ENV{LD_LIBRARY_PATH} // '');
+    #warn 'DYLD Path is: ' . join ' ', grep {defined} @DYLD_LIBRARY_PATH;
+    #warn 'Bare env var: ' . ($ENV{DYLD_LIBRARY_PATH} // '');
 
     my (@libs) = $self->SUPER::dynamic_libs;
 
