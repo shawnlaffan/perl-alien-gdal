@@ -64,8 +64,10 @@ jobs:
       #- name: Install Dependencies
       #  run: curl -sL https://git.io/cpm | perl - install -g --show-build-log-on-failure
   
-      #- name: Install dependencies 1
-      #  run: |
+      - name: Install dependencies 1
+        run: |
+          cpanm --quiet --notest Alien::Build::Plugin::Fetch::Cache
+
           #cpanm --notest local::lib
           #eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
           #cpanm --notest --installdeps .
@@ -76,7 +78,6 @@ jobs:
           #cpanm --quiet --notest Alien::Build::Plugin::Cleanse::BuildDir
           #cpanm --quiet --notest Alien::Build::Plugin::PkgConfig::PPWrapper
           #cpanm --quiet --notest File::Find::Rule
-          #cpanm --quiet --notest Alien::Build::Plugin::Fetch::Cache
           #cpanm --quiet --notest Env::ShellWords
           #cpanm --quiet --notest FFI::Platypus
 
