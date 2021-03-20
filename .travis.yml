@@ -5,7 +5,7 @@ perl:
 
 os:
   - linux
-  - osx
+  #- osx
 
 
 sudo: required 
