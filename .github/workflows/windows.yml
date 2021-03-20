@@ -82,7 +82,7 @@ jobs:
 
       - name: Install dependencies Alien::MSYS
         run: |
-          cpanm --notest Alien::MSYS
+          cpanm -v --notest Alien::MSYS
 
       - name: Install dependencies Alien::sqlite
         run: |
