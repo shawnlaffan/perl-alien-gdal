@@ -62,8 +62,9 @@ jobs:
           #cpanm Test2::Suite
           #cpanm --notest --installdeps .
           #cpanm --installdeps .
-          cpanm Alien::Build
-          cpanm Alien::Build::MM
+          cpanm --notest Alien::Build
+          cpanm --notest Alien::Build::MM
+          cpanm --notest Sort::Versions
       
       - name: Build and then run tests
         run: |
