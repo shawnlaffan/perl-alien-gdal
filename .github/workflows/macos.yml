@@ -54,14 +54,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-build-${{ hashFiles('perlversion.txt') }}
 
-      #- name: Install Dynamic Dependencies
-      #  run: |
-      #    # cpanm --notest IO::Socket::SSL
-      #    #cpanm --notest FFI::Platypus::Declare
-      #    #cpanm --notest Task::Biodiverse::NoGUI
-      #    #cpanm Test2::Suite
-      #    cpanm --notest --installdeps .
-      #    cpanm --installdeps .
+      - name: Install Dynamic Dependencies
+        run: |
+          # cpanm --notest IO::Socket::SSL
+          #cpanm --notest FFI::Platypus::Declare
+          #cpanm --notest Task::Biodiverse::NoGUI
+          #cpanm Test2::Suite
+          #cpanm --notest --installdeps .
+          #cpanm --installdeps .
+          cpanm Alien::Build
+          cpanm Alien::Build::MM
       
       - name: Build and then run tests
         run: |
