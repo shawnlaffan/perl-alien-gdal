@@ -1,7 +1,7 @@
 use 5.010;
 use alienfile;
 use Sort::Versions;
-use Env qw /@PATH/;
+use Env qw /@PATH @LD_LIBRARY_PATH/;
 use Path::Tiny qw /path/;
 
 my $on_windows = $^O =~ /mswin/i;
@@ -283,7 +283,7 @@ share {
     #  not sure this is needed, or if it is to deal with a cirrus quirk 
     #local $ENV{LDFLAGS} = join ' ', @ld_flags;
     #  hack
-    local $ENV{LD_LIBRARY_PATH} .= ' ' . join ' ', @ld_lib_path;
+    push @LD_LIBRARY_PATH, @ld_lib_path;
     build [
       #\&update_pkg_conf_path,
       \&cleanup_ldflags,
