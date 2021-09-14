@@ -23,6 +23,10 @@ jobs:
         with:
           perl-version: '5.32'
 
+      - name: cmake for geos
+        run: |
+          sudo apt-get --yes install cmake
+
       - name: Locale check
         run: |
           locale -a
