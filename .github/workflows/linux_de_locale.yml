@@ -68,7 +68,7 @@ jobs:
           cpanm -v Alien::sqlite
           cpanm --installdeps --notest Alien::libtiff
           cpanm -v Alien::libtiff
-          cpanm --installdeps --notest Alien::geos::af
+          cpanm --installdeps --notest Alien::geos::af@1.007
           cpanm -v Alien::geos::af
           cpanm --installdeps --notest Alien::proj
           cpanm -v Alien::proj
