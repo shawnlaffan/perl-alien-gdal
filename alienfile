@@ -244,7 +244,7 @@ share {
         . Alien::geos::af->bin_dir
         . '/geos-config';
       #  build weirdness on linux with geos under cmake
-      push @ld_lib_path, Alien::geos::af->libs;
+      push @ld_lib_path, Alien::geos::af->dist_dir . '/lib';
     }
     #  an attempt to get hdf5 support under strawberry,
     #  but which did not work so now it is turned off
