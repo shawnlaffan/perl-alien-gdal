@@ -114,7 +114,7 @@ sub libs {
     my $cflags = $self->SUPER::libs;
     
     if ($have_geos) {
-        $cflags .= ' ' . Alien::geos::af->libs;
+        $cflags .= ' ' . (Alien::geos::af->libs // '');
     }
     
     return $cflags;
