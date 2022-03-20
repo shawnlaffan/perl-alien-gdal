@@ -17,9 +17,11 @@ my @have_aliens;
 BEGIN {
     $have_geos = eval 'require Alien::geos::af';
     $have_spatialite = eval 'require Alien::spatialite';
-    foreach my $alien_lib (qw /Alien::geos::af Alien::sqlite Alien::proj Alien::freexl Alien::libtiff/) {
+    my @check_aliens
+      = qw /Alien::geos::af Alien::sqlite Alien::proj
+            Alien::freexl   Alien::libtiff Alien::spatialite/;
+    foreach my $alien_lib (@check_aliens) {
         my $have_lib = eval "require $alien_lib";
-        my $pushed_to_env = 0;
         if ($have_lib && $alien_lib->install_type eq 'share') {
             push @have_aliens, $alien_lib;
             #  crude, but otherwise Geo::GDAL::FFI does not
@@ -27,9 +29,22 @@ BEGIN {
             #warn "Adding Alien::geos bin to path: " . Alien::geos::af->bin_dir;
             push @PATH, $alien_lib->bin_dir;
             #warn $ENV{PATH};
+            my $libdir = Alien::geos::af->dist_dir . q{/lib};
+            if ($^O =~ /darwin/i) {
+                push @DYLD_LIBRARY_PATH, $libdir
+                  if !grep {/^$libdir$/}
+                      grep {defined}
+                      @DYLD_LIBRARY_PATH;
+            }
+            elsif (not $^O =~ /mswin/i) { 
+                push @LD_LIBRARY_PATH, $libdir
+                  if !grep {/^$libdir$/}
+                      grep {defined}
+                      @LD_LIBRARY_PATH;
+            }
         }
     }
-    # 
+    #
     if ($^O =~ /mswin/i and !$ENV{PROJSO} and Alien::gdal->version lt 3) {
         my $libpath;
         $have_proj = eval 'require Alien::proj';
@@ -53,24 +68,6 @@ BEGIN {
           push @have_aliens, 'Alien::spatialite';
         }
     }
-    if ($have_geos
-        && not $^O =~ /win/
-        && Alien::geos::af->install_type eq 'share'
-        ) {
-        #  underhanded, but we are getting failures if this is not set
-        #  maybe should be done in A::g::af
-        my $libdir = Alien::geos::af->dist_dir . q{/lib};
-        push @LD_LIBRARY_PATH, $libdir
-          if !grep {/^$libdir$/}
-              grep {defined}
-              @LD_LIBRARY_PATH;
-        push @DYLD_LIBRARY_PATH, $libdir
-          if !grep {/^$libdir$/}
-              grep {defined}
-              @DYLD_LIBRARY_PATH;
-        #warn "Adding $libdir to LD_LIBRARY_PATH and DYLD_LIBRARY_PATH";
-    }
-
 }
 
 sub dynamic_libs {
