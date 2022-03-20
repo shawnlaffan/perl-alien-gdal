@@ -71,8 +71,6 @@ jobs:
           cpanm --installdeps --notest Alien::geos::af
           cpanm -v Alien::geos::af
           cpanm --installdeps --notest Alien::proj
-          cpanm -v Alien::proj
-          cpanm --installdeps --notest Alien::gdal
           
       - name: Run Tests
         run: |
