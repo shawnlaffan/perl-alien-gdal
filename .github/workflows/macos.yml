@@ -56,12 +56,6 @@ jobs:
 
       - name: Install Dynamic Dependencies
         run: |
-          # cpanm --notest IO::Socket::SSL
-          #cpanm --notest FFI::Platypus::Declare
-          #cpanm --notest Task::Biodiverse::NoGUI
-          #cpanm Test2::Suite
-          #cpanm --notest --installdeps .
-          #cpanm --installdeps .
           cpanm --notest Alien::Build
           cpanm --notest Alien::Build::MM
           cpanm --notest Sort::Versions
