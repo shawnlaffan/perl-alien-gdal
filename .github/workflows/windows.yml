@@ -87,24 +87,28 @@ jobs:
 
       - name: Install dependencies Alien::sqlite
         run: |
-          cpanm -v Alien::sqlite~1.05
+          cpanm --installdeps --notest Alien::sqlite
+          cpanm -v Alien::sqlite
 
       - name: Install dependencies Alien::libtiff
         run: |
+          cpanm --installdeps --notest Alien::libtiff
           cpanm -v --notest Alien::libtiff
 
       - name: Install dependencies Alien::proj
         run: |
-          #perl -E"eval qq{require Alien::proj} || system (qw {cpanm -v --notest https://github.com/shawnlaffan/perl-alien-proj.git})"
-          cpanm -v --notest Alien::proj~1.10
+          cpanm --installdeps --notest Alien::proj
+          cpanm -v --notest Alien::proj
 
       - name: Install dependencies Alien::geos::af
         run: |
+          cpanm --installdeps --notest Alien::geos::af
           cpanm -v Alien::geos::af
 
-      - name: Install dependencies for Alien::gdal
+      - name: Install dependencies Alien::gdal
         run: |
           cpanm --notest --installdeps Alien::gdal
+          cpanm -v Alien::gdal
   
       # Runs a set of commands using the runners shell
       - name: Build
