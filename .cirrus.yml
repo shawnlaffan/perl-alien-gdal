@@ -12,7 +12,7 @@ task:
     folder: /perl5
     reupload_on_changes: false # set to false if there is a fingerprint script
     fingerprint_script:
-      - echo $CIRRUS_OS 20200611
+      - echo $CIRRUS_OS 20220321
       
   install_script:
     - sudo pkg install -y autoconf automake libtool pkgconf sqlite3 gmake
@@ -24,16 +24,15 @@ task:
     - echo Run it anyway...
     - eval $(perl -I ${PERL_MOD_DIR}/lib/perl5/ -Mlocal::lib)
     #- cpanm --local-lib=~/perl_modules local::lib && eval $(perl -I ~/perl_modules/lib/perl5/ -Mlocal::lib)
-    - cpanm Alien::Build::Plugin::PkgConfig::PPWrapper@0.02
-    #- cpanm -v --notest Data::Dump
+    - cpanm Alien::Build::Plugin::PkgConfig::PPWrapper
     - cpanm --installdeps --notest -v Alien::proj
     - MAKEFLAGS=-j4 cpanm -v Alien::proj
     - cpanm --installdeps --notest Alien::libtiff
     - MAKEFLAGS=-j4 cpanm -v Alien::libtiff
     - MAKEFLAGS=-j4 cpanm -v Alien::geos::af
     - cpanm --installdeps --notest Alien::gdal
-    #- cpanm --notest FFI::Platypus
-
+    - MAKEFLAGS=-j4 cpanm -v Alien::gdal
+    
   script:
     - eval $(perl -I ${PERL_MOD_DIR}/lib/perl5/ -Mlocal::lib)
     - perl Makefile.PL
