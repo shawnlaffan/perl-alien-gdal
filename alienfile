@@ -23,7 +23,9 @@ my @aliens_l_and_I = qw(
 #  make sure we get GEOS, PROJ and other support
 foreach my $alien (@aliens_l_and_I) {
   eval "require $alien";
-  if ($alien->install_type eq 'share') {
+  my $e = $@;
+  warn $e if $e;
+  if (!$e && $alien->install_type eq 'share') {
     log "Prepending $alien bin dir to path";
     unshift @PATH, $alien->bin_dir;
   }
