@@ -29,7 +29,7 @@ BEGIN {
             #warn "Adding Alien::geos bin to path: " . Alien::geos::af->bin_dir;
             push @PATH, $alien_lib->bin_dir;
             #warn $ENV{PATH};
-            my $libdir = Alien::geos::af->dist_dir . q{/lib};
+            my $libdir = $alien_lib->dist_dir . q{/lib};
             if ($^O =~ /darwin/i) {
                 push @DYLD_LIBRARY_PATH, $libdir
                   if !grep {/^$libdir$/}
