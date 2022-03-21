@@ -1,7 +1,7 @@
 use 5.010;
 use alienfile;
 use Sort::Versions;
-use Env qw /@PATH @LD_LIBRARY_PATH/;
+use Env qw /@PATH @LD_LIBRARY_PATH @DYLD_LIBRARY_PATH @PROJ_LIB/;
 use Path::Tiny qw /path/;
 
 my $on_windows = $^O =~ /mswin/i;
@@ -49,7 +49,7 @@ plugin 'Build::SearchDep' => (
 #  configure script does not seem to detect the proj lib distributed with Strawberry perl
 #use FFI::CheckLib;
 #my $proj_lib = FFI::CheckLib::find_lib (lib => 'proj');
-#say "PROJ_LIB FILE IS $proj_lib";
+Alien::Build->log ('$ENV{PROJ_LIB} IS ' . ($ENV{PROJ_LIB} // ''));
 
 
 #  make libtool noisy for debug purposes
@@ -223,18 +223,34 @@ share {
     #  system installs won't necessarily have dist dirs
     if (Alien::proj->install_type eq 'share') {
       push @with_args, '--with-proj=' . Alien::proj->dist_dir;
+      my $proj_lib = Alien::proj->dist_dir . '/share/proj';
+      warn "======\nno proj lib\n=====" if !-e $proj_lib;
+      if (!grep {($_ // '')=~ /^$proj_lib$/} @PROJ_LIB) {
+        Alien::Build->log ("Appending $proj_lib to \$ENV{PROJ_LIB}");
+        push @PROJ_LIB, $proj_lib;
+        Alien::Build->log ("PROJ_LIB is now $ENV{PROJ_LIB}");
+      }
+      if (!$on_windows) {
+        push @ld_lib_path, Alien::proj->dist_dir . '/lib';
+      }
+      #  get dynamic proj extra deps, one day will not be needed
+      push @with_args,
+        q{--with-proj-extra-lib-for-test="} . Alien::proj->libs . q{"};
     }
     if (Alien::libtiff->install_type eq 'share') {
       push @with_args, '--with-libtiff=' . Alien::libtiff->dist_dir;
+      if (!$on_windows) {
+        push @ld_lib_path, Alien::libtiff->dist_dir . '/lib';
+      }
     }
     if ($have_spatialite && $have_spatialite->install_type eq 'share') {
       push @with_args, '--with-spatialite=' . $have_spatialite->dist_dir;
     }
-    #  get dynamic proj extra deps, one day will not be needed
-    push @with_args,
-      q{--with-proj-extra-lib-for-test="} . Alien::proj->libs . q{"};
     if (Alien::sqlite->install_type eq 'share') {
       push @with_args, '--with-sqlite3=' . Alien::sqlite->dist_dir;
+      if (!$on_windows) {
+        push @ld_lib_path, Alien::sqlite->dist_dir . '/lib';
+      }
       #push @ld_flags, 'LDFLAGS=' . Alien::sqlite->libs;
       #'-L/home/libraries/intel/sqlite/lib -lsqlite3'
     }
@@ -285,9 +301,14 @@ share {
     #  not sure this is needed, or if it is to deal with a cirrus quirk 
     #local $ENV{LDFLAGS} = join ' ', @ld_flags;
     #  hack
-    push @LD_LIBRARY_PATH, @ld_lib_path;
+    if ($^O =~ /darwin/) {
+      push @DYLD_LIBRARY_PATH, @ld_lib_path;
+    }
+    else {
+      push @LD_LIBRARY_PATH, @ld_lib_path;
+    }
 
-    foreach my $env_var (qw /LD_LIBRARY_PATH LDFLAGS CFLAGS CXXFLAGS/) {
+    foreach my $env_var (qw /LD_LIBRARY_PATH DYLD_LIBRARY_PATH LDFLAGS CFLAGS CXXFLAGS/) {
       say "ENV: $env_var is " . ($ENV{$env_var} // '');
     }
     #$ENV{CFLAGS} = ' -O2 ';
