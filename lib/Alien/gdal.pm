@@ -8,6 +8,7 @@ use FFI::CheckLib;
 use Env qw ( @PATH @LD_LIBRARY_PATH @DYLD_LIBRARY_PATH );
 use Capture::Tiny qw /:all/;
 use Path::Tiny qw /path/;
+use List::Util qw /uniq/;
 use Alien::proj;
 
 our $VERSION = '1.28';
@@ -15,6 +16,7 @@ our $VERSION = '1.28';
 my ($have_geos, $have_proj, $have_spatialite);
 my @have_aliens;
 BEGIN {
+    my @ld_lib_dirs;
     $have_geos = eval 'require Alien::geos::af';
     $have_spatialite = eval 'require Alien::spatialite';
     my @check_aliens
@@ -26,24 +28,17 @@ BEGIN {
             push @have_aliens, $alien_lib;
             #  crude, but otherwise Geo::GDAL::FFI does not
             #  get fed all the needed info
-            #warn "Adding Alien::geos bin to path: " . Alien::geos::af->bin_dir;
             push @PATH, $alien_lib->bin_dir;
-            #warn $ENV{PATH};
-            my $libdir = $alien_lib->dist_dir . q{/lib};
-            if ($^O =~ /darwin/i) {
-                push @DYLD_LIBRARY_PATH, $libdir
-                  if !grep {/^$libdir$/}
-                      grep {defined}
-                      @DYLD_LIBRARY_PATH;
-            }
-            elsif (not $^O =~ /mswin/i) { 
-                push @LD_LIBRARY_PATH, $libdir
-                  if !grep {/^$libdir$/}
-                      grep {defined}
-                      @LD_LIBRARY_PATH;
-            }
+            push @ld_lib_dirs, $alien_lib->dist_dir . q{/lib};
         }
     }
+    if ($^O =~ /darwin/i) {
+        @DYLD_LIBRARY_PATH = grep {defined} uniq (@DYLD_LIBRARY_PATH, @ld_lib_dirs);
+    }
+    elsif (not $^O =~ /mswin/i) {
+        @LD_LIBRARY_PATH = grep {defined} uniq (@LD_LIBRARY_PATH, @ld_lib_dirs)
+    }
+
     #
     if ($^O =~ /mswin/i and !$ENV{PROJSO} and Alien::gdal->version lt 3) {
         my $libpath;
