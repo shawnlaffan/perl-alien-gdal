@@ -4,6 +4,10 @@ use Sort::Versions;
 use Env qw /@PATH @LD_LIBRARY_PATH @DYLD_LIBRARY_PATH @PROJ_LIB/;
 use Path::Tiny qw /path/;
 
+#  note to self for cmake builds:
+#  https://github.com/OSGeo/gdal/pull/5485
+
+
 my $on_windows = $^O =~ /mswin/i;
 my $on_automated_rig
   =  $ENV{PERL_CPAN_REPORTER_DIR}
@@ -295,6 +299,14 @@ share {
     
     meta->around_hook( build => \&remove_gitfw_from_path );
     plugin 'PkgConfig::PPWrapper';
+    meta->around_hook(
+      build => sub {
+        my ($orig, $build, @args) = @_;
+        $build->log("Setting CCACHE_BASEDIR to " . getcwd());
+        local $ENV{CCACHE_BASEDIR} = getcwd();
+        $orig->($build, @args);
+      }
+    );
 
     #meta->before_hook( build => \&cleanup_ldflags );
     
