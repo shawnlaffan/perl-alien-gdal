@@ -45,13 +45,6 @@ else {
   $have_spatialite = undef;
 }
 
-
-plugin 'Build::SearchDep' => (
-  aliens   => [@aliens_l_and_I],
-  public_I => 1,
-  public_l => 1,
-);
-
 #  configure script does not seem to detect the proj lib distributed with Strawberry perl
 #use FFI::CheckLib;
 #my $proj_lib = FFI::CheckLib::find_lib (lib => 'proj');
@@ -134,6 +127,12 @@ share {
       : 'http://download.osgeo.org/gdal/2.4.2';
   
     say "Proj library version is " . Alien::proj->version;
+
+    plugin 'Build::SearchDep' => (
+      aliens   => [@aliens_l_and_I],
+      public_I => 1,
+      public_l => 1,
+    );
   
     start_url $start_url;
     #start_url "file://$base_dir";  #  debug
