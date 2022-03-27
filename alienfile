@@ -321,11 +321,29 @@ share {
       push @LD_LIBRARY_PATH, @ld_lib_path;
     }
 
+    #LDFLAGS=-Wl,-rpath=$ORIGIN/path/to/library
+    my $h = get_alien_state_hash();
+    my $install_path = $h->{install}{prefix};
+    my @rpath;
+    my @alien_rpaths = @ld_lib_path;  #  cooperate with cargo culted code
+    my $ld_flags = '';
+    if (!$on_windows && defined $install_path && @alien_rpaths) {
+      my $origin_string = $^O =~ /darwin/ ? '@loader_path' : '${ORIGIN}';
+      my $alien_rpath_text
+        = join ':',
+          #  disable $ORIGIN for now - it causes too many shell escape headaches
+          #  and will not be an issue when gdal shifts to cmake
+          #(map {$origin_string . '/../' . path ($_)->relative($install_path)->stringify} @alien_rpaths),
+          @alien_rpaths;
+      #use Data::Printer;
+      $ld_flags .= "-Wl,-rpath=$alien_rpath_text";
+    }
+
     foreach my $env_var (qw /LD_LIBRARY_PATH DYLD_LIBRARY_PATH LDFLAGS CFLAGS CXXFLAGS/) {
       say "ENV: $env_var is " . ($ENV{$env_var} // '');
     }
     #$ENV{CFLAGS} = ' -O2 ';
-    my $config_flags = qq{CFLAGS='-O2' CXXFLAGS='-O2'};
+    my $config_flags = qq{CFLAGS='-O2' CXXFLAGS='-O2' LDFLAGS='$ld_flags'};
     
     build [
       #\&update_pkg_conf_path,
