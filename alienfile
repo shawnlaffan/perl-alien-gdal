@@ -17,7 +17,7 @@ my $on_automated_rig
   || $ENV{APPVEYOR}
   || $ENV{CI};
 
-my @aliens_l_and_I = qw(
+my @alien_deps = qw(
         Alien::geos::af
         Alien::proj
         Alien::sqlite
@@ -25,7 +25,7 @@ my @aliens_l_and_I = qw(
   );
 
 #  make sure we get GEOS, PROJ and other support
-foreach my $alien (@aliens_l_and_I) {
+foreach my $alien (@alien_deps) {
   eval "require $alien";
   my $e = $@;
   warn $e if $e;
@@ -37,9 +37,15 @@ foreach my $alien (@aliens_l_and_I) {
 my $have_spatialite = eval 'require
   Alien::spatialite';
 if ($have_spatialite && Alien::spatialite->version ge 5) {
-  log "Prepending Alien::spatialite bin dir to path";
-  unshift @PATH, Alien::spatialite->bin_dir;
-  push @aliens_l_and_I, 'Alien::spatialite';
+  if (!$on_windows and Alien::spatialite->install_type('share')
+      and $Alien::spatialite::VERSION lt 1.06) {
+    $have_spatialite = undef;  #  rpath issues before this
+  }
+  else {
+    log "Prepending Alien::spatialite bin dir to path";
+    unshift @PATH, Alien::spatialite->bin_dir;
+    push @alien_deps, 'Alien::spatialite';
+  }
 }
 else {
   $have_spatialite = undef;
@@ -129,7 +135,7 @@ share {
     say "Proj library version is " . Alien::proj->version;
 
     plugin 'Build::SearchDep' => (
-      aliens   => [@aliens_l_and_I],
+      aliens   => [@alien_deps],
       public_I => 1,
       public_l => 1,
     );
@@ -248,8 +254,8 @@ share {
         push @ld_lib_path, Alien::libtiff->dist_dir . '/lib';
       }
     }
-    if ($have_spatialite && $have_spatialite->install_type eq 'share') {
-      push @with_args, '--with-spatialite=' . $have_spatialite->dist_dir;
+    if ($have_spatialite && Alien::spatialite->install_type eq 'share') {
+      push @with_args, '--with-spatialite=' . Alien::spatialite->dist_dir;
     }
     if (Alien::sqlite->install_type eq 'share') {
       push @with_args, '--with-sqlite3=' . Alien::sqlite->dist_dir;
@@ -351,11 +357,74 @@ share {
       "%{configure} $config_flags $config_args $drivers_to_disable $build_static",
       \&pause,
       $make_cmd,
+      \&patch_rpaths,
       \&patch_pkgconfig,
       $make_inst_cmd,
     ];
   }
 };
+
+sub patch_rpaths {
+  my ($build) = @_;
+  
+  #  only run on unices - incomplete check but
+  #  I don't think aliens work on VMS or zOS
+  return if ($on_windows or $^O =~ /darwin/i);
+
+  my $h = get_alien_state_hash();
+  my $install_path = $h->{install}{prefix};
+  return if !defined $install_path;
+
+  my @alien_rpaths;
+  for my $alien (@alien_deps) {
+    next if not $alien->install_type('share');
+    push @alien_rpaths, $alien->dist_dir . '/lib';
+  }
+  if (!@alien_rpaths) {
+    $build->log('No shared alien deps found, not updating rpaths');
+    return;
+  }
+
+  my $origin_string = $^O =~ /darwin/ ? '@loader_path' : '${ORIGIN}';
+  my $alien_rpath_text
+    = join ':', (
+       (map {$origin_string . '/../' . path ($_)->relative($install_path)->stringify} @alien_rpaths),
+       @alien_rpaths
+      );
+
+  $build->log ("Prepending rpaths with $alien_rpath_text");
+  
+  #  need to also do the bin dir
+  use File::Find::Rule;
+  my (@so_files)
+    = grep {not -l $_}
+      File::Find::Rule
+              ->file()
+              ->name( qr/^libgdal.so/ )
+              ->in( getcwd() );
+  
+  eval 'require Alien::patchelf'
+    or do {
+      warn 'Unable to load Alien::patchelf, cannot update rpaths';
+      return;
+    };
+  my $pe = Alien::patchelf->new;
+  foreach my $so_file (@so_files) {
+    my ($old_rpath, $result, $stderr, @errors);
+    ($old_rpath, $stderr, @errors)
+      = $pe->patchelf ('--print-rpath', $so_file);
+    $old_rpath //= '';
+    #  prepend our paths
+    my $rpath = $alien_rpath_text . ($old_rpath ? (':' . $old_rpath) : '');
+    $build->log("Updating rpath for $so_file to $rpath, was $old_rpath");
+    ($result, $stderr, @errors)
+      = $pe->patchelf ('--set-rpath', $rpath, $so_file);
+    warn $stderr if $stderr;
+  }
+  
+  return;
+}
+
 
 #  we can get dangling -L values
 #  bandaid until we find the source
