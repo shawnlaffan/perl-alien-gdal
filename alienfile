@@ -127,12 +127,9 @@ share {
     my $with_local = '';
     my $with_cpp11 = '';
     
-    #  ensure we are compatible with the installed proj version
-    my $start_url = Alien::proj->atleast_version ('6.0.0')
-      ? 'http://download.osgeo.org/gdal/CURRENT'
-      : 'http://download.osgeo.org/gdal/2.4.2';
-  
-    say "Proj library version is " . Alien::proj->version;
+    Alien::Build->log ("Proj library version is " . Alien::proj->version);
+    die "Proj version must be at least 6.0.0"
+      if not Alien::proj->atleast_version ('6.0.0');  
 
     plugin 'Build::SearchDep' => (
       aliens   => [@alien_deps],
@@ -140,7 +137,7 @@ share {
       public_l => 1,
     );
   
-    start_url $start_url;
+    start_url 'http://download.osgeo.org/gdal/CURRENT';
     #start_url "file://$base_dir";  #  debug
     plugin Download => (
       filter  => qr/^gdal-([0-9\.]+)\.tar\.gz$/,
@@ -151,23 +148,6 @@ share {
     say "Downloaded gdal version is $gdal_version";
     
     plugin Extract => (format => 'tar.gz');
-  
-    if (versioncmp($gdal_version, '2.3.0') == -1) {
-      if ($on_windows) {
-        #  fix known issue in 2.2.3, harmless in 2.2.4.
-        patch [
-          '%{patch} port/cpl_port.h < ' . $patch_file_isnan,
-        ];
-      }
-      elsif ($^O =~ /freebsd/i) {
-        #  make sure we run a shared install on freebsd by default
-        #  (before libtool files were updated for gdal 2.3.0)
-        patch [
-          '%{patch} configure < ' . $patch_file_configure,
-        ];
-        $with_cpp11 = ' --without-cpp11 ';  #  issues with cad lib pre 2.3.0
-      }
-    }
   
     plugin 'Build::Autoconf' => ();
   
