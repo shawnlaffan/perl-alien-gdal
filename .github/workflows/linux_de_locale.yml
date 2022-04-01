@@ -26,6 +26,7 @@ jobs:
       - name: cmake for geos
         run: |
           sudo apt-get --yes install cmake
+          sudo apt-get --yes install patchelf
 
       - name: Locale check
         run: |
