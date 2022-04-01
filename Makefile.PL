@@ -14,8 +14,8 @@ my %common_reqs = (
     "Alien::Build::Plugin::Cleanse::BuildDir" => 0,
     'Sort::Versions' => 0,
     'Alien::libtiff' => 0,
-    "Alien::geos::af" => '1.005',
-    "Alien::proj" => '1.13',
+    "Alien::geos::af" => '1.010',
+    "Alien::proj" => '1.24',
     "Alien::sqlite" => '1.02',
     "FFI::CheckLib"   => "0.23",
     #"File::Stat" => 0,
@@ -35,6 +35,7 @@ my %WriteMakefileArgs = (
     },
     "BUILD_REQUIRES" => {
         %common_reqs,
+        (not $^O =~ /mswin|darwin/i) ? ("Alien::patchelf" => '0') : (),
     },
     "TEST_REQUIRES" => {
         "Test::Alien" => 0,
