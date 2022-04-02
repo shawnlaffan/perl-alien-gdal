@@ -348,6 +348,14 @@ sub patch_rpaths {
     return;
   }
 
+  eval 'require Alien::patchelf'
+    or do {
+      warn 'Unable to load Alien::patchelf, cannot update rpaths';
+      return;
+    };
+  my $pe = Alien::patchelf->new;
+
+
   my $origin_string = $^O =~ /darwin/ ? '@loader_path' : '${ORIGIN}';
   my $alien_rpath_text
     = join ':', (
@@ -357,7 +365,7 @@ sub patch_rpaths {
 
   $build->log ("Prepending rpaths with $alien_rpath_text");
   
-  #  need to also do the bin dir
+  #  need to also do the bin dir - those files only need to have $ORIGIN/../lib added
   use File::Find::Rule;
   my (@so_files)
     = grep {not -l $_}
@@ -366,12 +374,6 @@ sub patch_rpaths {
               ->name( qr/^libgdal.so/ )
               ->in( getcwd() );
   
-  eval 'require Alien::patchelf'
-    or do {
-      warn 'Unable to load Alien::patchelf, cannot update rpaths';
-      return;
-    };
-  my $pe = Alien::patchelf->new;
   foreach my $so_file (@so_files) {
     my ($old_rpath, $result, $stderr, @errors);
     ($old_rpath, $stderr, @errors)
