@@ -32,12 +32,12 @@ BEGIN {
             push @ld_lib_dirs, $alien_lib->dist_dir . q{/lib};
         }
     }
-    if ($^O =~ /darwin/i) {
-        @DYLD_LIBRARY_PATH = grep {defined} uniq (@DYLD_LIBRARY_PATH, @ld_lib_dirs);
-    }
-    elsif (not $^O =~ /mswin/i) {
-        @LD_LIBRARY_PATH = grep {defined} uniq (@LD_LIBRARY_PATH, @ld_lib_dirs)
-    }
+    #if ($^O =~ /darwin/i) {
+    #    @DYLD_LIBRARY_PATH = grep {defined} uniq (@DYLD_LIBRARY_PATH, @ld_lib_dirs);
+    #}
+    #elsif (not $^O =~ /mswin/i) {
+    #    @LD_LIBRARY_PATH = grep {defined} uniq (@LD_LIBRARY_PATH, @ld_lib_dirs)
+    #}
 
     #
     if ($^O =~ /mswin/i and !$ENV{PROJSO} and Alien::gdal->version lt 3) {
