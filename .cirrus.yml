@@ -12,7 +12,7 @@ task:
     folder: /perl5
     reupload_on_changes: false # set to false if there is a fingerprint script
     fingerprint_script:
-      - echo $CIRRUS_OS 20220321a
+      - echo $CIRRUS_OS 20220402
       
   install_script:
     - sudo pkg install -y autoconf automake m4 libtool pkgconf sqlite3 gmake cmake patchelf
