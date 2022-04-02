@@ -397,7 +397,7 @@ sub patch_rpaths {
               ->in( getcwd() );
   my @binaries
     = grep {$_ !~ /\.o$/}  #  no object files
-      map {glob (path($_)->parent->stringify . '/*')} @gdalinfo_files;
+      map {path($_)->parent->children} @gdalinfo_files;
 
   foreach my $so_file (@binaries) {
     my ($old_rpath, $result, $stderr, @errors);
