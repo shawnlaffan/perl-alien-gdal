@@ -387,6 +387,31 @@ sub patch_rpaths {
     warn $stderr if $stderr;
   }
   
+  #  surely we could just use one of the alien props to get the dir?
+  my (@gdalinfo_files)
+    = grep {not -l $_}
+      grep {$_ =~ m|apps/\.libs|}  #  must be in the .libs dir
+      File::Find::Rule
+              ->file()
+              ->name( 'gdalinfo' )
+              ->in( getcwd() );
+  my @binaries
+    = grep {$_ !~ /\.o$/}  #  no object files
+      map {glob (path($_)->parent->stringify . '/*')} @gdalinfo_files;
+
+  foreach my $so_file (@binaries) {
+    my ($old_rpath, $result, $stderr, @errors);
+    ($old_rpath, $stderr, @errors)
+      = $pe->patchelf ('--print-rpath', $so_file);
+    $old_rpath //= '';
+    #  prepend relative path
+    my $rpath = '$ORIGIN/../lib' . ($old_rpath ? (':' . $old_rpath) : '');
+    $build->log("Updating rpath for $so_file to $rpath, was $old_rpath");
+    ($result, $stderr, @errors)
+      = $pe->patchelf ('--set-rpath', $rpath, $so_file);
+    warn $stderr if $stderr;
+  }
+
   return;
 }
 
