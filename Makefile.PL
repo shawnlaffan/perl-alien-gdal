@@ -32,6 +32,7 @@ my %WriteMakefileArgs = (
         %common_reqs,
         "PkgConfig"  => 0,
         "HTTP::Tiny" => 0.044,  #  something, somewhere needs this version, need to track it down
+        (not $^O =~ /mswin|darwin/i) ? ("Alien::patchelf" => '0') : (),
     },
     "BUILD_REQUIRES" => {
         %common_reqs,
@@ -59,7 +60,7 @@ my %WriteMakefileArgs = (
         #prereqs => {
         #    build => {
         #        suggests => {
-        #            "Alien::spatialite" => '1.03',
+        #            "Alien::spatialite" => '1.07',
         #        },
         #    },
         #},
