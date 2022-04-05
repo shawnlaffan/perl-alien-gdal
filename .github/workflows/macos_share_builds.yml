@@ -75,3 +75,6 @@ jobs:
           perl Makefile.PL
           cpanm --installdeps --notest .
           make test
+          #  some feedback
+          otool -l `perl -Mblib -MAlien::gdal -E'print Alien::gdal->dist_dir . "/lib/libgdal.so"'`
+          
