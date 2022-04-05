@@ -444,6 +444,11 @@ sub patch_rpaths_macos {
     $build->log('install_name_tool not found, not updating rpaths');
     return;
   }
+  my $otool = which 'otool';
+  if (!$install_name_tool) {
+    $build->log('otool not found, not updating rpaths');
+    return;
+  }
 
   my $origin_string = '@loader_path';
   my @inst_tool_rpath_args
@@ -460,14 +465,22 @@ sub patch_rpaths_macos {
     = grep {not -l $_}
       File::Find::Rule
               ->file()
-              ->name( qr/^libgdal.dylib/ )
+              ->name( qr/^libgdal[.\d]*.dylib/ )
               ->in( getcwd() );
   
   foreach my $so_file (@so_files) {
-    my ($old_rpath, $result, $stderr, @errors);
-    (my $otool_text, $stderr, @errors)
-      = Capture::Tiny ('otool', '-l', $so_file);
-    warn $stderr if $stderr;
+    use Capture::Tiny qw /capture/;
+    $build->log ("Updating rpath for $so_file");
+    my ($otool_text, $old_rpath, $result, $stderr, @errors);
+    $build ->log ("Calling: $otool, '-l', $so_file");
+    #eval {
+      ($otool_text, $stderr, @errors)
+        = capture {system $otool, '-l', $so_file};
+    #};
+    #$build->log ($@) if $@;
+    #$build->log (@errors) if @errors;
+    $build->log ($stderr) if $stderr;
+    #$build->log($otool_text);  #  debug
     
     #  now we need to extract the rpaths
     my @lines = split "\n", $otool_text;
@@ -482,17 +495,22 @@ sub patch_rpaths_macos {
         }
     }
     #  remove existing
-    my @delete_args = map {; '-delete_rpath' => $_} @existing_paths;
-    ($result, $stderr, @errors)
-      = Capture::Tiny ($install_name_tool, @delete_args, $so_file);
-    warn $stderr if $stderr;
-    
+    if (@existing_paths) {
+      $build->log ("removing existing rpaths " . join ' ', @existing_paths);
+      my @delete_args = map {; '-delete_rpath' => $_} @existing_paths;
+      ($result, $stderr, @errors)
+        = capture {system $install_name_tool, @delete_args, $so_file};
+      #$build->log($result);
+      $build->log($stderr) if $stderr;
+    }
+
     #  now append the existing ones
     push @inst_tool_rpath_args, map {; '-add_rpath' => $_} @existing_paths;
     #  prepend our paths
     ($result, $stderr, @errors)
-      = Capture::Tiny ($install_name_tool, @inst_tool_rpath_args, $so_file);
-    warn $stderr if $stderr;
+      = capture {system $install_name_tool, @inst_tool_rpath_args, $so_file};
+    #$build->log($result);
+    $build->log($stderr) if $stderr;
   }
   
   ##  surely we could just use one of the alien props to get the dir?
