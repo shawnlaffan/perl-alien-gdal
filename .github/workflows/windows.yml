@@ -50,7 +50,7 @@ jobs:
       - name: Prepare for Alien cache
         run: |
           perl -V > aliencache.txt
-          echo 'aliens 20220402' >> aliencache.txt
+          echo 'aliens 20220410' >> aliencache.txt
           dir aliencache.txt
 
       - name: Cache Alien downloads
@@ -60,26 +60,10 @@ jobs:
           key: ${{ runner.os }}-build-${{ hashFiles('aliencache.txt') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ hashFiles('aliencache.txt') }}
-
-      #- name: Install Dependencies
-      #  run: curl -sL https://git.io/cpm | perl - install -g --show-build-log-on-failure
   
       - name: Install dependencies 1
         run: |
           cpanm --quiet --notest Alien::Build::Plugin::Fetch::Cache
-
-          #cpanm --notest local::lib
-          #eval "$(perl -Mlocal::lib=${PWD}/perl_modules)"
-          #cpanm --notest --installdeps .
-          #cpanm --quiet --notest Alien::Build
-          #cpanm --quiet --notest Alien::Build::MM
-          #cpanm --quiet --notest Sort::Versions
-          #cpanm --quiet --notest PkgConfig
-          #cpanm --quiet --notest Alien::Build::Plugin::Cleanse::BuildDir
-          #cpanm --quiet --notest Alien::Build::Plugin::PkgConfig::PPWrapper
-          #cpanm --quiet --notest File::Find::Rule
-          #cpanm --quiet --notest Env::ShellWords
-          #cpanm --quiet --notest FFI::Platypus
 
       - name: Install dependencies Alien::MSYS
         run: |
