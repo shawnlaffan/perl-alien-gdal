@@ -222,7 +222,8 @@ share {
         Alien::Build->log ("PROJ_LIB is now $ENV{PROJ_LIB}");
       }
       if (!$on_windows) {
-        push @ld_lib_path, Alien::proj->dist_dir . '/lib';
+        my $dir = List::Util::first {-d $_} map {Alien::proj->dist_dir . "/$_"} (qw/lib lib64 lib32/);
+        push @ld_lib_path, $dir;
       }
       #  get dynamic proj extra deps, one day will not be needed
       push @with_args,
@@ -252,7 +253,8 @@ share {
         . '/geos-config';
       #  build weirdness on linux with geos under cmake
       if (!$on_windows) {
-        push @ld_lib_path, Alien::geos::af->dist_dir . '/lib';
+        my $dir = List::Util::first {-d $_} map {(Alien::geos::af->dist_dir . "/$_")} (qw/lib lib64 lib32/);
+        push @ld_lib_path, $dir;
       }
     }
     #  an attempt to get hdf5 support under strawberry,
@@ -344,14 +346,10 @@ sub patch_rpaths {
   my @alien_rpaths;
   for my $alien (@alien_deps) {
     next if not $alien->install_type('share');
-    my $libdir;
-    for my $tgt (qw/lib lib64 lib32/) { 
-        $libdir = $alien->dist_dir . '/lib';
-        last if -d $libdir;
-    }
+    my $libdir = List::Util::first {-d $_} map {$alien->dist_dir . "/$_"} (qw/lib lib64 lib32/);
     $build->log ("Unable to locate lib dir for $alien, tried lib, lib64 and lib32.  Expect issues later on.")
-      if !-d $libdir;
-    push @alien_rpaths, $libdir;
+      if !defined $libdir;
+    push @alien_rpaths, $libdir // ();
   }
   if (!@alien_rpaths) {
     $build->log('No shared alien deps found, not updating rpaths');
