@@ -3,6 +3,7 @@ use alienfile;
 use Sort::Versions;
 use Env qw /@PATH @LD_LIBRARY_PATH @DYLD_LIBRARY_PATH @PROJ_LIB/;
 use Path::Tiny qw /path/;
+use List::Util;
 
 #  note to self for cmake builds:
 #  https://github.com/OSGeo/gdal/pull/5485
