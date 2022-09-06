@@ -14,10 +14,10 @@ my $on_windows = $^O =~ /mswin/i;
 my $on_automated_rig
   =  $ENV{PERL_CPAN_REPORTER_DIR}
   || $ENV{PERL_CPAN_REPORTER_CONFIG}
-  || $ENV{AUTOMATED_TESTING}
-  || $ENV{TRAVIS}
-  || $ENV{APPVEYOR}
-  || $ENV{CI};
+  || $ENV{AUTOMATED_TESTING};
+  #|| $ENV{TRAVIS}
+  #|| $ENV{APPVEYOR}
+  #|| $ENV{CI};
 
 my @alien_deps = qw(
         Alien::geos::af
