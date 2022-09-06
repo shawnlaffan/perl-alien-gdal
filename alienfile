@@ -198,11 +198,11 @@ share {
           $make_cmd      .= q/ || perl -e"system ('type', 'build.log'); exit 1"/;
           $make_inst_cmd .= q/ || perl -e"system ('type', 'install.log'); exit 1"/;
       }
-      if (! ($ENV{TRAVIS} || $ENV{APPVEYOR} || $ENV{CI})) {
+      #if (! ($ENV{TRAVIS} || $ENV{APPVEYOR} || $ENV{CI})) {
           #  make build slightly faster and smaller on cpan testers
           #https://gdal.org/build_hints.html#cmdoption-arg-GDAL_ENABLE_DRIVER_-driver_name-_PLUGIN-BOOL
           #push @automated_rig_config_args, '--with-gnm=no';
-      }
+      #}
       #  debug
       #push @automated_rig_config_args,
       #  (qw/--with-openjpeg=no --with-jasper=no/);
