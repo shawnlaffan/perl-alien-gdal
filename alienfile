@@ -222,10 +222,13 @@ share {
       #$^O eq 'MSWin32' ? '--without-hdf5' : (),  #  issues with strawberry perl hdf5 dlls
       '-DGDAL_SET_INSTALL_RELATIVE_RPATH=ON',
     );
+    
+    Alien::Build->log('LD_LIBRARY_PATH: ' . join ':', map {defined $_ ? $_ : ''} @LD_LIBRARY_PATH);
     my @ld_flags;
     my @ld_lib_path;
     #  system installs won't necessarily have dist dirs
     if (Alien::proj->install_type eq 'share') {
+#Alien::Build->log (path (Alien::proj->dist_dir . '/include')->stringify);
       push @with_args, '-DPROJ_INCLUDE_DIR=' . path (Alien::proj->dist_dir . '/include')->stringify;
       my $libfile = find_lib_file (
         lib   => 'proj',
@@ -241,8 +244,8 @@ share {
         Alien::Build->log ("PROJ_LIB is now $ENV{PROJ_LIB}");
       }
       if (!$on_windows) {
-        my $dir = List::Util::first {-d (Alien::proj->dist_dir . "/$_")} (qw/lib lib64 lib32/);
-        push @ld_lib_path, $dir;
+        my $dir = List::Util::first {-d $_} map {Alien::proj->dist_dir . "/$_"} (qw/lib lib64 lib32/);
+        push @ld_lib_path, $dir if $dir;
       }
       #  get dynamic proj extra deps, one day will not be needed
       #push @with_args,
@@ -260,7 +263,7 @@ share {
       );
       #push @alien_rpaths, Alien::libtiff->dist_dir . '/lib';
       if (!$on_windows) {
-        push @ld_lib_path, Alien::libtiff->dist_dir . '/lib';
+        push @ld_lib_path, (Alien::libtiff->dist_dir . '/lib');
       }
     }
     if ($have_spatialite && Alien::spatialite->install_type eq 'share') {
@@ -281,7 +284,7 @@ share {
       );
       #push @alien_rpaths, Alien::sqlite->dist_dir . '/lib';
       if (!$on_windows) {
-        push @ld_lib_path, Alien::sqlite->dist_dir . '/lib';
+        push @ld_lib_path, (Alien::sqlite->dist_dir . '/lib');
       }
       #push @ld_flags, 'LDFLAGS=' . Alien::sqlite->libs;
       #'-L/home/libraries/intel/sqlite/lib -lsqlite3'
@@ -295,8 +298,8 @@ share {
       push @with_args, '-DGEOS_LIBRARY=' . $libfile;
       #  build weirdness on linux with geos under cmake
       if (!$on_windows) {
-        my $dir = List::Util::first {-d (Alien::geos::af->dist_dir . "/$_")} (qw/lib lib64 lib32/);
-        push @ld_lib_path, $dir;
+        my $dir = List::Util::first {-d $_} map {Alien::geos::af->dist_dir . "/$_"} (qw/lib lib64 lib32/);
+        push @ld_lib_path, $dir if $dir;
       }
     }
     #  an attempt to get hdf5 support under strawberry,
@@ -336,15 +339,17 @@ share {
       }
     );
     
-    my $drivers_to_disable = join ' ', get_drivers_to_disable();
+    my @drivers_to_disable = get_drivers_to_disable();
     ## --with-curl=no
     #  not sure this is needed, or if it is to deal with a cirrus quirk 
     #  hack
     if ($^O =~ /darwin/) {
       push @DYLD_LIBRARY_PATH, @ld_lib_path;
+      Alien::Build->log('DYLD_LIBRARY_PATH: ' . join ':', @DYLD_LIBRARY_PATH);
     }
     else {
       push @LD_LIBRARY_PATH, @ld_lib_path;
+      Alien::Build->log('LD_LIBRARY_PATH: ' . join ':', @LD_LIBRARY_PATH);
     }
 
     #foreach my $env_var (qw /LD_LIBRARY_PATH DYLD_LIBRARY_PATH LDFLAGS CFLAGS CXXFLAGS/) {
@@ -372,6 +377,7 @@ share {
       '-DCMAKE_INSTALL_PREFIX:PATH=%{.install.prefix}',
       '-DCMAKE_BUILD_TYPE=Release',
       '-DBUILD_PYTHON_BINDINGS:BOOL=OFF',
+      @drivers_to_disable,
       #@rpath,
       #'-DCMAKE_VERBOSE=ON',
       '..'
@@ -646,7 +652,7 @@ sub patch_rpaths_macos {
 sub cleanup_ldflags {
     my ($build, @args) = @_;
 
-    if ($ENV{LDFLAGS} =~ /\s*-L\s*$/) {
+    if ($ENV{LDFLAGS} && $ENV{LDFLAGS} =~ /\s*-L\s*$/) {
         $build->log("Trimming trailing -L from $ENV{LDFLAGS}");
         $ENV{LDFLAGS} =~ s/\s*-L\s*$//;
     }
@@ -841,27 +847,47 @@ sub get_alien_state_hash {
 
 
 sub get_drivers_to_disable {
-  return;
+  #return;
   #  some of these are already disabled in recent versions of GDAL
-  my @drivers = qw /
-    e00grid  jdem     xpm       grib
-    zmap     adrg     arg       blx
-    bt       cals     ceos      coasp
-    cosar    ctg      dimap     elas
-    fit      gff      gsg       gxf
-    hf2      iris     lan       leveller
-    mrf      msgn     northwood prf
-    rmf      rs2      sgi       sigdem
-    stacta   terragen til       rik
-    ozi      webp
-    
-    aeronavfaa arcgen   bna    couchdb
-    geomedia   gtm      htf    openair
-    cloudant   rec      sdts   sua
-    walk       tiger    edigeo
-    geoconcept georss   gmt    jml
-    s57        wasp     vdv
+  #my @gdal_drivers = qw /
+  #  e00grid  jdem     xpm       grib
+  #  zmap     adrg     arg       blx
+  #  bt       cals     ceos      coasp
+  #  cosar    ctg      dimap     elas
+  #  fit      gff      gsg       gxf
+  #  hf2      iris     lan       leveller
+  #  mrf      msgn     northwood prf
+  #  rmf      rs2      sgi       sigdem
+  #  stacta   terragen til       rik
+  #  ozi      webp
+  #/;
+  my @gdal_drivers = qw /
+    jdem xpm zmap blx
+    cals ceos coasp
+    cosar ctg dimap elas
+    fit gff gxf
+    hf2 iris leveller
+    msgn prf
+    rmf rs2 sgi sigdem
+    stacta terragen til rik
+    ozi 
   /;
-  my @args = map {"--disable-driver-$_"} @drivers;
+  #my @ogr_drivers = qw /
+  #  aeronavfaa arcgen   bna    couchdb
+  #  geomedia   gtm      htf    openair
+  #  cloudant   rec      sdts   sua
+  #  walk       tiger    edigeo
+  #  geoconcept georss   gmt    jml
+  #  s57        wasp     vdv
+  #/;
+  my @ogr_drivers = qw /
+    tiger edigeo wasp vdv
+    geoconcept georss gmt
+    jml 
+  /;
+
+  my @args;
+  push @args, map {"-DGDAL_ENABLE_DRIVER_${_}_PLUGIN:BOOL=OFF"} map {uc} @gdal_drivers;
+  push @args, map {"-DOGR_ENABLE_DRIVER_${_}_PLUGIN:BOOL=OFF"}  map {uc} @ogr_drivers;
   return wantarray ? @args : \@args;
 }
