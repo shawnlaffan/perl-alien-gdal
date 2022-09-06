@@ -130,6 +130,7 @@ share {
     my $with_cpp11 = '';
     
     requires 'Alien::cmake3';
+    requires 'Alien::MSYS' if $on_windows;
     
     Alien::Build->log ("Proj library version is " . Alien::proj->version);
     die "Proj version must be at least 6.0.0"
@@ -228,12 +229,19 @@ share {
     my @ld_lib_path;
     #  system installs won't necessarily have dist dirs
     if (Alien::proj->install_type eq 'share') {
-#Alien::Build->log (path (Alien::proj->dist_dir . '/include')->stringify);
+      #Alien::Build->log (path (Alien::proj->dist_dir . '/include')->stringify);
       push @with_args, '-DPROJ_INCLUDE_DIR=' . path (Alien::proj->dist_dir . '/include')->stringify;
       my $libfile = find_lib_file (
         lib   => 'proj',
         alien => 'Alien::proj',
       );
+      #  windows proj has non-conformant lib name, libproj_9_0.dll
+      #  and this fails the checks in FFI::CheckLib
+      if ($on_windows && !$libfile) {
+        my @files = grep {/libproj/} glob (Alien::proj->bin_dir . '/*.dll');
+        $libfile = shift @files;
+        Alien::Build->log ("Secondary search for proj dynamic lib found $libfile");
+      }
       push @with_args, '-DPROJ_LIBRARY_RELEASE=' . $libfile;
       
       my $proj_lib = Alien::proj->dist_dir . '/share/proj';
@@ -409,7 +417,7 @@ sub find_lib_file {
   );
   #  we grab the first, assuming they are
   #  all the same or point to the same origin
-  my $libfile = $lib_files[0];
+  my $libfile = $lib_files[0] // '';
   $libfile =~ s|\\|/|g if $on_windows;
   Alien::Build->log ("Found $args{lib} dynamic lib: $libfile");
   return $libfile;
