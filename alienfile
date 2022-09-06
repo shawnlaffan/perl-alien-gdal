@@ -394,7 +394,7 @@ share {
       $make_cmd,
       \&patch_pkgconfig,
       $make_inst_cmd,
-      #\&patch_rpaths,
+      \&patch_rpaths,
     ];
   }
 };
@@ -493,31 +493,6 @@ sub patch_rpaths {
       = $pe->patchelf ('--set-rpath', $rpath, $so_file);
     warn $stderr if $stderr;
   }
-  
-  #  surely we could just use one of the alien props to get the dir?
-  my (@gdalinfo_files)
-    = grep {not -l $_}
-      grep {$_ =~ m|bin|}  #  must be in the bin dir
-      File::Find::Rule
-              ->file()
-              ->name( 'gdalinfo' )
-              ->in( $dest_dir );
-  my @binaries
-    = grep {$_ !~ /\.o$/}  #  no object files
-      map {path($_)->parent->children} @gdalinfo_files;
-
-  foreach my $so_file (@binaries) {
-    my ($old_rpath, $result, $stderr, @errors);
-    ($old_rpath, $stderr, @errors)
-      = $pe->patchelf ('--print-rpath', $so_file);
-    $old_rpath //= '';
-    #  prepend relative path
-    my $rpath = '$ORIGIN/../lib' . ($old_rpath ? (':' . $old_rpath) : '');
-    $build->log("Updating rpath for $so_file to $rpath, was $old_rpath");
-    ($result, $stderr, @errors)
-      = $pe->patchelf ('--set-rpath', $rpath, $so_file);
-    warn $stderr if $stderr;
-  }
 
 #my $xy = <STDIN>;
   return;
@@ -562,6 +537,13 @@ sub patch_rpaths_macos {
        @alien_rpaths,
       );
 
+  my $dest_dir;
+  if($build->meta_prop->{destdir})
+  {
+    $dest_dir = $ENV{DESTDIR};
+  }
+  $build->log('DEST DIR IS: ' . $dest_dir); 
+
   $build->log ("Prepending rpaths with args " . join ' ', @inst_tool_rpath_args);
   
   #  need to also do the bin dir - those files only need to have $ORIGIN/../lib added
@@ -571,7 +553,7 @@ sub patch_rpaths_macos {
       File::Find::Rule
               ->file()
               ->name( qr/^libgdal[.\d]*.dylib/ )
-              ->in( getcwd() );
+              ->in( $dest_dir );
   
   foreach my $so_file (@so_files) {
     use Capture::Tiny qw /capture/;
@@ -617,31 +599,6 @@ sub patch_rpaths_macos {
     #$build->log($result);
     $build->log($stderr) if $stderr;
   }
-  
-  ##  surely we could just use one of the alien props to get the dir?
-  #my (@gdalinfo_files)
-  #  = grep {not -l $_}
-  #    grep {$_ =~ m|apps/\.libs|}  #  must be in the .libs dir
-  #    File::Find::Rule
-  #            ->file()
-  #            ->name( 'gdalinfo' )
-  #            ->in( getcwd() );
-  #my @binaries
-  #  = grep {$_ !~ /\.o$/}  #  no object files
-  #    map {path($_)->parent->children} @gdalinfo_files;
-  #
-  #foreach my $so_file (@binaries) {
-  #  my ($old_rpath, $result, $stderr, @errors);
-  #  ($old_rpath, $stderr, @errors)
-  #    = $pe->patchelf ('--print-rpath', $so_file);
-  #  $old_rpath //= '';
-  #  #  prepend relative path
-  #  my $rpath = '$ORIGIN/../lib' . ($old_rpath ? (':' . $old_rpath) : '');
-  #  $build->log("Updating rpath for $so_file to $rpath, was $old_rpath");
-  #  ($result, $stderr, @errors)
-  #    = $pe->patchelf ('--set-rpath', $rpath, $so_file);
-  #  warn $stderr if $stderr;
-  #}
 
   return;
 }
