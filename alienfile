@@ -4,6 +4,7 @@ use Sort::Versions;
 use Env qw /@PATH @LD_LIBRARY_PATH @DYLD_LIBRARY_PATH @PROJ_LIB/;
 use Path::Tiny qw /path/;
 use List::Util;
+use FFI::CheckLib;
 
 #  note to self for cmake builds:
 #  https://github.com/OSGeo/gdal/pull/5485
@@ -128,6 +129,8 @@ share {
     my $with_local = '';
     my $with_cpp11 = '';
     
+    requires 'Alien::cmake3';
+    
     Alien::Build->log ("Proj library version is " . Alien::proj->version);
     die "Proj version must be at least 6.0.0"
       if not Alien::proj->atleast_version ('6.0.0');  
@@ -150,18 +153,24 @@ share {
     
     plugin Extract => (format => 'tar.gz');
   
-    plugin 'Build::Autoconf' => ();
-  
-    my $build_static = ($^O =~ /mswin/i) ? '' : '--disable-shared';
-    $build_static = '';
-    $build_static = '--enable-static=no';  #  override - HUGE files if static
-    $build_static = '' if $ENV{FORCE_DYNAMIC};
+    #plugin 'Build::Autoconf' => ();
+    plugin 'Build::CMake' => ();
+    
+    #my $build_static = ($^O =~ /mswin/i) ? '' : '--disable-shared';
+    #$build_static = '--enable-static=no';  #  override - HUGE files if static
+    #$build_static = '' if $ENV{FORCE_DYNAMIC};
+    my $build_static = '';
     
     
     if ($^O =~ /bsd|dragonfly/) {
       plugin 'Build::Make' => 'gmake';
-      if (-d '/usr/local') {
-          $with_local = '--with-local=/usr/local';
+      #if (-d '/usr/local') {
+          #$with_local = '--with-local=/usr/local';
+      #}
+      if (!-e '/usr/local/include/sqlite3.h' && Alien::sqlite->install_type eq 'system') {
+        warn '/usr/local/include/sqlite3.h does not exist, '
+           . 'you might need to install the sqlite package for your system, '
+           . 'or install a share version of Alien::sqlite';
       }
     }
   
@@ -190,31 +199,40 @@ share {
       }
       if (! ($ENV{TRAVIS} || $ENV{APPVEYOR} || $ENV{CI})) {
           #  make build slightly faster and smaller on cpan testers
-          push @automated_rig_config_args, '--with-gnm=no';
+          #https://gdal.org/build_hints.html#cmdoption-arg-GDAL_ENABLE_DRIVER_-driver_name-_PLUGIN-BOOL
+          #push @automated_rig_config_args, '--with-gnm=no';
       }
       #  debug
-      push @automated_rig_config_args,
-        (qw/--with-openjpeg=no --with-jasper=no/);
+      #push @automated_rig_config_args,
+      #  (qw/--with-openjpeg=no --with-jasper=no/);
   
       #  clean up the build dir on cpan testers etc
       plugin 'Cleanse::BuildDir';
     }
     
     my @with_args = (
+      #https://gdal.org/build_hints.html#cmdoption-arg-GDAL_USE_-Packagename_in_upper_case-BOOL
       #'--with-libtiff=internal',
-      $with_cpp11,
-      $with_local,
+      #$with_cpp11,
+      #$with_local,
       @automated_rig_config_args,
       #'--without-pg',
-      '--without-ogdi',
-      '--with-mongocxxv3=no',
-      $^O eq 'MSWin32' ? '--without-hdf5' : (),  #  issues with strawberry perl hdf5 dlls
+      #'--without-ogdi',
+      #'--with-mongocxxv3=no',
+      #$^O eq 'MSWin32' ? '--without-hdf5' : (),  #  issues with strawberry perl hdf5 dlls
+      '-DGDAL_SET_INSTALL_RELATIVE_RPATH=ON',
     );
     my @ld_flags;
     my @ld_lib_path;
     #  system installs won't necessarily have dist dirs
     if (Alien::proj->install_type eq 'share') {
-      push @with_args, '--with-proj=' . Alien::proj->dist_dir;
+      push @with_args, '-DPROJ_INCLUDE_DIR=' . path (Alien::proj->dist_dir . '/include')->stringify;
+      my $libfile = find_lib_file (
+        lib   => 'proj',
+        alien => 'Alien::proj',
+      );
+      push @with_args, '-DPROJ_LIBRARY_RELEASE=' . $libfile;
+      
       my $proj_lib = Alien::proj->dist_dir . '/share/proj';
       warn "======\nno proj lib\n=====" if !-e $proj_lib;
       if (!grep {($_ // '')=~ /^$proj_lib$/} @PROJ_LIB) {
@@ -227,20 +245,41 @@ share {
         push @ld_lib_path, $dir;
       }
       #  get dynamic proj extra deps, one day will not be needed
-      push @with_args,
-        q{--with-proj-extra-lib-for-test="} . Alien::proj->libs . q{"};
+      #push @with_args,
+      #  q{--with-proj-extra-lib-for-test="} . Alien::proj->libs . q{"};
     }
     if (Alien::libtiff->install_type eq 'share') {
-      push @with_args, '--with-libtiff=' . Alien::libtiff->dist_dir;
+      my $libtiff_include = path ('Alien::libtiff'->dist_dir . '/include')->stringify;
+      my $libfile = find_lib_file (
+        lib   => 'tiff',
+        alien => 'Alien::libtiff',
+      );
+      push @with_args, (
+        "-DTIFF_LIBRARY=$libfile",
+        "-DTIFF_INCLUDE_DIR=$libtiff_include",
+      );
+      #push @alien_rpaths, Alien::libtiff->dist_dir . '/lib';
       if (!$on_windows) {
         push @ld_lib_path, Alien::libtiff->dist_dir . '/lib';
       }
     }
     if ($have_spatialite && Alien::spatialite->install_type eq 'share') {
-      push @with_args, '--with-spatialite=' . Alien::spatialite->dist_dir;
+      #push @with_args, '--with-spatialite=' . Alien::spatialite->dist_dir;
     }
     if (Alien::sqlite->install_type eq 'share') {
-      push @with_args, '--with-sqlite3=' . Alien::sqlite->dist_dir;
+      my $sqlite_include = path ('Alien::sqlite'->dist_dir . '/include')->stringify;
+      my $libfile = find_lib_file (
+          lib   => 'sqlite3',
+          alien => 'Alien::sqlite',
+      );
+      my $exe_extension = ($on_windows ? '.exe' : '');
+      my $sqlite_exe = path ('Alien::sqlite'->dist_dir . "/bin/sqlite3$exe_extension");
+      push @with_args, (
+        "-DEXE_SQLITE3=$sqlite_exe",
+        "-DSQLITE3_LIBRARY=$libfile",
+        "-DSQLITE3_INCLUDE_DIR=$sqlite_include",
+      );
+      #push @alien_rpaths, Alien::sqlite->dist_dir . '/lib';
       if (!$on_windows) {
         push @ld_lib_path, Alien::sqlite->dist_dir . '/lib';
       }
@@ -248,10 +287,12 @@ share {
       #'-L/home/libraries/intel/sqlite/lib -lsqlite3'
     }
     if (Alien::geos::af->install_type eq 'share') {
-      push @with_args,
-          '--with-geos='
-        . Alien::geos::af->bin_dir
-        . '/geos-config';
+      my $libfile = find_lib_file (
+          lib   => 'geos',
+          alien => 'Alien::geos::af',
+      );
+      push @with_args, '-DGEOS_INCLUDE_DIR=' . path(Alien::geos::af->dist_dir . '/include')->stringify;
+      push @with_args, '-DGEOS_LIBRARY=' . $libfile;
       #  build weirdness on linux with geos under cmake
       if (!$on_windows) {
         my $dir = List::Util::first {-d (Alien::geos::af->dist_dir . "/$_")} (qw/lib lib64 lib32/);
@@ -270,17 +311,16 @@ share {
     #  }
     #}
     if ($^O eq 'MSWin32') {
-      unshift @with_args, '--with-hide-internal-symbols=yes';
-      push @with_args, '--without-gnm';
+      #push @with_args, '--without-gnm';
       #  should add an env flag for this
-      push @with_args, '--with-curl=no';
+      push @with_args, '-DGDAL_USE_CURL=OFF';
     }    
-    
     
     my $config_args = $ENV{ALIEN_GDAL_CONFIG_ARGS} // '';
     $config_args =~ s/[^-\s\w,=+]//g;  #  overkill?
     $config_args = join (' ', @with_args) . " $config_args";
   
+    #  no onger needed - remove in a later commit
     if (versioncmp ($gdal_version, '3.1.1') < 0) {
       meta->before_hook( build => \&patch_makefile_long_line );
     }
@@ -295,13 +335,10 @@ share {
         $orig->($build, @args);
       }
     );
-
-    #meta->before_hook( build => \&cleanup_ldflags );
     
     my $drivers_to_disable = join ' ', get_drivers_to_disable();
     ## --with-curl=no
     #  not sure this is needed, or if it is to deal with a cirrus quirk 
-    #local $ENV{LDFLAGS} = join ' ', @ld_flags;
     #  hack
     if ($^O =~ /darwin/) {
       push @DYLD_LIBRARY_PATH, @ld_lib_path;
@@ -315,20 +352,63 @@ share {
     #}
     #$ENV{CFLAGS} = ' -O2 ';
     my $ld_flags = '';
-    my $config_flags = qq{CFLAGS='-O2' CXXFLAGS='-O2' LDFLAGS='$ld_flags'};
+    #  these should not need to be set under cmake
+    #my $config_flags = qq{CFLAGS='-O2' CXXFLAGS='-O2' LDFLAGS='$ld_flags'};
+    my $config_flags = '';
+    
+    my $cmake_cmd = [
+      '%{cmake}',
+      -G => '%{cmake_generator}',
+      '-DCMAKE_MAKE_PROGRAM=%{make}',
+      #'-DBUILD_DOCUMENTATION=NO',
+      '-DBUILD_TESTING=OFF',
+      '-DBUILD_SHARED_LIBS=ON',
+      @with_args,
+      #"-DENABLE_CURL=$enable_curl",
+      #$enable_curl eq 'ON' ? @curl_extra_args : (),
+      '-DBUILD_PROJSYNC=OFF',
+      #'-DENABLE_IPO=ON',
+      #'-DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=true',
+      '-DCMAKE_INSTALL_PREFIX:PATH=%{.install.prefix}',
+      '-DCMAKE_BUILD_TYPE=Release',
+      '-DBUILD_PYTHON_BINDINGS:BOOL=OFF',
+      #@rpath,
+      #'-DCMAKE_VERBOSE=ON',
+      '..'
+    ];
     
     build [
       #\&update_pkg_conf_path,
-      \&cleanup_ldflags,
-      "%{configure} $config_flags $config_args $drivers_to_disable $build_static",
+      #\&cleanup_ldflags,
+      #"%{configure} $config_flags $config_args $drivers_to_disable $build_static",
       #\&pause,
+      'mkdir _build',
+      'cd _build',
+      $cmake_cmd,
       $make_cmd,
       \&patch_pkgconfig,
       $make_inst_cmd,
-      \&patch_rpaths,
+      #\&patch_rpaths,
     ];
   }
 };
+
+
+sub find_lib_file {
+  my %args = @_;
+  
+  my(@lib_files) = find_lib(
+      %args,
+      systempath => $args{alien} ? [] : undef,  #  only search the alien if one is passed
+  );
+  #  we grab the first, assuming they are
+  #  all the same or point to the same origin
+  my $libfile = $lib_files[0];
+  $libfile =~ s|\\|/|g if $on_windows;
+  Alien::Build->log ("Found $args{lib} dynamic lib: $libfile");
+  return $libfile;
+}
+
 
 sub patch_rpaths {
   my ($build) = @_;
@@ -761,6 +841,7 @@ sub get_alien_state_hash {
 
 
 sub get_drivers_to_disable {
+  return;
   #  some of these are already disabled in recent versions of GDAL
   my @drivers = qw /
     e00grid  jdem     xpm       grib
