@@ -142,12 +142,11 @@ share {
       public_l => 1,
     );
   
-    #start_url 'https://download.osgeo.org/gdal/CURRENT';
-    start_url 'https://download.osgeo.org/gdal/3.5.2/';
+    start_url 'https://download.osgeo.org/gdal/CURRENT';
     #start_url "file://$base_dir";  #  debug
     plugin Download => (
-      filter  => qr/^gdal-([0-9\.]+)(?:rc\d)?\.tar\.gz$/,
-      version => qr/^gdal-([0-9\.]+)(?:rc\d)?\.tar\.gz$/,
+      filter  => qr/^gdal-([0-9\.]+)\.tar\.gz$/,
+      version => qr/^gdal-([0-9\.]+)\.tar\.gz$/,
     );
   
     my $gdal_version = get_gdal_version() // 'not yet defined';
