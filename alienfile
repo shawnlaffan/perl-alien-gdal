@@ -219,6 +219,7 @@ share {
       @automated_rig_config_args,
       '-DGDAL_USE_MSSQL_ODBC=OFF',
       '-DGDAL_USE_MSSQL_NCLI=OFF',
+      '-DGDAL_USE_MYSQL=OFF',
       #'--without-pg',
       #'--without-ogdi',
       #'--with-mongocxxv3=no',
