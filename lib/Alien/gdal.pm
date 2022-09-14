@@ -11,7 +11,7 @@ use Path::Tiny qw /path/;
 use List::Util qw /uniq/;
 use Alien::proj;
 
-our $VERSION = '1.32';
+our $VERSION = '1.33_001';
 
 my ($have_geos, $have_proj, $have_spatialite);
 my @have_aliens;
