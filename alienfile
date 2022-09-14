@@ -1,14 +1,11 @@
 use 5.010;
+use warnings;
 use alienfile;
 use Sort::Versions;
 use Env qw /@PATH @LD_LIBRARY_PATH @DYLD_LIBRARY_PATH @PROJ_LIB/;
 use Path::Tiny qw /path/;
 use List::Util;
 use FFI::CheckLib;
-
-#  note to self for cmake builds:
-#  https://github.com/OSGeo/gdal/pull/5485
-
 
 my $on_windows = $^O =~ /mswin/i;
 my $on_automated_rig
@@ -131,6 +128,7 @@ share {
     
     requires 'Alien::cmake3';
     requires 'Alien::MSYS' if $on_windows;
+    #requires 'Alien::patchelf' if !($on_windows || $^O =~ /darwin/i);
     
     Alien::Build->log ("Proj library version is " . Alien::proj->version);
     die "Proj version must be at least 6.0.0"
@@ -198,14 +196,6 @@ share {
           $make_cmd      .= q/ || perl -e"system ('type', 'build.log'); exit 1"/;
           $make_inst_cmd .= q/ || perl -e"system ('type', 'install.log'); exit 1"/;
       }
-      #if (! ($ENV{TRAVIS} || $ENV{APPVEYOR} || $ENV{CI})) {
-          #  make build slightly faster and smaller on cpan testers
-          #https://gdal.org/build_hints.html#cmdoption-arg-GDAL_ENABLE_DRIVER_-driver_name-_PLUGIN-BOOL
-          #push @automated_rig_config_args, '--with-gnm=no';
-      #}
-      #  debug
-      #push @automated_rig_config_args,
-      #  (qw/--with-openjpeg=no --with-jasper=no/);
   
       #  clean up the build dir on cpan testers etc
       plugin 'Cleanse::BuildDir';
@@ -213,9 +203,6 @@ share {
     
     my @with_args = (
       #https://gdal.org/build_hints.html#cmdoption-arg-GDAL_USE_-Packagename_in_upper_case-BOOL
-      #'--with-libtiff=internal',
-      #$with_cpp11,
-      #$with_local,
       @automated_rig_config_args,
       '-DGDAL_USE_MSSQL_ODBC=OFF',
       '-DGDAL_USE_MSSQL_NCLI=OFF',
@@ -233,14 +220,13 @@ share {
     my @ld_lib_path;
     #  system installs won't necessarily have dist dirs
     if (Alien::proj->install_type eq 'share') {
-      #Alien::Build->log (path (Alien::proj->dist_dir . '/include')->stringify);
       push @with_args, '-DPROJ_INCLUDE_DIR=' . path (Alien::proj->dist_dir . '/include')->stringify;
       my $libfile = find_lib_file (
         lib   => 'proj',
         alien => 'Alien::proj',
       );
       #  windows proj has non-conformant lib name, libproj_9_0.dll
-      #  and this fails the checks in FFI::CheckLib
+      #  and this fails the checks in FFI::CheckLib < 0.29
       if ($on_windows && !$libfile) {
         my @files = grep {/libproj/} glob (Alien::proj->bin_dir . '/*.dll');
         $libfile = shift @files;
@@ -259,9 +245,6 @@ share {
         my $dir = List::Util::first {-d $_} map {Alien::proj->dist_dir . "/$_"} (qw/lib lib64 lib32/);
         push @ld_lib_path, $dir if $dir;
       }
-      #  get dynamic proj extra deps, one day will not be needed
-      #push @with_args,
-      #  q{--with-proj-extra-lib-for-test="} . Alien::proj->libs . q{"};
     }
     if (Alien::libtiff->install_type eq 'share') {
       my $libtiff_include = path ('Alien::libtiff'->dist_dir . '/include')->stringify;
@@ -273,13 +256,12 @@ share {
         "-DTIFF_LIBRARY=$libfile",
         "-DTIFF_INCLUDE_DIR=$libtiff_include",
       );
-      #push @alien_rpaths, Alien::libtiff->dist_dir . '/lib';
       if (!$on_windows) {
         push @ld_lib_path, (Alien::libtiff->dist_dir . '/lib');
       }
     }
     if ($have_spatialite && Alien::spatialite->install_type eq 'share') {
-      #push @with_args, '--with-spatialite=' . Alien::spatialite->dist_dir;
+      #  need to check for this under cmake?
     }
     if (Alien::sqlite->install_type eq 'share') {
       my $sqlite_include = path ('Alien::sqlite'->dist_dir . '/include')->stringify;
@@ -294,12 +276,9 @@ share {
         "-DSQLITE3_LIBRARY=$libfile",
         "-DSQLITE3_INCLUDE_DIR=$sqlite_include",
       );
-      #push @alien_rpaths, Alien::sqlite->dist_dir . '/lib';
       if (!$on_windows) {
         push @ld_lib_path, (Alien::sqlite->dist_dir . '/lib');
       }
-      #push @ld_flags, 'LDFLAGS=' . Alien::sqlite->libs;
-      #'-L/home/libraries/intel/sqlite/lib -lsqlite3'
     }
     if (Alien::geos::af->install_type eq 'share') {
       my $libfile = find_lib_file (
@@ -314,19 +293,7 @@ share {
         push @ld_lib_path, $dir if $dir;
       }
     }
-    #  an attempt to get hdf5 support under strawberry,
-    #  but which did not work so now it is turned off
-    #if ($^O eq 'MSWin32' && !$ENV{HDF5_LIBS}) {
-    #  my $c_dir = path ($^X)->parent->parent->parent->child('c');
-    #  if ($c_dir->exists) {
-    #    #$ENV{HDF5_LIBS} = "-L$c_dir/lib -lhdf5";
-    #    #warn 'adding HDF5_LIBS var: ' . $ENV{HDF5_LIBS};
-    #    push @with_args, '--without-hdf5';
-    #    #push @ld_flags, "-L$c_dir/lib -lhdf5";
-    #  }
-    #}
     if ($^O eq 'MSWin32') {
-      #push @with_args, '--without-gnm';
       #  should add an env flag for this
       push @with_args, '-DGDAL_USE_CURL=OFF';
     }    
@@ -334,11 +301,6 @@ share {
     my $config_args = $ENV{ALIEN_GDAL_CONFIG_ARGS} // '';
     $config_args =~ s/[^-\s\w,=+]//g;  #  overkill?
     $config_args = join (' ', @with_args) . " $config_args";
-  
-    #  no onger needed - remove in a later commit
-    if (versioncmp ($gdal_version, '3.1.1') < 0) {
-      meta->before_hook( build => \&patch_makefile_long_line );
-    }
     
     meta->around_hook( build => \&remove_gitfw_from_path );
     plugin 'PkgConfig::PPWrapper';
@@ -352,7 +314,6 @@ share {
     );
     
     my @drivers_to_disable = get_drivers_to_disable();
-    ## --with-curl=no
     #  not sure this is needed, or if it is to deal with a cirrus quirk 
     #  hack
     if ($^O =~ /darwin/) {
@@ -367,11 +328,6 @@ share {
     #foreach my $env_var (qw /LD_LIBRARY_PATH DYLD_LIBRARY_PATH LDFLAGS CFLAGS CXXFLAGS/) {
     #  say "ENV: $env_var is " . ($ENV{$env_var} // '');
     #}
-    #$ENV{CFLAGS} = ' -O2 ';
-    my $ld_flags = '';
-    #  these should not need to be set under cmake
-    #my $config_flags = qq{CFLAGS='-O2' CXXFLAGS='-O2' LDFLAGS='$ld_flags'};
-    my $config_flags = '';
     
     my $cmake_cmd = [
       '%{cmake}',
@@ -381,25 +337,17 @@ share {
       '-DBUILD_TESTING=OFF',
       '-DBUILD_SHARED_LIBS=ON',
       @with_args,
-      #"-DENABLE_CURL=$enable_curl",
-      #$enable_curl eq 'ON' ? @curl_extra_args : (),
       '-DBUILD_PROJSYNC=OFF',
-      #'-DENABLE_IPO=ON',
-      #'-DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=true',
       '-DCMAKE_INSTALL_PREFIX:PATH=%{.install.prefix}',
       '-DCMAKE_BUILD_TYPE=Release',
       '-DBUILD_PYTHON_BINDINGS:BOOL=OFF',
       @drivers_to_disable,
-      #@rpath,
-      #'-DCMAKE_VERBOSE=ON',
       '..'
     ];
     
     build [
-      #\&update_pkg_conf_path,
-      #\&cleanup_ldflags,
-      #"%{configure} $config_flags $config_args $drivers_to_disable $build_static",
       #\&pause,
+      #\&cleanup_ldflags,
       'mkdir _build',
       'cd _build',
       $cmake_cmd,
@@ -631,12 +579,6 @@ sub cleanup_ldflags {
 }
 
 
-sub update_makefile {
-    return;  #  should not be needed now
-    return if !$on_windows;
-    system ($^X, '-p', '-i.bak', q{-e"s/\$\(GDAL_ROOT\)/\./"}, "GNUmakefile");
-}
-
 sub update_pkg_conf_path {
     return if !$on_windows;
     use Env qw /@PKG_CONFIG_PATH/;
@@ -648,55 +590,6 @@ sub update_pkg_conf_path {
     return;
 }
 
-
-sub patch_makefile_long_line {
-    my ($build) = @_;
-
-    #return if !$on_windows;
-    
-    my $target = "GNUmakefile";
-    $build->log ("Patching $target to cope with long lines");
-    #my $target_line = quotemeta q{$(LD) $(LDFLAGS) $(LIBS) -o $@ $(sort $(wildcard $(GDAL_OBJ:.o=.lo))) \ };
-    
-    my $text_target1 = '$(LIBGDAL):	$(GDAL_OBJ:.o=.lo)';
-    my $x = quotemeta $text_target1;
-    my $qr_target1 = qr /^$x/;
-    my $new_contents1 = <<'NEW_CONTENTS'
-SORTED  := $(sort $(wildcard $(GDAL_OBJ:.o=.lo)))
-NSORTED := $(words $(SORTED))
-#  mid left and right indices
-MIDL := $(shell echo $$(( $(NSORTED) / 2 )) )
-MIDR := $(shell echo $$(( $(MIDL) + 1 )) )
-NEW_CONTENTS
-  ;
-    my $qr_target2 = qr /sort .+wildcard/;
-    my $new_contents2 = << 'NEW_CONTENTS'
-$(LD) $(LDFLAGS) $(LIBS) -o $@ \
-$(wordlist 1,$(MIDL),$(SORTED)) \
-$(wordlist $(MIDR),$(NSORTED),$(SORTED)) \
-NEW_CONTENTS
-  ;
-    $new_contents2 =~ s/^/\t/gms;
-    open my $fh , '<', $target
-      or die "Could not open GNUmakefile for reading, $!";
-    my $file_contents;
-    
-    while (my $line = <$fh>) {
-        if ($line =~ $qr_target1) {
-            $file_contents .= $new_contents1;
-        }
-        elsif ($line =~ $qr_target2) {
-            $line = $new_contents2;
-        };
-        $file_contents .= $line;
-    }
-    $fh->close;
-    rename $target, "$target.bak";
-    open my $ofh, '>', $target
-      or die "Could not open $target for writing, $!";
-    print {$ofh} $file_contents;
-    return;
-}
 
 #  git for windows clashes with MSYS
 #  if its /usr/bin dir is in the path
@@ -727,7 +620,7 @@ sub remove_gitfw_from_path {
 }
 
 sub pause {
-#    return;  #  re-enable in case of debug
+    return;  #  re-enable in case of debug
 #    return if $on_automated_rig;
 #    return if !$on_windows;
 
@@ -817,19 +710,6 @@ sub get_alien_state_hash {
 
 sub get_drivers_to_disable {
   #return;
-  #  some of these are already disabled in recent versions of GDAL
-  #my @gdal_drivers = qw /
-  #  e00grid  jdem     xpm       grib
-  #  zmap     adrg     arg       blx
-  #  bt       cals     ceos      coasp
-  #  cosar    ctg      dimap     elas
-  #  fit      gff      gsg       gxf
-  #  hf2      iris     lan       leveller
-  #  mrf      msgn     northwood prf
-  #  rmf      rs2      sgi       sigdem
-  #  stacta   terragen til       rik
-  #  ozi      webp
-  #/;
   my @gdal_drivers = qw /
     jdem xpm zmap blx
     cals ceos coasp
@@ -841,14 +721,6 @@ sub get_drivers_to_disable {
     stacta terragen til rik
     ozi 
   /;
-  #my @ogr_drivers = qw /
-  #  aeronavfaa arcgen   bna    couchdb
-  #  geomedia   gtm      htf    openair
-  #  cloudant   rec      sdts   sua
-  #  walk       tiger    edigeo
-  #  geoconcept georss   gmt    jml
-  #  s57        wasp     vdv
-  #/;
   my @ogr_drivers = qw /
     tiger edigeo wasp vdv
     geoconcept georss gmt
