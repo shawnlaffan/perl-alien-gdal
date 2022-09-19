@@ -162,6 +162,7 @@ share {
     
     
     if ($^O =~ /bsd|dragonfly/) {
+      requires "Alien::gmake";
       plugin 'Build::Make' => 'gmake';
       #if (-d '/usr/local') {
           #$with_local = '--with-local=/usr/local';
