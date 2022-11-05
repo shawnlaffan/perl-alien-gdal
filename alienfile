@@ -141,10 +141,14 @@ share {
     );
   
     start_url 'https://download.osgeo.org/gdal/CURRENT';
+    #start_url 'https://download.osgeo.org/gdal/3.6.0';
     #start_url "file://$base_dir";  #  debug
+    #  Handle release candidates in the regex.
+    #  These are checked occasionally for debug purposes.
+    my $RE_filter_version = qr/^gdal-([0-9\.]+)(?:rc\d\d)?\.tar\.gz$/;
     plugin Download => (
-      filter  => qr/^gdal-([0-9\.]+)\.tar\.gz$/,
-      version => qr/^gdal-([0-9\.]+)\.tar\.gz$/,
+      filter  => $RE_filter_version,
+      version => $RE_filter_version,
     );
   
     my $gdal_version = get_gdal_version() // 'not yet defined';
