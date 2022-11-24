@@ -399,8 +399,8 @@ sub patch_rpaths {
   for my $alien (@alien_deps) {
     next if not $alien->install_type('share');
     my $libdir;
-    for my $tgt (qw/lib lib64 lib32/) { 
-        $libdir = $alien->dist_dir . '/lib';
+    for my $tgt (qw/lib lib64 lib32/) {
+        $libdir = path ($alien->dist_dir, $tgt);
         last if -d $libdir;
     }
     $build->log ("Unable to locate lib dir for $alien, tried lib, lib64 and lib32.  Expect issues later on.")
