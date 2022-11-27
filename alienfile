@@ -62,10 +62,6 @@ Alien::Build->log ('$ENV{PROJ_LIB} IS ' . ($ENV{PROJ_LIB} // ''));
 
 use Cwd;
 my $base_dir = getcwd();
-my $patch_file_isnan
-  = "$base_dir/patch_isnan_gcc.patch";
-my $patch_file_configure
-  = "$base_dir/0001-Enable-shared-build-on-freebsd-10.patch";
 
 my $min_target_version = '3.1.0';
 
