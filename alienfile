@@ -146,9 +146,6 @@ share {
       filter  => $RE_filter_version,
       version => $RE_filter_version,
     );
-  
-    my $gdal_version = get_gdal_version() // 'not yet defined';
-    say "Downloaded gdal version is $gdal_version";
     
     plugin Extract => (format => 'tar.gz');
   
