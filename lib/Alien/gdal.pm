@@ -18,12 +18,18 @@ my @have_aliens;
 BEGIN {
     my @ld_lib_dirs;
     $have_geos = eval 'require Alien::geos::af';
-    $have_spatialite = eval 'require Alien::spatialite';
+    $have_spatialite
+      = Alien::gdal->runtime_prop->{"built_with_spatialite"}
+        && eval 'require Alien::spatialite';
     my @check_aliens
       = qw /Alien::geos::af Alien::sqlite Alien::proj
             Alien::freexl   Alien::libtiff Alien::spatialite/;
     foreach my $alien_lib (@check_aliens) {
-        my $have_lib = eval "require $alien_lib";
+        $alien_lib =~ m/Alien::(\w+)/;
+        my $name = $1;
+        my $have_lib
+            = Alien::gdal->runtime_prop->{"built_with_$name"}
+              && eval "require $alien_lib";
         if ($have_lib && $alien_lib->install_type eq 'share') {
             push @have_aliens, $alien_lib;
             #  crude, but otherwise Geo::GDAL::FFI does not
