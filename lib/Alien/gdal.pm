@@ -16,7 +16,6 @@ our $VERSION = '1.36';
 my ($have_geos, $have_proj, $have_spatialite);
 my @have_aliens;
 BEGIN {
-    my @ld_lib_dirs;
     $have_geos = eval 'require Alien::geos::af';
     $have_spatialite
       = Alien::gdal->runtime_prop->{"built_with_spatialite"}
@@ -35,15 +34,8 @@ BEGIN {
             #  crude, but otherwise Geo::GDAL::FFI does not
             #  get fed all the needed info
             push @PATH, $alien_lib->bin_dir;
-            push @ld_lib_dirs, $alien_lib->dist_dir . q{/lib};
         }
     }
-    #if ($^O =~ /darwin/i) {
-    #    @DYLD_LIBRARY_PATH = grep {defined} uniq (@DYLD_LIBRARY_PATH, @ld_lib_dirs);
-    #}
-    #elsif (not $^O =~ /mswin/i) {
-    #    @LD_LIBRARY_PATH = grep {defined} uniq (@LD_LIBRARY_PATH, @ld_lib_dirs)
-    #}
 
     #
     if ($^O =~ /mswin/i and !$ENV{PROJSO} and Alien::gdal->version lt 3) {
@@ -73,11 +65,6 @@ BEGIN {
 
 sub dynamic_libs {
     my $self = shift;
-    
-    #warn 'LD Path is: ' . join ' ', grep {defined} @LD_LIBRARY_PATH;
-    #warn 'Bare env var: ' . ($ENV{LD_LIBRARY_PATH} // '');
-    #warn 'DYLD Path is: ' . join ' ', grep {defined} @DYLD_LIBRARY_PATH;
-    #warn 'Bare env var: ' . ($ENV{DYLD_LIBRARY_PATH} // '');
 
     my (@libs) = $self->SUPER::dynamic_libs;
 
