@@ -229,7 +229,7 @@ share {
     my @ld_lib_path;
     #  system installs won't necessarily have dist dirs
     if (Alien::proj->install_type eq 'share') {
-      push @with_args, '-DPROJ_INCLUDE_DIR=' . path (Alien::proj->dist_dir . '/include')->stringify;
+      my $include_dir = path (Alien::proj->dist_dir . '/include')->stringify;
       my $libfile = find_lib_file (
         lib   => 'proj',
         alien => 'Alien::proj',
@@ -241,7 +241,10 @@ share {
         $libfile = shift @files;
         Alien::Build->log ("Secondary search for proj dynamic lib found $libfile");
       }
-      push @with_args, '-DPROJ_LIBRARY_RELEASE=' . $libfile;
+      push @with_args, (
+        "-DPROJ_INCLUDE_DIR=$include_dir",
+        "-DPROJ_LIBRARY_RELEASE=$libfile"
+      );
       
       my $proj_lib = Alien::proj->dist_dir . '/share/proj';
       warn "======\nno proj lib\n=====" if !-e $proj_lib;
@@ -255,35 +258,35 @@ share {
       }
     }
     if (Alien::libtiff->install_type eq 'share') {
-      my $libtiff_include = path ('Alien::libtiff'->dist_dir . '/include')->stringify;
+      my $include_dir = path ('Alien::libtiff'->dist_dir . '/include')->stringify;
       my $libfile = find_lib_file (
         lib   => 'tiff',
         alien => 'Alien::libtiff',
       );
       push @with_args, (
         "-DTIFF_LIBRARY=$libfile",
-        "-DTIFF_INCLUDE_DIR=$libtiff_include",
+        "-DTIFF_INCLUDE_DIR=$include_dir",
       );
       if (!$on_windows) {
         push @ld_lib_path, get_alien_lib_dir('Alien::libtiff');
       }
     }
     if ($have_spatialite && Alien::spatialite->install_type eq 'share') {
-      my $spatialite_include = path ('Alien::spatialite'->dist_dir . '/include')->stringify;
+      my $include_dir = path ('Alien::spatialite'->dist_dir . '/include')->stringify;
       my $libfile = find_lib_file (
         lib   => 'spatialite',
         alien => 'Alien::spatialite',
       );
       push @with_args, (
         "-DSPATIALITE_LIBRARY=$libfile",
-        "-DSPATIALITE_INCLUDE_DIR=$spatialite_include",
+        "-DSPATIALITE_INCLUDE_DIR=$include_dir",
       );
       if (!$on_windows) {
         push @ld_lib_path, get_alien_lib_dir('Alien::spatialite');
       }
     }
     if (Alien::sqlite->install_type eq 'share') {
-      my $sqlite_include = path ('Alien::sqlite'->dist_dir . '/include')->stringify;
+      my $include_dir = path ('Alien::sqlite'->dist_dir . '/include')->stringify;
       my $libfile = find_lib_file (
           lib   => 'sqlite3',
           alien => 'Alien::sqlite',
@@ -293,20 +296,22 @@ share {
       push @with_args, (
         "-DEXE_SQLITE3=$sqlite_exe",  #  might not be needed now
         "-DSQLITE3_LIBRARY=$libfile",
-        "-DSQLITE3_INCLUDE_DIR=$sqlite_include",
+        "-DSQLITE3_INCLUDE_DIR=$include_dir",
       );
       if (!$on_windows) {
         push @ld_lib_path, get_alien_lib_dir('Alien::sqlite');
       }
     }
     if (Alien::geos::af->install_type eq 'share') {
+      my $include_dir = path ('Alien::geos::af'->dist_dir . '/include')->stringify;
       my $libfile = find_lib_file (
           lib   => 'geos',
           alien => 'Alien::geos::af',
       );
-      push @with_args, '-DGEOS_INCLUDE_DIR=' . path(Alien::geos::af->dist_dir . '/include')->stringify;
-      push @with_args, '-DGEOS_LIBRARY=' . $libfile;
-      #  build weirdness on linux with geos under cmake
+      push @with_args, (
+        "-DGEOS_INCLUDE_DIR=$include_dir",
+        "-DGEOS_LIBRARY=$libfile"
+      );
       if (!$on_windows) {
         push @ld_lib_path, get_alien_lib_dir('Alien::geos::af');
       }
