@@ -251,8 +251,7 @@ share {
         Alien::Build->log ("PROJ_LIB is now $ENV{PROJ_LIB}");
       }
       if (!$on_windows) {
-        my $dir = List::Util::first {-d $_} map {Alien::proj->dist_dir . "/$_"} (qw/lib lib64 lib32/);
-        push @ld_lib_path, $dir if $dir;
+        push @ld_lib_path, get_alien_lib_dir('Alien::proj');
       }
     }
     if (Alien::libtiff->install_type eq 'share') {
@@ -266,7 +265,7 @@ share {
         "-DTIFF_INCLUDE_DIR=$libtiff_include",
       );
       if (!$on_windows) {
-        push @ld_lib_path, (Alien::libtiff->dist_dir . '/lib');
+        push @ld_lib_path, get_alien_lib_dir('Alien::libtiff');
       }
     }
     if ($have_spatialite && Alien::spatialite->install_type eq 'share') {
@@ -297,7 +296,7 @@ share {
         "-DSQLITE3_INCLUDE_DIR=$sqlite_include",
       );
       if (!$on_windows) {
-        push @ld_lib_path, (Alien::sqlite->dist_dir . '/lib');
+        push @ld_lib_path, get_alien_lib_dir('Alien::sqlite');
       }
     }
     if (Alien::geos::af->install_type eq 'share') {
@@ -309,8 +308,7 @@ share {
       push @with_args, '-DGEOS_LIBRARY=' . $libfile;
       #  build weirdness on linux with geos under cmake
       if (!$on_windows) {
-        my $dir = List::Util::first {-d $_} map {Alien::geos::af->dist_dir . "/$_"} (qw/lib lib64 lib32/);
-        push @ld_lib_path, $dir if $dir;
+        push @ld_lib_path, get_alien_lib_dir('Alien::geos::af');
       }
     }
     if ($^O eq 'MSWin32') {
