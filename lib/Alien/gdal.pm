@@ -13,13 +13,10 @@ use Alien::proj;
 
 our $VERSION = '1.36';
 
-my ($have_geos, $have_proj, $have_spatialite);
+my ($have_geos, $have_proj);
 my @have_aliens;
 BEGIN {
     $have_geos = eval 'require Alien::geos::af';
-    $have_spatialite
-      = Alien::gdal->runtime_prop->{"built_with_spatialite"}
-        && eval 'require Alien::spatialite';
     my @check_aliens
       = qw /Alien::geos::af Alien::sqlite Alien::proj
             Alien::freexl   Alien::libtiff Alien::spatialite/;
@@ -55,10 +52,17 @@ BEGIN {
     if (Alien::gdal->version ge '3') {
         push @PATH, 'Alien::proj'->bin_dirs
           if 'Alien::proj'->can('bin_dirs');
+        my $have_spatialite
+          = Alien::gdal->runtime_prop->{"built_with_spatialite"}
+            && eval 'require Alien::spatialite';
         if ($have_spatialite && Alien::spatialite->version ge 5) {
-          push @PATH, 'Alien::spatialite'->bin_dirs
-            if 'Alien::spatialite'->can('bin_dirs');
-          push @have_aliens, 'Alien::spatialite';
+            push @PATH, 'Alien::spatialite'->bin_dirs
+              if 'Alien::spatialite'->can('bin_dirs');
+            push @have_aliens, 'Alien::spatialite';
+            #  clunky
+            require Alien::freexl;
+            push @have_aliens, 'Alien::freexl';
+            push @PATH, Alien::freexl->bin_dir;
         }
     }
 }
