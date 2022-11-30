@@ -19,7 +19,9 @@ diag(
 diag '';
 diag 'Aliens:';
 my %alien_versions;
-foreach my $alien (qw /Alien::sqlite Alien::libtiff Alien::proj Alien::geos::af/) {
+foreach my $alien (qw /Alien::sqlite Alien::libtiff Alien::proj Alien::geos::af Alien::spatialite/) {
+    next if $alien =~ /spatialite/
+            and not Alien::gdal->runtime_prop->{built_with_spatialite};
     my $have = eval "require $alien";
     next if !$have;
     diag sprintf "%s: version: %s, install type: %s", $alien, $alien->version, $alien->install_type;
