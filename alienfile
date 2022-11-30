@@ -270,7 +270,18 @@ share {
       }
     }
     if ($have_spatialite && Alien::spatialite->install_type eq 'share') {
-      #  need to check for this under cmake?
+      my $spatialite_include = path ('Alien::spatialite'->dist_dir . '/include')->stringify;
+      my $libfile = find_lib_file (
+        lib   => 'spatialite',
+        alien => 'Alien::spatialite',
+      );
+      push @with_args, (
+        "-DSPATIALITE_LIBRARY=$libfile",
+        "-DSPATIALITE_INCLUDE_DIR=$spatialite_include",
+      );
+      if (!$on_windows) {
+        push @ld_lib_path, get_alien_lib_dir('Alien::spatialite');
+      }
     }
     if (Alien::sqlite->install_type eq 'share') {
       my $sqlite_include = path ('Alien::sqlite'->dist_dir . '/include')->stringify;
@@ -380,6 +391,12 @@ share {
   }
 };
 
+
+sub get_alien_lib_dir {
+  my $alien = shift;
+  my $dir = List::Util::first {-d $_} map {$alien->dist_dir . "/$_"} (qw/lib lib64 lib32/);
+  return $dir;
+}
 
 sub find_lib_file {
   my %args = @_;
