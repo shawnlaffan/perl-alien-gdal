@@ -59,7 +59,7 @@ BEGIN {
             push @PATH, 'Alien::spatialite'->bin_dirs
               if 'Alien::spatialite'->can('bin_dirs');
             push @have_aliens, 'Alien::spatialite';
-            #  clunky
+            #  clunky, should probably be done by Alien::spatialite
             require Alien::freexl;
             push @have_aliens, 'Alien::freexl';
             push @PATH, Alien::freexl->bin_dir;
