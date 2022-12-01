@@ -2,6 +2,7 @@ use strict;
 use warnings;
 use Test::More;
 use Test::Alien;
+use List::Util qw/uniq/;
 
 BEGIN {
     use_ok('Alien::gdal') or BAIL_OUT('Failed to load Alien::gdal');
@@ -19,9 +20,10 @@ diag(
 diag '';
 diag 'Aliens:';
 my %alien_versions;
-foreach my $alien (qw /Alien::sqlite Alien::libtiff Alien::proj Alien::geos::af Alien::spatialite/) {
-    next if $alien =~ /spatialite/
-            and not Alien::gdal->runtime_prop->{built_with_spatialite};
+my @aliens = qw /Alien::sqlite Alien::libtiff Alien::proj Alien::geos::af Alien::spatialite/;
+my $built_with = Alien::gdal->runtime_prop->{built_with} // {};
+push @aliens, sort keys %$built_with;
+foreach my $alien (uniq @aliens) {
     my $have = eval "require $alien";
     next if !$have;
     diag sprintf "%s: version: %s, install type: %s", $alien, $alien->version, $alien->install_type;

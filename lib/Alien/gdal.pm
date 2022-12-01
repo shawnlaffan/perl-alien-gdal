@@ -11,22 +11,19 @@ use Path::Tiny qw /path/;
 use List::Util qw /uniq/;
 use Alien::proj;
 
-our $VERSION = '1.36';
+our $VERSION = '1.37';
 
 my ($have_geos, $have_proj);
 my @have_aliens;
 BEGIN {
     $have_geos = eval 'require Alien::geos::af';
     my @check_aliens
-      = qw /Alien::geos::af Alien::sqlite Alien::proj
-            Alien::freexl   Alien::libtiff Alien::spatialite/;
-    foreach my $alien_lib (@check_aliens) {
-        $alien_lib =~ m/Alien::(\w+)/;
-        my $name = $1;
-        my $have_lib
-            = Alien::gdal->runtime_prop->{"built_with_$name"}
-              && eval "require $alien_lib";
-        if ($have_lib && $alien_lib->install_type eq 'share') {
+      = qw /Alien::geos::af Alien::sqlite Alien::proj Alien::libtiff/;
+    my $built_with = Alien::gdal->runtime_prop->{built_with} // {};
+    push @check_aliens, sort keys %$built_with;
+
+    foreach my $alien_lib (uniq @check_aliens) {
+        if (eval "require $alien_lib" && $alien_lib->install_type eq 'share') {
             push @have_aliens, $alien_lib;
             #  crude, but otherwise Geo::GDAL::FFI does not
             #  get fed all the needed info

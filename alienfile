@@ -199,15 +199,13 @@ share {
       plugin 'Cleanse::BuildDir';
     }
     
-    my %runtime_props;
+    my %runtime_props_built_with;
     foreach my $alien (@alien_deps) {
-      my $libname = $alien;
-      $libname =~ s/^Alien:://;
-      $libname =~ s/::af$//;
-      my $key = "built_with_$libname";
-      $runtime_props{$key}
-        = sprintf "%s %s", $alien->version, $alien->install_type;
-      #Alien::Build->runtime_prop->{$key} = $runtime_props{$key};
+      $runtime_props_built_with{$alien}
+        = {
+          version      => $alien->version,
+          install_type => $alien->install_type,
+        };
     };
     
     my @with_args = (
@@ -382,13 +380,8 @@ share {
 
     meta->after_hook( gather_share => sub {
       my ($build) = @_;
-      $build->log ('+++++++ Setting props ++++++');
-      foreach my $alien_dep (sort keys %runtime_props) {
-        my $prop_name =  sprintf '%%{.runtime.%s}', $alien_dep;
-        #push @props, [$runtime_props{$alien_dep}, \$prop_name];
-        $build->log("Setting runtime prop $prop_name to $runtime_props{$alien_dep}");
-        $build->runtime_prop->{$alien_dep} = $runtime_props{$alien_dep};
-      }
+      $build->runtime_prop->{'built_with'}
+        = \%runtime_props_built_with;
     });
 
   }

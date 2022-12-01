@@ -1,5 +1,9 @@
 Revision history for Alien::gdal
 
+1.37 2022-12-01
+    - Only load Alien::spatialite modules if it was used in compilation for
+      a share build.  GH#23
+
 1.36 2022-11-28
     - Unices: fix rpath check for lib, lib64 and lib32
 
