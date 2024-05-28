@@ -5,10 +5,11 @@ skip_tags: true
 
 cache:
   - C:\strawberry
-  - .alienbuild\plugin_fetch_cache
+  #- .alienbuild\plugin_fetch_cache
 
 install:
-  - if not exist "C:\strawberry" choco install strawberryperl --version 5.26.1.1
+  # - rmdir /S /Q C:\strawberry
+  - if not exist "C:\strawberry" choco install strawberryperl --version 5.38.2.2
   - set ST=C:\strawberry
   - set PATH=%ST%\perl\bin;%ST%\perl\site\bin;%ST%\c\bin;%PATH%
   - cd C:\projects\%APPVEYOR_PROJECT_NAME%
@@ -26,18 +27,17 @@ install:
   - cpanm -v --notest Alien::geos::af
   - cpanm -v --notest Alien::sqlite
   #- cpanm -v --notest https://github.com/shawnlaffan/perl-alien-proj.git
-  - cpanm -v --notest Alien::proj~1.10
+  - cpanm -v --notest Alien::proj
   - cpanm -v --notest Alien::libtiff
   - cpanm -v --notest Alien::sqlite
   
   #- cpanm --quiet --notest --installdeps .
   - cpanm --quiet --notest Alien::Build::Plugin::Fetch::Cache
-  - cpanm --quiet --notest FFI::Platypus 
+  - cpanm --quiet --notest FFI::Platypus
 
   - gcc -v
 
 build_script:
-  
   - set ALIEN_GDAL_CONFIG_ARGS=--with-qhull=no
   - set ALIEN_BUILD_PRELOAD=Fetch::Cache
   - perl Makefile.PL
