@@ -16,7 +16,7 @@ task:
       - echo $CIRRUS_OS 20240528
       
   install_script:
-    - sudo pkg install -y autoconf automake m4 libtool pkgconf sqlite3 gmake cmake patchelf git
+    - sudo pkg install -y autoconf automake m4 libtool tiff pkgconf sqlite3 gmake cmake patchelf git
     - sudo pkg install -y p5-App-cpanminus
     - sudo cpanm local::lib
     #- cpanm --local-lib=$PERL_MOD_DIR local::lib && eval $(perl -I ${PERL_MOD_DIR}/lib/perl5/ -Mlocal::lib)
@@ -29,17 +29,17 @@ task:
     - cpanm Alien::gmake
     - cpanm Alien::Build::Plugin::PkgConfig::PPWrapper
     - cpanm --installdeps --notest Alien::sqlite
-    - MAKEFLAGS="--jobs=4" cpanm -v Alien::sqlite
+    - cpanm -v Alien::sqlite
     - cpanm --installdeps --notest Alien::proj
-    - MAKEFLAGS="--jobs=4" cpanm -v Alien::proj
+    - cpanm -v Alien::proj
     - cpanm --installdeps --notest Alien::libtiff
-    - MAKEFLAGS="--jobs=4" cpanm -v Alien::libtiff
+    - cpanm -v Alien::libtiff
     - cpanm --installdeps --notest Alien::geos::af
-    - MAKEFLAGS="--jobs=4" cpanm -v Alien::geos::af
+    - cpanm -v Alien::geos::af
     
   script:
     - eval $(perl -I ${PERL_MOD_DIR}/lib/perl5/ -Mlocal::lib)
     - perl Makefile.PL
     - cpanm --installdeps .
-    - MAKEFLAGS="--jobs=4" make
+    - make
     - make test TEST_VERBOSE=1
