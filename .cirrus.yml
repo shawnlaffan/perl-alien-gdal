@@ -18,6 +18,7 @@ task:
   install_script:
     - sudo pkg install -y autoconf automake m4 libtool tiff pkgconf sqlite3 gmake cmake patchelf git
     - sudo pkg install -y p5-App-cpanminus
+    - sudo pkg install -y tiff
     - sudo cpanm local::lib
     #- cpanm --local-lib=$PERL_MOD_DIR local::lib && eval $(perl -I ${PERL_MOD_DIR}/lib/perl5/ -Mlocal::lib)
     - echo probe local::lib
