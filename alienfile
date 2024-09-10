@@ -206,6 +206,8 @@ share {
       '-DGDAL_USE_MSSQL_NCLI=OFF',
       '-DGDAL_USE_MYSQL=OFF',
       '-DBUILD_CSHARP_BINDINGS:BOOL=OFF',
+      '-DBUILD_PYTHON_BINDINGS:BOOL=OFF',
+      '-DBUILD_JAVA_BINDINGS:BOOL=OFF',
       #'--without-pg',
       #'--without-ogdi',
       #'--with-mongocxxv3=no',
@@ -337,8 +339,6 @@ share {
       @with_args,
       '-DCMAKE_INSTALL_PREFIX:PATH=%{.install.prefix}',
       '-DCMAKE_BUILD_TYPE=Release',
-      '-DBUILD_PYTHON_BINDINGS:BOOL=OFF',
-      '-DBUILD_JAVA_BINDINGS:BOOL=OFF',
       @drivers_to_disable,
       '..'
     ];
