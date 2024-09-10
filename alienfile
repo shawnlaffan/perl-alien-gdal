@@ -335,7 +335,6 @@ share {
       '-DBUILD_TESTING=OFF',
       '-DBUILD_SHARED_LIBS=ON',
       @with_args,
-      '-DBUILD_PROJSYNC=OFF',
       '-DCMAKE_INSTALL_PREFIX:PATH=%{.install.prefix}',
       '-DCMAKE_BUILD_TYPE=Release',
       '-DBUILD_PYTHON_BINDINGS:BOOL=OFF',
