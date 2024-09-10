@@ -339,6 +339,7 @@ share {
       '-DCMAKE_INSTALL_PREFIX:PATH=%{.install.prefix}',
       '-DCMAKE_BUILD_TYPE=Release',
       '-DBUILD_PYTHON_BINDINGS:BOOL=OFF',
+      '-DBUILD_JAVA_BINDINGS:BOOL=OFF',
       @drivers_to_disable,
       '..'
     ];
