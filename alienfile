@@ -203,6 +203,7 @@ share {
     my @with_args = (
       #https://gdal.org/build_hints.html#cmdoption-arg-GDAL_USE_-Packagename_in_upper_case-BOOL
       @automated_rig_config_args,
+      '-DGDAL_USE_GEOTIFF_INTERNAL:BOOL=ON',  #  until we have an alien
       '-DGDAL_USE_MSSQL_ODBC=OFF',
       '-DGDAL_USE_MSSQL_NCLI=OFF',
       '-DGDAL_USE_MYSQL=OFF',
