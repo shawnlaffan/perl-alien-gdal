@@ -1,5 +1,8 @@
 Revision history for Alien::gdal
 
+1.38 2024-xx-xx
+    - Share builds: Disable Java bindings for faster builds
+
 1.37 2024-05-28
     - More effective search for the data dir for systems installs using homebrew
 
