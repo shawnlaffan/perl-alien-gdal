@@ -269,6 +269,13 @@ share {
       push @cmake_prefix_path, path('Alien::spatialite'->dist_dir);
       #  need to check for this under cmake?
     }
+    elsif (Alien::proj->install_type eq 'share') {
+      #  spatialite depends on proj and this can cause grief if proj is a share install
+      #  and spatialite is found by CMake
+      #  https://gdal.org/en/latest/development/building_from_source.html#conflicting-proj-libraries
+      push @with_args, '-DGDAL_USE_SPATIALITE=OFF';
+    }
+
     if (Alien::sqlite->install_type eq 'share') {
       push @cmake_prefix_path, path('Alien::sqlite'->dist_dir);
       my $sqlite_include = path ('Alien::sqlite'->dist_dir . '/include')->stringify;
