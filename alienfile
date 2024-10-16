@@ -333,11 +333,11 @@ share {
     #  hack
     if ($^O =~ /darwin/) {
       push @DYLD_LIBRARY_PATH, @ld_lib_path;
-      Alien::Build->log('DYLD_LIBRARY_PATH: ' . join ':', @DYLD_LIBRARY_PATH);
+      Alien::Build->log('DYLD_LIBRARY_PATH: ' . join ':', grep {defined} @DYLD_LIBRARY_PATH);
     }
     else {
       push @LD_LIBRARY_PATH, @ld_lib_path;
-      Alien::Build->log('LD_LIBRARY_PATH: ' . join ':', @LD_LIBRARY_PATH);
+      Alien::Build->log('LD_LIBRARY_PATH: ' . join ':', grep {defined} @LD_LIBRARY_PATH);
     }
 
     #foreach my $env_var (qw /LD_LIBRARY_PATH DYLD_LIBRARY_PATH LDFLAGS CFLAGS CXXFLAGS/) {
