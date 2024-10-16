@@ -2,6 +2,7 @@ Revision history for Alien::gdal
 
 1.38 2024-xx-xx
     - Share builds:
+        Use the internal libgeotiff
         Disable Java bindings for faster builds
         Disable use of system libspatialite if Alien::proj is a share build.
           This sidesteps seg faults due to use of two libproj instances.
