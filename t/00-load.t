@@ -26,6 +26,8 @@ foreach my $alien (qw /Alien::sqlite Alien::libtiff Alien::proj Alien::geos::af/
     $alien_versions{$alien} = $alien->version;
 }
 
+like (Alien::gdal->version, qr /^[0-9\._RC]+$/, 'gdal version string is valid');
+
 my $have_ldd = !!`ldd --help`;
 if (Alien::gdal->install_type eq 'share' && $have_ldd) {
     my $dylib = Alien::gdal->dist_dir . '/lib/libgdal.so';
