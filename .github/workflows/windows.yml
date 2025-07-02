@@ -30,12 +30,11 @@ jobs:
         run: |
           ## echo "ALIEN_GDAL_CONFIG_ARGS=--with-hide_internal_symbols" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           ## $env:ALIEN_GDAL_CONFIG_ARGS = "--with-hide-internal-symbols=yes --without-gnm"
-          prove -lv t
-
-#          perl Makefile.PL
-#          cpanm --notest --installdeps .
-#          gmake
-#          gmake test TEST_VERBOSE=1
+          ## prove -lv t
+          perl Makefile.PL
+          cpanm --notest --installdeps .
+          gmake
+          gmake test TEST_VERBOSE=1
 
 
       #- name: Zip _alien
