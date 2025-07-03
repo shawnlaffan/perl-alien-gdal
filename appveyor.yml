@@ -38,8 +38,6 @@ install:
   - gcc -v
 
 build_script:
-  - set ALIEN_GDAL_CONFIG_ARGS=--with-qhull=no
-  - set ALIEN_BUILD_PRELOAD=Fetch::Cache
   - perl Makefile.PL
   - cpanm --notest --installdeps .
   #- gmake | perl -ne "BEGIN {$|=1; open our $log, q|>|, q|build.log|}; print qq|\n| if 0 == ($. %% 100); print q|.|; print {$log} $_;" || type build.log
