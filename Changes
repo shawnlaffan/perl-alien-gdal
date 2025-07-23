@@ -1,6 +1,6 @@
 Revision history for Alien::gdal
 
-1.40 2025-07-04
+1.41 2025-07-04
     - No functional changes.  Only difference is that
       the release is packaged on Windows to avoid
       pulling in Alien::patchelf on systems that don't
