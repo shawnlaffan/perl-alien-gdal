@@ -37,6 +37,7 @@ task:
     - cpanm -v Alien::libtiff
     - cpanm --installdeps --notest Alien::geos::af
     - cpanm -v Alien::geos::af
+    - cpanm Mojo::DOM58 Alien::patch Alien::patchelf
     
   script:
     - eval $(perl -I ${PERL_MOD_DIR}/lib/perl5/ -Mlocal::lib)
