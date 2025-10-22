@@ -283,6 +283,13 @@ Alien::gdal - Compile GDAL, the Geographic Data Abstraction Library
 
 GDAL is the Geographic Data Abstraction Library.  See L<http://www.gdal.org>.
 
+=head1 Environment Variables
+
+User defined CMake arguments can be passed using the C<< ALIEN_GDAL_CMAKE_ARGS >>
+environment variable. e.g. to disable the search for PDF and KML libs, set it to
+C<< "-DGDAL_ENABLE_DRIVER_PDF:BOOL=OFF -DGDAL_USE_LIBKML=OFF" >>.
+
+
 
 =head1 REPORTING BUGS
 
